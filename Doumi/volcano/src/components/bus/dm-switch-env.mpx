@@ -1,0 +1,110 @@
+<template>
+  <!-- 切换环境按钮 -->
+  <view wx:if="{{showSwitchEnvBtn}}"
+    class="{{isTransform? 'post1' : 'post'}}"
+    bindtap="onPostClick">
+    <view wx:if="{{!isTransform}}" class="{{isTransform?'textView1':'textView'}}">
+      切换环境
+    </view>
+
+    <view wx:if="{{isTransform}}" class='testENV' catchtap="clickTestENV">test环境</view>
+    <view wx:if="{{isTransform}}" class='simENV' catchtap="clickSimENV"> sim环境</view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import globalDataStore from '~/store/globalData'
+
+const app = getApp()
+
+createComponent({
+  data: {
+    isTransform: false
+  },
+
+  computed: {
+    ...globalDataStore.mapState(['showSwitchEnvBtn'])// 弹窗显示控制
+  },
+
+  methods: {
+    onPostClick () {
+      this.isTransform = !this.data.isTransform
+    },
+    clickTestENV () {
+      this.__nextTick(0)
+      this.triggerEvent('on-test')
+    },
+    clickSimENV () {
+      this.__nextTick(1)
+      this.triggerEvent('on-sim')
+    },
+    __nextTick (env) {
+      wx.clearStorageSync()
+      wx.setStorageSync('envFlag', env)
+      app.code2login()
+      this.onPostClick()
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.post
+  width 145rpx
+  height 100rpx
+  float right
+  text-align center
+  background-color #f60
+  position fixed
+  z-index 2000
+  bottom 0
+  right 0
+  border 0 solid #fff
+  transition width 0.5s
+  border-radius 20rpx
+  .text
+    font-size 10rpx
+.post1
+  width 100%
+  height 100rpx
+  float right
+  background-color #f60
+  position fixed
+  z-index 2000
+  bottom 0
+  right 0
+  display flex
+  flex-direction row
+  align-items center
+  transition width 0.5s
+  border-radius 20rpx
+.textView
+  margin-top 25rpx
+  margin-left 5rpx
+.textView1
+  margin-top 25rpx
+  margin-left 0
+.testENV
+  height 100%
+  flex 1
+  background-color orange
+  display flex
+  flex-direction row
+  align-items center
+  justify-content center
+.simENV
+  height 100%
+  flex 1
+  background-color goldenrod
+  display flex
+  flex-direction row
+  align-items center
+  justify-content center
+</style>
+
+<script type="application/json">
+  {
+    "component": true
+  }
+</script>

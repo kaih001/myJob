@@ -1,0 +1,336 @@
+<!--
+  Description  约面报名选择面试时间、工作地点的弹层
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-26 14:03:08
+-->
+<template>
+  <view
+    wx:show="{{isShowWork}}"
+    class="dm-mask"
+    bindtap="bindHideWork">
+    <view class="popup-wrapper pop-bookPlace {{isIpx ? 'iphonex-fixed' : ''}}" catchtap>
+      <view class="popup-caution">正规职位不会收取费用,若收费请提高警惕</view>
+      <view class="popup-main-box place-box">
+        <view class="popup-title">选择工作地点</view>
+        <scroll-view class="popup-list" scroll-y>
+          <view
+            class="popup-item"
+            wx:for="{{interview}}"
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="bindSelectWorkAddress">
+            <view class="mod-title">{{item.work_address.address}}</view>
+            <view class="mod-place">
+              <view wx:if="{{item.work_address.distance > -1}}" class="text">距你{{item.work_address.distance_txt}}</view>
+              <view class="{{item.work_address.isSelect ? 'icon-active' : 'icon'}}"></view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view class="popup-main-box date-box">
+        <view wx:if="{{interviewAddress.address}}" class='popup-tips'>
+          面试地点：{{interviewAddress.address}}
+        </view>
+        <block wx:if="{{interviewTimes.length > 0}}">
+          <view class="popup-title">选择面试时间</view>
+          <scroll-view class="popup-list" scroll-x="true">
+            <view
+              class="popup-item"
+              wx:class="{{ { active: item.isSelect } }}"
+              wx:for="{{interviewTimes}}"
+              wx:key="index"
+              data-index="{{index}}"
+              bindtap="bindSelectWorkTime">
+              <view class="mod-date">
+                <view class="week">{{item.date}}<!-- <view class="week-info">明天</view> --></view>
+                <view class="time">{{item.time}}</view>
+              </view>
+            </view>
+          </scroll-view>
+        </block>
+      </view>
+      <view class="popup-btn">
+        <view class="btn-cancel" bindtap="bindHideWork">取消</view>
+        <view class="btn-sure" bindtap="bindSelectWorkOk">确定</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import interviewApi from '~/interface/interview'
+import jobStore from '~/store/job'
+import globalDataStore from '~/store/globalData'
+
+const STE = jobStore.state
+const app = getApp()
+
+createComponent({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+
+  data: {
+    isShowWork: false, // 是否显示选择工作地址和面试时间的 pop
+  },
+
+  computed: {
+    ...globalDataStore.mapState(['isIpx', 'isBindPhone']),
+    ...jobStore.mapState(Object.keys(STE)),
+    ...jobStore.mapGetters(['interviewParams']),
+    // 是否完善了简历信息
+    isResumeComplete () {
+      const { is_resume_complete, is_degree_complete } = STE.jobBtnStatus
+      return is_resume_complete === 1 && is_degree_complete === 1
+    },
+  },
+
+  methods: {
+    ...jobStore.mapActions(['postEv']),
+
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    /**
+     * 弹层中勾选工作地点
+     * @param {Object} e.currentTarget.dataset
+     * └─ @property {Number} index - 当前选中的工作地点所在的工作地点列表的索引
+     */
+    bindSelectWorkAddress ({
+      currentTarget: {
+        dataset: { index }
+      }
+    }) {
+      const { interview } = STE
+      const postAddrList = interview.map(x => {
+        x.work_times.forEach(xx => (xx.isSelect = false))
+        return x.work_address
+      })
+      const { isSelect } = postAddrList[index]
+
+      if (!isSelect) {
+        // - 用户点选工作地址后不可取消勾选(至少选中一个)
+        // - 当前点击的工作地址被选中时
+        postAddrList.forEach(x => (x.isSelect = false)) // - 清空其他地址的选中态
+        postAddrList[index].isSelect = !isSelect
+        STE.interview = interview
+        STE.interviewAddress = interview[index].interview_address
+        STE.interviewTimes = interview[index].work_times.slice(0, 4) // - 最多取四条时间
+      }
+
+      this.postEv({ append: '@ca_from=ms_address' })
+    },
+
+    /**
+     * 弹层中勾选面试时间
+     * @param {Object} e.currentTarget.dataset
+     * └─ @property {Number} index - 当前选中的面试时间在该工作地址对应的面试时间列表中的索引
+     */
+    bindSelectWorkTime ({
+      currentTarget: {
+        dataset: { index }
+      }
+    }) {
+      const { interviewTimes } = STE
+      const { isSelect } = interviewTimes[index]
+
+      if (!isSelect) {
+        // - 用户点选面试时间后不可取消勾选(至少选中一个)
+        // - 当前点击的面试时间被选中时
+        interviewTimes.forEach(x => (x.isSelect = false)) // - 清空其他地址的选中态
+        interviewTimes[index].isSelect = !isSelect
+        STE.interviewTimes = interviewTimes
+      }
+
+      this.postEv({ append: '@ca_from=ms_time' })
+    },
+
+    /**
+     * 工作地址和面试时间选择的弹层中点击确定
+     */
+    async bindSelectWorkOk () {
+      const isSelectedWorkTime = STE.interviewTimes.some(x => x.isSelect)
+
+      this.postEv({ append: '@ca_from=ms_true' })
+
+      if (isSelectedWorkTime) {
+        try {
+          // - (未登录 || 简历信息不全)跳转极速报名页
+          if (!this.isBindPhone || !this.isResumeComplete) {
+            this.triggerEvent('to-page', { type: 'apply' })
+            return
+          }
+
+          const applyId = await this.__interviewApplyJob()
+          this.triggerEvent('to-page', { type: 'success', applyId })
+          this.postEv({ append: '@ca_from=ms_apply_success' }) // - 预约面试成功的 ev
+        } catch (err) {
+          app.showErrorToastHandler(err)
+        }
+      } else {
+        wx.showToast({ title: '请选择面试时间', icon: 'none' })
+      }
+    },
+
+    /**
+     * 隐藏工作地址和面试时间选择的弹层
+     * @param {boolean} isPostEv - 是否发起ev
+     */
+    bindHideWork (isPostEv = true) {
+      clearTimeout(STE.delayClick)
+      STE.delayClick = false
+      this.hide()
+      isPostEv && this.postEv('@ca_from=ms_cancel')
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    show () {
+      this.isShowWork = true
+      STE.isScrollY = false
+    },
+
+    hide () {
+      this.isShowWork = false
+      STE.isScrollY = true
+    },
+
+    // 约面报名
+    async __interviewApplyJob () {
+      try {
+        const { data } = await interviewApi
+          .showLoading()
+          .applyJob(this.interviewParams)
+
+        return Promise.resolve(data.apply_id)
+      } catch (err) {
+        if (err.code) return Promise.reject(err)
+        app.showErrorToastHandler(err)
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.pop-bookPlace
+  padding 16px
+  padding-bottom 0
+  .popup-caution
+    font-size 12px
+    color #f60
+    line-height 20px
+    text-align center
+    padding-top 8px
+    padding-bottom 8px
+    margin-bottom 16px
+    background-color #fff5ed
+  .popup-main-box
+    position relative
+  .popup-title
+    margin-bottom 12px
+    font-weight 700
+  .popup-list
+    font-size 0
+    max-height 156px
+  .place-box
+    .popup-item
+      display flex
+      align-items center
+      justify-content space-between
+      margin-bottom 16px
+      &::after
+        visibility hidden
+        display block
+        font-size 0
+        content " "
+        clear both
+        height 0
+  .popup-item
+    .mod-title
+      flex 1
+      font-size 14px
+      line-height 22px
+    .mod-place
+      flex-shrink 1
+      box-sizing border-box
+      font-size 14px
+      color #999
+      line-height 22px
+      padding-left 16px
+      text-align right
+      vertical-align middle
+  .mod-place
+    .text
+      display inline-block
+      margin-right 8px
+      max-width 240px
+      vertical-align middle
+    .icon
+      position relative
+      display inline-block
+      width 32rpx
+      height 32rpx
+      border-radius 100px
+      vertical-align middle
+      &::after
+        border-radius 50%
+    .icon-active
+      display inline-block
+      width 32rpx
+      height 32rpx
+      vertical-align middle
+      background url("https://cdn.doumistatic.com/165,015350759fe1c754.png") no-repeat
+      background-size 100% 100%
+  .date-box
+    margin-bottom 24px
+    .popup-title
+      margin-bottom 8px
+    .popup-list
+      max-height 66px
+      white-space nowrap
+    .popup-item
+      display inline-block
+      position relative
+      box-sizing border-box
+      padding 6px
+      margin 4px 8px 8px 0
+      border-radius 4px
+      background-color #fff
+      color #434244
+      font-size 12px
+      line-height 20px
+      white-space nowrap
+      &::after
+        border-radius 16rpx
+  .popup-tips
+    margin-top 20px
+    margin-bottom 8px
+    color #f60
+    font-size 14px
+    line-height 22px
+  .mod-date
+    white-space nowrap
+    .week
+      font-weight 700
+    .week-info
+      display inline-block
+      margin-left 4px
+
+.pop-bookPlace .date-box .popup-item::after,
+.pop-bookPlace .mod-place .icon::after
+  content ""
+  position absolute
+  left 0
+  top 0
+  width 200%
+  height 200%
+  border 1px solid #e5e5e5
+  transform-origin 0 0
+  transform scale(0.5)
+  box-sizing border-box
+</style>

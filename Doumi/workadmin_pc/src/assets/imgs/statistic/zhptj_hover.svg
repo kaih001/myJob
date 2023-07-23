@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>招聘统计_高亮</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="招聘" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-19.000000, -55.000000)" fill="#6699EE">
+            <path d="M19,57 L19,57 C19,55.8954305 19.8954305,55 21,55 L21,55 L33,55 C34.1045695,55 35,55.8954305 35,57 L35,57 L35,69 C35,70.1045695 34.1045695,71 33,71 L21,71 C19.8954305,71 19,70.1045695 19,69 L19,57 Z M27.8658573,66.4140154 L32.6970784,61.7169949 L31.3029216,60.2830051 L28.1341427,63.3637624 L26.1792364,60.6486149 L21.3535828,64.7370158 L22.6464172,66.2629842 L25.8207636,63.5736074 L27.8658573,66.4140154 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

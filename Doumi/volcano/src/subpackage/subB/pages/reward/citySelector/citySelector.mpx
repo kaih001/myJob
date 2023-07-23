@@ -1,0 +1,315 @@
+<template>
+  <!-- 城市列表 -->
+  <scroll-view
+    class="dm-cities"
+    style="height: 100vh"
+    enable-back-to-top
+    scroll-y
+    scroll-with-animation="{{scrollWithAnimation}}"
+    scroll-into-view="{{scrollToKey}}"
+  >
+    <view class="title refresh">
+      当前定位
+      <image
+        class="dm-icon-refresh"
+        wx:class="{{ { spin: locationStatus === 'loading' } }}"
+        src="../../../../../assets/image/refresh.png"
+        bindtap="bindRefreshLocation"/>
+    </view>
+    <view class="location">
+      <dm-checkbox
+        wx:if="{{locationStatus === 'reject'}}"
+        checked-style="{{ { width: '310rpx', color: '#F60', backgroundColor: 'white' } }}"
+        size="large"
+        value="{{true}}"
+        bindtap="openAuthSetting">
+        未授权定位 立即开启
+      </dm-checkbox>
+      <dm-checkbox
+        wx:elif="{{locationStatus === 'fail'}}"
+        checked-style="{{ { width: '310rpx', color: '#F60', backgroundColor: 'white' } }}"
+        size="large"
+        value="{{true}}">
+        定位失败 请点击重试
+      </dm-checkbox>
+      <dm-checkbox
+        wx:else
+        class="dm-select-box"
+        checked-style="{{ {
+          color: currentCity.id === locationCity.id ? '#FA0' : '',
+          backgroundColor: '#F7F7F7'
+        } }}"
+        size="large"
+        val="{{ locationCity.id }}"
+        value="{{true}}"
+        bindtap="bindSelectCity(locationCity)">
+        <image
+          slot="before"
+          class="dm-icon-location"
+          src="../../../../../assets/image/location.png"
+        />{{ locationCity.name }}
+      </dm-checkbox>
+    </view>
+    <view id="hot" class="title">热门城市</view>
+    <view class="dm-hot-main">
+      <dm-checkbox
+        class="dm-select-box"
+        checked-style="{{ { backgroundColor: '#F7F7F7' } }}"
+        size="large"
+        val="{{ id }}"
+        wx:for="{{ hotCities }}"
+        wx:key="id"
+        disabled
+        bindtap="bindSelectCity(item)">
+        {{ item.name }}
+      </dm-checkbox>
+    </view>
+    <view class="dm-notice">
+      <image class="dm-notice-image" src="https://cdn.doumistatic.com/196,01a2820a07a56c45.png"></image>
+      <text class="dm-notice-text">其他城市陆续开放中，敬请期待</text>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import util, { $ } from '../../../../../utils/util'
+import api from '../../../../../utils/api'
+import encrypt from '../../../../../utils/encrypt/encrypt'
+import cityStore from '../../../../../store/city'
+import pageRmlist from '../rmlist/rmlist?resolve'
+
+const app = getApp()
+
+let indexsTop = 0
+let indexsItemHeight = 0
+
+createPage({
+  data: {
+    scrollWithAnimation: false,
+    scrollToKey: '',
+    locationStatus: null, // - 定位的状态
+    hotCities: [], // - 热门城市
+    cities: {}, // - 所有城市
+    cityIndexs: [] // - 城市的索引
+  },
+
+  computed: {
+    ...cityStore.mapGetters(['currentCity']), // - 当前选择的城市的信息
+    ...cityStore.mapState(['locationCity']) // - 当前定位城市的信息
+  },
+
+  async onLoad () {
+    util.showLoading()
+    await this.__initData()
+    // await this.__calcRect()
+    util.hideLoading()
+    this.__initLocation()
+  },
+
+  methods: {
+    openAuthSetting () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=getposition')
+      app.setAuthorize().then(res => {
+        // util.showLoading()
+      })
+    },
+
+    bindRefreshLocation () {
+      this.__initLocation()
+    },
+
+    bindSelectCity (item) {
+      const pages = getCurrentPages()
+      const prevPage = pages[pages.length - 2] // - 拿到上一个页面的实例
+      const { callbackName } = this.options
+      cityStore.commit('SET_SELECTED_CITY', item)
+      cityStore.dispatch('updateCitiesAndDistricts')
+      if (pages.length > 1) { // - 从首页选择城市过来
+        wx.navigateBack({
+          delta: 1,
+          success: () => {
+            callbackName && prevPage[callbackName]()
+          }
+        })
+      } else { // - 首页拒绝定位过来
+        wx.redirectTo({ url: pageRmlist })
+      }
+    },
+
+    catchTouchMove ({ touches: [{ clientY }] }) {
+      const index = Math.floor((clientY - indexsTop) / indexsItemHeight)
+      const key = this.cityIndexs[index]
+      this.scrollWithAnimation = false
+      this.$nextTick(() => this.__updateScrollToKey(key))
+    },
+
+    catchTap (key) {
+      this.scrollWithAnimation = true
+      this.$nextTick(() => this.__updateScrollToKey(key))
+    },
+
+    __updateScrollToKey (key) {
+      this.scrollToKey = key === '热' ? 'hot' : key
+    },
+
+    __initData () {
+      const time = new Date().getTime()
+      const str = time + encrypt.md5('api-headhunter-opt-key')
+      const sign = encrypt.md5(str)
+      const url = 'headhunter/city_list'
+      util.requestByPost(
+        url,
+        {
+          time,
+          sign
+        },
+        true,
+        res => {
+          const { code, data } = res.data
+          if (code === 200) {
+            this.hotCities = data
+          } else {
+            wx.showToast({
+              icon: 'none',
+              title: res.data.message
+            })
+          }
+        },
+        err => {
+          // wx.stopPullDownRefresh()
+        }
+      )
+    },
+
+    async __calcRect () {
+      const { top, height } = await $('.dm-city-indexs .index')
+      indexsTop = top
+      indexsItemHeight = height
+    },
+
+    async __initLocation () {
+      try {
+        this.locationStatus = 'loading'
+        await app.checkAuthAndGetLocation()
+        await app.getCityInfo()
+        if (!cityStore.state.longitude) {
+          this.locationStatus = 'fail' // - 用户已授权定位, 手机gps未开
+        } else {
+          this.locationStatus = 'success' // - 获取定位成功
+        }
+      } catch (err) {
+        this.locationStatus = 'reject' // - 用户拒绝授权
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+page
+  color #404040
+  background-color white
+.location
+.title
+.dm-hot-main
+  padding-left 32rpx
+  padding-right 32rpx
+.dm-cities
+  .location
+    .dm-icon-location
+      display inline-block
+      width 24.8rpx
+      height 30.2rpx
+      margin-top -6rpx
+      margin-right 9rpx
+      vertical-align middle
+  .dm-select-box view::after
+    display none
+  .title
+    position relative
+    color #808080
+    font-size 14px
+    line-height 14px
+    padding-top 48rpx
+    padding-bottom 32rpx
+    .dm-icon-refresh
+      display block
+      position absolute
+      top 16rpx
+      right 0
+      width 28rpx
+      height 28rpx
+      padding 32rpx
+      &.spin
+        animation: spin 0.9s infinite linear;
+  .dm-hot-main
+    display flex
+    flex-wrap wrap
+    .dm-select-box
+      margin-bottom 16rpx
+      margin-left 16rpx
+      &:nth-child(4n)
+        margin-right 0
+      &:nth-child(4n + 1)
+        margin-left 0
+  .dm-cities-main
+    .key
+      height 52rpx
+      line-height 52rpx
+      padding-left 32rpx
+      background-color #F7F7F7
+    .dm-cell::after
+      left 0
+    .current
+      color #B3B3B3
+      padding-left 16rpx
+
+.dm-city-indexs
+  position fixed
+  top 50%
+  right 0
+  transform translateY(-50%)
+  .index
+    display block
+    width 40rpx
+    height 40rpx
+    line-height 40rpx
+    font-size 10px
+    font-weight 700
+    text-align center
+.dm-notice
+  position relative
+  margin-top 16rpx
+  padding 48rpx 32rpx
+  &::before
+    content ''
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 1px
+    background-color #e5e5e5
+    transform-origin 0 0
+    transform scale3d(1, .5, 1)
+  &-image
+    display block;
+    width 302rpx
+    height 264rpx
+    margin 0 auto 16px
+  &-text
+    display block
+    font-size 14px
+    line-height 22px
+    text-align center
+</style>
+
+<script type="application/json">
+  {
+    "navigationBarTitleText": "选择城市",
+    "usingComponents": {
+      "dm-checkbox": "../../../../../components/dmx/dm-checkbox",
+      "dm-cell": "../../../../../components/dmx/dm-cell"
+    }
+  }
+</script>

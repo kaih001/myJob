@@ -1,0 +1,423 @@
+<!--
+  Description  职位底部(包括按钮和弹层逻辑)
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-26 13:52:11
+-->
+<template>
+  <block wx:if="{{jobBtnStatus}}">
+    <!-- 普通报名选择时间、工作地点的弹层 -->
+    <dm-apply-pop wx:ref="applyPop" bind:apply="bindApply"></dm-apply-pop>
+
+    <!-- 约面报名选择面试时间、工作地点的弹层 -->
+    <dm-interview-apply-pop wx:ref="interviewApplyPop" bind:to-page="bindToPage"></dm-interview-apply-pop>
+
+    <!-- 协议弹窗-->
+    <dm-agreement-pop wx:ref="agreementPop" bind:register="handleRegister"></dm-agreement-pop>
+
+    <!-- 电话联系需要分享的弹层 -->
+    <dm-share-pop wx:ref="sharePop"></dm-share-pop>
+    <view wx:if="{{jobBtnStatus.post_button_status}}" class="dm-footbar {{isIpx ? 'iphonex-fixed' : ''}}">
+      <view class="dm-btn-group">
+        <button class="dm-btn dm-btn-default dm-btn-large" hover-class="dm-touch" type="button" open-type="share">
+          <view class="dm-icon dm-icon-share">分享</view>
+          分享
+        </button>
+        <block wx:if="{{!phoneContact.is_show_contact}}">
+          <button
+            wx:if="{{applyBtnText == '取消报名' || jobBtnStatus.post_button_status.can_apply == -300}}"
+            class="dm-btn dm-btn-default dm-btn-large"
+            hover-class="dm-touch"
+            type="button"
+            bindtap="bindOpenContactAction"
+          >
+            <view class="dm-icon dm-icon-chat">咨询</view>
+            咨询
+          </button>
+        </block>
+
+        <!-- 处于登陆状态 && 可以跳过选择时间和地点 -->
+        <!-- DMC-3553 -->
+        <!-- 点金的职位不能取消报名ad_types 为10，13，14 -->
+        <!-- jobBtnStatus.post_button_status.can_apply 为 -300 -->
+        <button wx:if="{{(jobBtnStatus.post_button_status.can_apply == -300) && isBindPhone}}" class="dm-applyed" hover-class="none" disabled="{{false}}" style="flex: 1">已报名</button>
+        <form wx:else class="dm-btn dm-btn-primary dm-btn-large {{applyBtnClass}}" report-submit="true">
+          <!-- 普通贴在未登录情况下点击报名时未登录需要授权手机号 -->
+          <button
+            wx:if="{{!jobDetail.is_ziying && !isBindPhone}}"
+            class="dm-btn dm-btn-primary dm-btn-large {{applyBtnClass}}"
+            hover-class="dm-touch"
+            formType="submit"
+            open-type="getPhoneNumber"
+            bindgetphonenumber="bindGetPhoneNumber"
+          >
+            {{ applyBtnText }}
+          </button>
+          <button wx:else class="dm-btn dm-btn-primary dm-btn-large {{applyBtnClass}}" hover-class="dm-touch" formType="submit" bindtap="bindApplyJob">
+            {{ applyBtnText }}
+          </button>
+        </form>
+        <!-- 电话联系 -->
+        <block wx:if="{{!!phoneContact.is_show_contact&&!isBindPhone}}">
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            formType="submit"
+            open-type="getPhoneNumber"
+            bindgetphonenumber="bindGetPhoneNumber"
+            style="border-left: 1px solid #fff"
+          >
+            <!-- {{phoneContact.tel?phoneContact.tel:'电话联系'}} -->
+            {{ !!phoneContact.is_shared ? (phoneContact.tel ? phoneContact.tel : '电话联系') : '电话联系' }}
+          </button>
+        </block>
+        <block wx:else>
+          <button
+            wx:if="{{!!phoneContact.is_show_contact}}"
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            formType="submit"
+            bindtap="phoneContactHandle"
+            style="border-left: 1px solid #fff"
+          >
+            {{ !!phoneContact.is_shared ? (phoneContact.tel ? phoneContact.tel : '电话联系') : '电话联系' }}
+          </button>
+        </block>
+      </view>
+    </view>
+  </block>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import util from '~/utils/util'
+import jobStore from '~/store/job'
+import globalDataStore from '~/store/globalData'
+
+const STE = jobStore.state
+console.log('STE====', STE)
+const app = getApp()
+console.log('app===', app)
+
+createComponent({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+
+  // -------------------------------------------------------------------------
+  // 计算属性(在store中共享)
+  // -------------------------------------------------------------------------
+
+  computed: {
+    ...globalDataStore.mapState(['isIpx', 'isBindPhone']),
+    ...jobStore.mapState(Object.keys(STE)),
+    ...jobStore.mapGetters(['pierceParams', 'interviewParams'])
+  },
+
+  ready () {
+    // 给当前组件所在的页面附加极速报名成功的回调方法
+    util.getCurrentPage().applyCallback = this.applyCallback.bind(this)
+  },
+
+  methods: {
+    ...jobStore.mapActions([
+      'postEv',
+      'updateDetailBtn',
+      'generalApplyJob',
+      'fastGeneralApplyJob',
+      'fastInterviewApplyJob',
+      'getInterviewDate',
+      'goToPageApply',
+      'goToPageApplySuccess',
+      'agreeToTheAgreement'
+    ]),
+
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    // 自营贴(报名 | 预约面试)
+    async bindApplyJob () {
+      const { interview, isInterview ,jobDetail} = STE
+      //判断是否是芝麻职位
+      if(jobDetail.is_zhima&&jobDetail.is_proto){
+        this.$refs.agreementPop.show()
+        return
+      }
+      // const { interview, isInterview } = STE
+
+      // 防止用户多次连续点击
+      if (STE.delayClick) {
+        return
+      } else {
+        STE.delayClick = setTimeout(() => (STE.delayClick = false), 3000)
+      }
+
+      if (isInterview) {
+        // - 约面流程
+        if (interview.length === 0) await this.getInterviewDate() // 工作地址不存在的时候从接口拉一下数据
+
+        this.$refs.interviewApplyPop.show()
+        this.postEv({ append: '@ca_from=apply_interviem' })
+      } else {
+        // - 普通报名流程
+        this.__generalApplyJob()
+      }
+    },
+    //是否签订协议
+    async handleRegister(){
+      try {
+        await this.agreeToTheAgreement(1)
+        this.bindApplyJob2()
+      } catch (error) {
+
+      }
+    },
+    //签订协议后报名
+    async bindApplyJob2(){
+      const { interview, isInterview } = STE
+
+      // 防止用户多次连续点击
+      if (STE.delayClick) {
+        return
+      } else {
+        STE.delayClick = setTimeout(() => (STE.delayClick = false), 3000)
+      }
+
+      if (isInterview) {
+        // - 约面流程
+        if (interview.length === 0) await this.getInterviewDate() // 工作地址不存在的时候从接口拉一下数据
+
+        this.$refs.interviewApplyPop.show()
+        this.postEv({ append: '@ca_from=apply_interviem' })
+      } else {
+        // - 普通报名流程
+        this.__generalApplyJob()
+      }
+    },
+
+    //电话联系
+    async phoneContactHandle () {
+      if (!!this.phoneContact.is_shared && !this.phoneContact.tel) {
+        wx.showToast({
+          title: '该职位未发布联系电话', // 提示的内容,
+          icon: 'none', // 图标,
+          duration: 2000, // 延迟时间,
+          mask: true // 显示透明蒙层，防止触摸穿透,
+        })
+        return
+      }
+      if (!this.phoneContact.is_shared) {
+        this.postEv({ append: '@ca_from=lx_202201_noshare' })
+        this.$refs.sharePop.show()
+        return
+      } else {
+        this.postEv({ append: '@ca_from=lx_202201_shared' })
+        wx.makePhoneCall({
+          phoneNumber: this.phoneContact.tel
+        })
+      }
+    },
+
+    // 点击了报名参加按钮获取的formId
+    // bindApplyJoinData (e) {
+    //   // STE.applyJoinFormId = e.detail.formId
+    // },
+
+    // 调用报名
+    bindApply () {
+      this.generalApplyJob()
+    },
+
+    // 约面pop回传的事件, 去极速报名页后者去报名成功页
+    bindToPage ({ detail: { type, applyId } }) {
+      type === 'apply' ? this.goToPageApply() : this.goToPageApplySuccess(applyId)
+    },
+
+    async bindOpenContactAction () {
+      const list = [
+        // 0:电话，1：微信，2：QQ,3: 邮件，4:微信公众号，5:QQ群
+        '电话联系商家',
+        '微信联系商家',
+        'QQ联系商家',
+        '请发邮件联系商家，完成录取',
+        '微信公众号联系商家',
+        '添加QQ群联系商家'
+      ]
+
+      let title = '职位仅接受在线兼职'
+      let content = '请下载斗米APP进行咨询'
+      console.log('===========', STE);
+      const { id } = STE
+      if (!STE.consulting) {
+        util.showLoading()
+        STE.consulting = await app.getPostContact(id)
+        util.hideLoading()
+      }
+
+      const { consulting } = STE
+      if (consulting && consulting.consulting_info) {
+        title = list[consulting.consulting_display]
+        content = consulting.consulting_info
+      }
+
+      wx.showModal({
+        title,
+        content,
+        confirmText: '确认',
+        cancelText: '取消',
+        success (res) {
+          if (res.confirm) {
+            if (consulting && +consulting.consulting_display === 0) {
+              wx.makePhoneCall({
+                phoneNumber: consulting.consulting_info
+              })
+            }
+          }
+        }
+      })
+    },
+
+    // 手机号授权
+    async bindGetPhoneNumber (e) {
+      // 允许授权后进行多时间多地点选择或者进入极速报名或者报名成功
+      // 拒接授权后进行多时间多地点选择或者进入极速报名
+      const { post_work_times, post_address } = STE.jobBtnStatus
+      const { post_address_list } = post_address
+      const isShowPop = post_work_times.length > 1 || post_address_list.length > 1 // 是否显示多地址弹层
+
+      try {
+        // 同意授权手机号
+        await app.getPhoneNumber(e) // 进行手机号登录或者绑定
+        await this.updateDetailBtn() // 更新按钮状态
+      } catch (err) {
+        // 拒绝授权手机号
+      }
+
+      // const { interview, isInterview ,jobDetail} = STE
+      //判断是否是芝麻职位
+      // if(jobDetail.is_zhima&&jobDetail.is_proto){
+      //   this.$refs.agreementPop.show()
+      //   return
+      // }
+
+      // 工作时间或者工作地点存在多个的时候需要显示弹框进行选择
+      isShowPop ? this.$refs.applyPop.show() : this.generalApplyJob()
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    /**
+     * 极速报名页填完信息要执行的回调
+     * @param {Object} args - 参数
+     */
+    applyCallback (args) {
+      this.postEv({ append: '@ca_from=apply' })
+      return STE.isInterview
+        ? this.fastInterviewApplyJob(args).catch(() => this.$refs.interviewApplyPop.hide())
+        : this.fastGeneralApplyJob(args)
+    },
+
+    /**
+     * 普通帖报名
+     * apply_type 1，黄展贴 直接报名； 非黄展贴展示报名弹层，根据detail/applyinfo接口返回信息展示内容
+     * 原来是用ad_types 表示是不是黄展帖，2018/12/05 修改为apply_type 来表示
+     */
+    __generalApplyJob () {
+      const { applyBtnText, telPhone } = STE
+      const { post_work_times, post_address } = STE.jobBtnStatus
+      const { post_address_list } = post_address
+      let isShowPop = post_work_times.length > 1 || post_address_list.length > 1 // 是否显示多地址弹层
+
+      if (applyBtnText === '取消报名') {
+        this.postEv({ append: '@ca_from=cancel_apply' })
+        wx.showModal({
+          content: '确定取消报名？',
+          confirmText: '确认',
+          cancelText: '取消',
+          success: res => {
+            if (res.confirm) this.__unApply()
+          }
+        })
+      } else if (applyBtnText === '报名') {
+        // console.log('1111----2222')
+        // isShowPop = true
+        // return
+        // 工作时间或者工作地点存在多个的时候需要显示弹框进行选择
+        isShowPop ? this.$refs.applyPop.show() : this.generalApplyJob()
+        this.postEv({ append: '@ca_from=apply_login' })
+      }
+    },
+
+    // 取消报名
+    async __unApply () {
+      const { domain } = app.globalData.cityInfo
+      const { id } = STE
+
+      util.showLoading()
+      await util.getData(`client/unapply/${id}?citydomain=${domain}`)
+      wx.$addCalcelApplyIds(id) // - 添加到已取消报名帖子列表中, 用于在首页列表状态更新
+      await this.updateDetailBtn()
+      util.hideLoading()
+    },
+    // 调起打电话的接口
+    async bindCallPhone () {
+      const { id } = STE
+      console.log('id==', id)
+      const consulting = await app.getPostContact(id)
+      console.log('consulting==', consulting)
+      return;
+      wx.makePhoneCall({
+        phoneNumber: this.data.consultingInfo,
+        // success: () => this.__postEv('@ca_from=call_success')
+      })
+      // this.__postEv('@ca_from=call')
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+  .dm-footbar
+    .dm-btn
+      border-radius 0
+      .dm-icon
+        top -2px
+        margin-right 4px
+    .dm-btn-default
+      flex none
+      box-sizing border-box
+      width 25%
+      color #fa0
+      &::after
+        display none
+    .dm-btn-large
+      height 50px
+      font-size 16px
+      line-height 50px
+  .dm-footbar .dm-btn-default ~ .dm-btn-default, .dm-footbar .dm-btn-primary.dm-active
+    position relative
+  .dm-footbar .dm-btn-default ~ .dm-btn-default::before, .dm-footbar .dm-btn-primary.dm-active::before
+    content ''
+    position absolute
+    top 10px
+    left 0
+    bottom 10px
+    width 1px
+    background-color #e5e5e5
+    transform-origin 0 0
+    transform scale3d(0.5, 1, 1)
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-apply-pop": "./dm-apply-pop",
+      "dm-interview-apply-pop": "./dm-interview-apply-pop",
+      "dm-share-pop": "./dm-share-pop",
+      "dm-agreement-pop": "./dm-agreement-pop"
+    }
+  }
+</script>

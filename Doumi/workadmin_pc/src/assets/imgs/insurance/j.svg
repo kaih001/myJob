@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>警告 icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="400" height="202" rx="2"></rect>
+        <filter x="-3.2%" y="-5.4%" width="106.5%" height="112.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.04 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter2" in2="SourceAlpha" operator="out" result="shadowBlurOuter2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="企业用工保" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="企业用工保_弹窗" transform="translate(-560.000000, -665.000000)">
+            <rect id="Rectangle" fill="#FFFFFF" x="220" y="0" width="1000" height="1143"></rect>
+            <g id="Group-3" transform="translate(301.000000, 596.000000)">
+                <g id="Group-22" transform="translate(52.000000, 69.000000)" fill="#707070" font-family="PingFang-SC-Medium, PingFang SC" font-size="16" font-weight="400" letter-spacing="1.20000005">
+                    <text id="一天一投保，节约成本">
+                        <tspan x="66" y="25">一天一投保，节约成本</tspan>
+                    </text>
+                </g>
+                <g id="Group-4" transform="translate(128.000000, 79.000000)"></g>
+            </g>
+            <rect id="Rectangle-19" fill="#000000" opacity="0.5" x="0" y="0" width="1440" height="1144"></rect>
+            <g id="嵌套表单-dialog" transform="translate(520.000000, 589.000000)">
+                <g id="bg">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#E0E6ED" stroke-width="1" x="0.5" y="0.5" width="399" height="201" rx="2"></rect>
+                </g>
+                <path d="M60,76 C57.2435754,76 54.6474462,76.5208308 52.2115385,77.5624985 C49.7756308,78.6041723 47.6522523,80.0304369 45.8413465,81.8413477 C44.0304394,83.6522523 42.6041717,85.7756308 41.5624997,88.2115385 C40.5208281,90.6474462 40,93.2435754 40,96 C40,98.7564246 40.5208281,101.352554 41.5624997,103.788462 C42.6041717,106.224369 44.0304394,108.347748 45.8413465,110.158654 C47.6522523,111.969561 49.7756308,113.395828 52.2115385,114.4375 C54.6474462,115.479172 57.2435754,116 60,116 C62.7564246,116 65.3525538,115.479172 67.7884615,114.4375 C70.2243692,113.395828 72.3477477,111.969561 74.1586523,110.158654 C75.9695631,108.347748 77.3958277,106.224369 78.4375015,103.788462 C79.4791692,101.352554 80,98.7564246 80,96 C80,93.2435754 79.4791692,90.6474462 78.4375015,88.2115385 C77.3958277,85.7756308 75.9695631,83.6522523 74.1586523,81.8413477 C72.3477477,80.0304369 70.2243692,78.6041723 67.7884615,77.5624985 C65.3525538,76.5208308 62.7564246,76 60,76 L60,76 Z M60,107.346154 C59.3589723,107.346154 58.8141046,107.121797 58.3653846,106.673077 C57.9166646,106.224357 57.6923077,105.679489 57.6923077,105.038462 C57.6923077,104.397434 57.9166646,103.852566 58.3653846,103.403846 C58.8141046,102.955126 59.3589723,102.730769 60,102.730769 C60.6410277,102.730769 61.1858954,102.955126 61.6346154,103.403846 C62.0833354,103.852566 62.3076923,104.397434 62.3076923,105.038462 C62.3076923,105.679489 62.0833354,106.224357 61.6346154,106.673077 C61.1858954,107.121797 60.6410277,107.346154 60,107.346154 L60,107.346154 Z M62.4373997,98.3556448 C62.3657643,99.4549726 61.4177997,100.346154 60.3101608,100.346154 L59.6898392,100.346154 C58.586633,100.346154 57.6342211,99.4547481 57.5626003,98.3556448 L56.7579205,86.006904 C56.7216835,85.4508063 57.1470099,85 57.6970422,85 L62.3029578,85 C62.8578573,85 63.2788427,85.4427304 63.2420795,86.006904 L62.4373997,98.3556448 Z" id="警告-icon" fill="#F5974E"></path>
+            </g>
+        </g>
+    </g>
+</svg>

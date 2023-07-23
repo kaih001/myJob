@@ -1,0 +1,161 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+
+  <!-- 自定义返回头 -->
+  <nav-bar title="{{navBarTitle}}" backShow="{{true}}"></nav-bar>
+
+  <!-- 错误页面 -->
+  <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+
+  <!-- 方便面面试提醒框 -->
+  <dm-interview-pop wx:ref="dmInterviewPop"></dm-interview-pop>
+
+  <!-- 方便面签到调研框 -->
+  <dm-survey-pop wx:ref="dmSurveyPop"></dm-survey-pop>
+  <!-- 授权弹窗组件调用 -->
+  <scroll-view
+    bindscrolltolower="loadMore"
+    lower-threshold="10"
+    scroll-y="{{!isSelect}}"
+    class="dm-page zhuanqu"
+    wx:if="{{!showErrorTemp && show>1}}"
+    scroll-with-animation
+    scroll-top="{{setScrollTop}}"
+    bindscroll="bindScroll"
+  >
+    <view class="prefecture-box">
+      <view class="dm-banner" wx:if="{{options.topic}}">
+        <image
+          class="dm-banner-img"
+          mode="aspectFill"
+          src="{{options.topic}}"
+          style="height:{{imageHeight}}px"
+        />
+      </view>
+
+      <selector
+        wx:if="{{options.category !== 'zhipin' && options.category !== 'funny' && filterConfig}}"
+        config="{{filterConfig}}"
+        doubleDis="{{true}}"
+        isNear="{{isNear}}"
+        bind:select="select"
+        id="selector"
+      ></selector>
+
+      <view class="dm-pannel recommend">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">在线兼职/好玩兼职</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <scroll-view lower-threshold="50">
+            <view class="dm-list">
+              <view
+                class="dm-list-item"
+                wx:for="{{zoneListData}}"
+                wx:key="addr_id"
+                wx:for-item="item"
+                data-id="{{item.id}}"
+                data-ad_type="{{item.ad_types}}"
+                data-ca_kw="{{index}}"
+                data-reqid="{{reqid}}"
+              >
+                <view
+                  class="dm-product-box"
+                  hover-class="dm-touch"
+                  data-index="{{index}}"
+                  data-id="{{item.id}}"
+                  data-type="{{item.job_type}}"
+                  data-label="{{item.operate_label}}"
+                  data-query="id={{item.id}}&jobType={{item.job_type}}&source={{options.source}}&ca_campaign={{options.category}}{{from}}&reqid={{reqid}}"
+                  bindtap="bindItemClick"
+                >
+                  <view class="dm-product-content">
+                    <view class="dm-product-title">{{ item.title }}</view>
+                    <view class="dm-product-price">
+                      <text class="dm-product-price-value">{{
+                        item.salary
+                      }}</text>
+                      <block wx:if="{{item.is_salary_nego != 1}}"
+                        >{{ item.salary_unit_str }}/{{
+                          item.salary_type_str
+                        }}</block
+                      >
+                    </view>
+                  </view>
+                  <view class="dm-product-info">
+                    <view class="dm-product-meta">
+                      <icon class="dm-icon dm-icon-location-sm"></icon
+                      >{{ item.post_area }}
+                    </view>
+                    <view class="dm-product-meta">
+                      <icon class="dm-icon dm-icon-clock-sm"></icon
+                      >{{ item.date }}
+                    </view>
+                  </view>
+                  <view class="dm-product-label">
+                    <view
+                      class="dm-tag dm-tag-icon dm-tag-haowan"
+                      wx:if="{{item.is_funny_work==1}}"
+                    >
+                      <text class="dm-tag-text">好玩兼职</text>
+                    </view>
+                    <view
+                      class="dm-tag dm-tag-icon dm-tag-danbao"
+                      wx:if="{{item.is_wages_guarantee == 1}}"
+                    >
+                      <text class="dm-tag-text">工资保障</text>
+                    </view>
+                    <view class="dm-tag">
+                      <text class="dm-tag-text">{{
+                        item.payment_type_str
+                      }}</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+        <view class="dm-loadmore" wx:if="{{showButtomLoading}}">
+          <icon class="dm-loadmore-icon"></icon>
+          <text class="dm-loadmore-text">正在加载</text>
+        </view>
+        <view class="dm-loadmore" wx:if="{{showNoMore}}">
+          <text class="dm-loadmore-text">没有更多职位啦！</text>
+        </view>
+      </view>
+      <view class="dm-gotop dm-active" bindtap="backTop"></view>
+    </view>
+    <view style="height:{{fillHeight}};width:100%;"></view>
+  </scroll-view>
+  <dialog
+    wx:ref="dialog"
+    closable
+    enable-animation
+    open-type="getPhoneNumber"
+    title="先登录开启快速求职"
+    cancel-text="账户登录"
+    auto-hide="{{false}}"
+    bind:close="bindGoBasic"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack"
+  ></dialog>
+</template>
+
+<script src="./handle.js"></script>
+
+<style src="./prefecture.wxss"></style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "dialog": "../../components/dialog/dialog",
+    "selector": "../../components/selector/selector",
+    "nav-bar": "../../components/navBar/navBar",
+    "dm-survey-pop": "../../components/dm-survey-pop",
+    "dm-interview-pop": "../../components/dm-interview-pop"
+  }
+}
+</script>

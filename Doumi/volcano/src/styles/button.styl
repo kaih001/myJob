@@ -1,0 +1,85 @@
+button
+  border-radius 0
+  &::after
+    border none
+    border-radius 0
+
+.dm-btn-group
+  display flex
+  .dm-btn
+    flex 1
+    max-width 100%
+.dm-btn-ds
+  display inline-block
+  font-size 10px
+  line-height inherit
+  vertical-align middle
+  margin-left 12px
+
+.dm-btn
+  display inline-block
+  position relative
+  box-sizing border-box
+  background-clip padding-box
+  border 0 none
+  border-radius 4px
+  font-size 14px
+  font-weight 400
+  line-height 32px
+  text-align center
+  padding 0
+  cursor pointer
+  background-color transparent
+  &::after
+    content ''
+    position absolute
+    left 0
+    top 0
+    width 200%
+    height 200%
+    border-radius 8px
+    border 1px solid #e5e5e5
+    transform-origin 0 0
+    transform scale(0.5)
+  &.dm-disabled,
+  &[disabled]
+    pointer-events none
+
+.dm-btn-default
+  background-color #fff
+  color #404040
+  &.dm-touch
+    background-color #f5f5f5
+    color #404040
+  &.dm-disabled,
+  &.dm-disabled.dm-touch,
+  &[disabled],
+  &[disabled].dm-touch
+    background-color #e5e5e5
+    color #999
+
+.dm-btn-primary
+  background-color #fc0
+  color #404040
+  &::after
+    display none
+  &.dm-touch
+    background-color #fb0 !important
+    color #404040
+  &.dm-active
+    background-color #fff
+    color #404040
+    &.dm-touch
+      background-color #f5f5f5 !important
+      color #404040
+  &.dm-disabled,
+  &.dm-disabled.dm-touch,
+  &[disabled],
+  &[disabled].dm-touch
+    background-color #e5e5e5
+    color #999
+
+.dm-btn-large
+  width 100%
+  font-size 16px
+  line-height 44px

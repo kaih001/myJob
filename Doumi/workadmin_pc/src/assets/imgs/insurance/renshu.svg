@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>人数限制</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="企业用工保" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-705.000000, -660.000000)">
+            <rect id="Rectangle" fill="#FFFFFF" x="220" y="0" width="1000" height="1143"></rect>
+            <g id="Group-3" transform="translate(301.000000, 596.000000)">
+                <g id="Group-4-Copy" transform="translate(404.000000, 64.000000)">
+                    <g id="Group-25">
+                        <rect id="Rectangle-8" fill="#D8D8D8" opacity="0" x="0" y="0" width="46" height="46"></rect>
+                        <g id="Group-17" transform="translate(3.000000, 2.000000)" stroke="#7A8BD4" stroke-linecap="round" stroke-width="3">
+                            <g id="Group-21">
+                                <path d="M9.23076923,9.80384398 C8.46985566,10.3685066 7.94944881,11.4253334 8.07692308,11.982476 C8.53502574,13.7315739 9.78046375,14.2697777 9.23076923,14.161108 C9.78046375,14.2697777 11.7288844,16.8162218 11.5384615,18.518372 C11.7288844,19.7780164 11.7288844,20.3533505 11.5384615,21.78632 C10.6845905,22.8242511 0.435125818,24.3052241 0,31.5901639 L15,31.5901639 L30,31.5901639 C29.5648742,24.3068146 19.3154095,22.8258416 18.4615385,21.78632 C18.2711156,20.354941 18.2711156,19.7796068 18.4615385,18.518372 C18.2711156,16.8178123 20.2195363,14.2713681 20.7692308,14.161108 C20.2195363,14.2713681 21.4649743,13.7331643 21.9230769,11.982476 C22.0505512,11.4269238 21.5301443,10.3700971 20.7692308,9.80384398 C21.9923062,7.9715625 23.4670634,0.28313597 15,0 C15.044621,0.000791556141 15.0075403,0.00172672104 15,0 C6.53293658,0.281545543 8.0076938,7.96997207 9.23076923,9.80384398 Z" id="Layer-4" fill="#FFFFFF" stroke-linejoin="round"></path>
+                                <g id="Group-66" transform="translate(15.333333, 16.131148)">
+                                    <ellipse id="Oval-13" fill="#FFFFFF" stroke-linejoin="round" cx="12.3333333" cy="12.4344262" rx="12.3333333" ry="12.4344262"></ellipse>
+                                    <polyline id="Path-3" transform="translate(12.268939, 10.286222) scale(1, -1) translate(-12.268939, -10.286222) " points="8.33333333 8.63831052 12.2621212 11.9341335 16.2045455 8.70769906"></polyline>
+                                    <path d="M12.3393939,17.8834895 L12.3393939,10.0819672" id="Path-10"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,43 @@
+// radio未选中时样式
+radio .wx-radio-input
+  width 32rpx
+  height 32rpx
+  background none
+  border-radius 50%
+  box-sizing border-box
+  // 选中后的 背景样式 （红色背景 无边框 可根据UI需求自己修改
+  &.wx-radio-input-checked
+    background-color #fc0 !important
+    border-color #fc0 !important
+    overflow hidden
+    box-sizing border-box
+    // 选中后的 对勾样式 （白色对勾 可根据UI需求自己修改
+    &::before {}
+
+.dm-radio-label
+  display flex
+  align-items center
+  line-height 32rpx
+  .dm-radio-input
+    margin-right 4px
+  .dm-radio-text
+    flex 1
+    color #808080
+.dm-radio-group
+  overflow hidden
+  .dm-radio-label
+    float left
+    margin-right 12px
+.dm-radio-vertical
+  .dm-radio-label
+    float none
+    margin-right 0
+    margin-top 12px
+.dm-radio-flip
+  flex-direction row-reverse
+  .dm-radio-input
+    margin-left 4px
+    margin-right 0
+.dm-cell
+  .dm-radio-label
+    width 32%

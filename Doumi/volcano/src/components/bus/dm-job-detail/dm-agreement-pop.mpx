@@ -1,0 +1,161 @@
+<template>
+  <view class="dm-agreement-mask" wx:class="{{ {mask:open} }}" catchtap="closeMask"></view>
+  <view class="dm-agreement-wrapper" wx:class="{{ {open:open} }}">
+    <view class="header">
+      <view class="title">
+        <!-- <text class="title-text">快速</text>
+        创建简历 -->
+      </view>
+      <view class="close-icon" catchtap="closeMask"></view>
+    </view>
+    <!-- <view class="remark">简历的完善度影响您的高薪机会哦</view> -->
+    <view class="agreement-warapper">
+      <!-- <view class="agreement-title">斗米智能简历服务</view> -->
+      <view class="agreement-check"><text class="check-box" wx:class="{{ {'check-box-bg' :isSelected  } }}" catchtap="handleCheckbox"></text> 我已阅读并同意 <text class="agreement-text" catchtap="goAgreement">《斗米报名协议》</text> </view>
+      <view class="agreement-agree-btn" catchtap="handleRegister">立即报名</view>
+      <view class="tips">安全提示：兼职过程请拒绝向商家缴纳任何费用</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+createComponent({
+  options: {},
+
+  data: {
+    open: false,
+    isSelected:false
+  },
+
+  computed: {},
+
+  methods: {
+    show () {
+      this.open = true
+      this.triggerEvent('open')
+    },
+    closeMask () {
+      this.open = false
+      this.triggerEvent('cancel')
+    },
+    goAgreement () {
+      wx.navigateTo({
+        url:'/pages/zhima/zhimaAgreement'
+      })
+    },
+    handleRegister(){
+      if(!this.isSelected){
+        wx.showToast({ title: '请勾选协议后报名', icon: "none" })
+        return
+      }
+      this.open = false
+      this.triggerEvent('register')
+    },
+    handleCheckbox(){
+      this.isSelected=!this.isSelected
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+  .dm-agreement-mask
+    width 100%
+    height 100%
+    position fixed
+    top 0
+    left 0
+    bottom 0
+    right 0
+    background #000
+    opacity 0.2
+    color #ffffff
+    z-index 1000
+    display none
+  .dm-agreement-wrapper
+    width 100%
+    height 332rpx
+    overflow hidden
+    position fixed
+    bottom 0
+    left 0
+    z-index 2000
+    background #ffffff
+    padding-top 40rpx
+    border-radius 20rpx 20rpx 0 0
+    display none
+    .header
+      display flex
+      align-items center
+      justify-content space-between
+      padding 0 20rpx
+      .title
+        font-size 42rpx
+        line-height 32rpx
+        color #000000
+        font-weight bold
+        .title-text
+          color #F02529
+      .close-icon
+        width 50rpx
+        height 50rpx
+        background url('../../../assets/icon/icon_agreement_close.png') no-repeat
+        background-size cover
+    .remark
+      font-size 24rpx
+      color #939393
+      margin-top 10rpx
+      padding 0 20rpx
+    .agreement-warapper
+      width 620rpx
+      height 272rpx
+      margin 20rpx auto 0
+      // background linear-gradient(123deg, #FFF9DB 12%, #FCE571 81%)
+      // display flex
+      // flex-direction column
+      // align-items center
+      border-radius 16rpx
+      .agreement-title
+        color #000000
+        font-size 36rpx
+        font-weight 500
+        line-height 32rpx
+        margin-top 44rpx
+      .agreement-check
+        margin-top 14rpx
+        color #3D3D3D
+        font-size 28rpx
+        display flex
+        align-items center
+        .check-box
+          display inline-block
+          width 20rpx
+          height 20rpx
+          border 1rpx solid #dddddd
+          margin-right 10rpx
+        .check-box-bg
+          background #fc0
+        .agreement-text
+          color #307AFF
+      .agreement-agree-btn
+        width 100%
+        height 76rpx
+        border-radius 8rpx
+        background #fc0
+        text-align center
+        line-height 76rpx
+        font-size 32rpx
+        color #ffffff
+        margin-top 20rpx
+      .tips
+        margin-top 20rpx
+
+  .mask
+    display block
+    animation fadeInAgreement 0.2s
+  .open
+    display block
+    animation slidedown 0.3s
+</style>

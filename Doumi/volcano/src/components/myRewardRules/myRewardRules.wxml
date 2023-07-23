@@ -1,0 +1,9 @@
+<view class='rewardRules' hidden="{{isShow}}">
+  <view class='title'>活动规则</view>
+  <view class='content'>
+    <view class='text' wx:for="{{ content }}" wx:key="index">{{ item }}</view>
+  </view>
+  <view class='btn'>
+    <image bindtap='close' src='../../assets/image/btnClose.png' mode="widthFix"></image>
+  </view>
+</view>

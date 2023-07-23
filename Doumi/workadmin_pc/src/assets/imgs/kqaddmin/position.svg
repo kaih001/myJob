@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="86px" height="73px" viewBox="0 0 86 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>打卡位置</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="-7.07396842%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFC100" offset="0%"></stop>
+            <stop stop-color="#FF8900" offset="100%"></stop>
+        </linearGradient>
+        <path d="M7.07487947,21.2790453 C2.93805206,19.6984335 0,15.6923262 0,11 C0,4.92486775 4.92486775,0 11,0 C17.0751322,0 22,4.92486775 22,11 C22,16.0163381 18.6421855,20.2484166 14.0515838,21.5712082 C13.9958925,21.6189474 13.8972968,21.6701717 13.75,21.725 C12.265,22.277762 11.3661156,23.5992093 11.0533469,25.689342 L10.745712,25.6433073 C10.7498421,25.6157071 10.7478067,25.5875346 10.7397522,25.5608147 C10.0129811,23.1498413 8.90806369,21.7795697 7.425,21.45 C7.14025472,21.3867233 7.03750691,21.3294522 7.07487947,21.2790453 Z" id="path-2"></path>
+        <filter x="-13.6%" y="-11.4%" width="127.3%" height="122.7%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.675116922   0 0 0 0 0.600854915   0 0 0 0 0.507842746  0 0 0 0.335795969 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M3.9956548,26.5311207 C1.78891559,26.5311207 0,24.7445867 0,22.5433841 L0,4.0737236 C0,1.8713575 1.78890465,0.0859870156 3.9956548,0.0859870156 L60.0043452,0 C62.2110844,0 64,1.786534 64,3.98773659 L64,22.4573971 C64,24.6597632 62.2110954,26.4451337 60.0043452,26.4451337 L35.6068396,26.4451337 L32.7247651,29.6860403 C32.3560144,30.1007021 31.7544327,30.0965203 31.3894009,29.6860403 L28.5073264,26.4451337 L3.9956548,26.5311207 Z" id="path-4"></path>
+        <filter x="-25.8%" y="-55.0%" width="151.6%" height="210.0%" filterUnits="objectBoundingBox" id="filter-6">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Artboard-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-306.000000, -401.000000)">
+        <g id="Group-4" transform="translate(317.000000, 412.000000)">
+            <g id="Pin" transform="translate(21.000000, 34.000000)">
+                <ellipse id="Oval-6" fill-opacity="0.142181839" fill="#000000" cx="10.5" cy="25.5" rx="4.5" ry="1.5"></ellipse>
+                <g id="Oval">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                </g>
+                <circle id="Oval-2" fill="#FFFFFF" cx="11.1" cy="11.1" r="3.5"></circle>
+            </g>
+            <g id="Group-Copy-3">
+                <g id="Rectangle-6">
+                    <g id="Rectangle-6-Copy-2">
+                        <g id="Group">
+                            <mask id="mask-5" fill="white">
+                                <use xlink:href="#path-4"></use>
+                            </mask>
+                            <g id="Combined-Shape">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-4"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                                <path stroke-opacity="0.243829257" stroke="#979797" stroke-width="0.5" d="M3.99522217,26.2811207 L28.5064494,26.1951352 L28.6941424,26.2790019 L31.5762169,29.5199085 C31.8432574,29.8201967 32.2700891,29.8211183 32.5379491,29.5199085 L35.4200236,26.2790019 L35.6068396,26.1951337 L60.0043452,26.1951337 C62.0731312,26.1951337 63.75,24.5215847 63.75,22.4573971 L63.75,3.98773659 C63.75,1.92430318 62.0727103,0.25 60.004729,0.249999705 L3.9956548,0.335987016 C1.92686883,0.335987016 0.25,2.00953595 0.25,4.0737236 L0.25,22.5433841 C0.25,24.606674 1.92705642,26.2808878 3.99522328,26.2811207 Z"></path>
+                            </g>
+                            <text id="打卡位置" mask="url(#mask-5)" font-family="PingFangSC-Medium, PingFang SC" font-size="12" font-weight="400" fill="#666666">
+                                <tspan x="8" y="18">打卡位置</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,613 @@
+  /*覆盖组件原样式*/
+  html,body{
+    font-family: PingFang SC;
+  }
+  .el-message-box__wrapper .el-message-box__content {
+    padding: 27px 20px 30px 20px;
+  }
+  .el-message-box__wrapper .el-message-box__content .el-message-box__message p{
+    color: red;
+  }
+  #PayListDetail .el-table {
+    margin-bottom: 45px;
+  }
+ #PayListDetail .kq-wapper h2{
+  font-size: 13px;
+  text-align: left;
+  color: #8492a6;
+
+  padding-bottom: 0;
+  font-style: normal;
+  margin-bottom: 0;
+}
+ #PayListDetail .kq-wapper .kq-header{position: relative;}
+ #PayListDetail .kq-wapper .kq-header .kq-export{
+  position: absolute;
+  right: 0px;
+  top: 15px;
+  z-index:999;
+}
+ #PayListDetail .kq-wapper .kq-header .kq-export h3{
+  font-size: 13px;
+  color: #6699ee;
+  cursor: pointer;
+}
+ #PayListDetail .kq-tab .from-item-list{
+  float: left;
+  margin-right: 15px;
+}
+ #PayListDetail .kq-tab .no-margin-right{margin-right: 0}
+ #PayListDetail .kq-tab .kq-seach-form{overflow: hidden;margin-bottom: 8px;}
+ #PayListDetail .unn .className{color: #ff6600}
+ #PayListDetail .kq-wapper .pp .cell{color: #ff6600}
+ #PayListDetail .kq-wapper .tt{color: #6699ee}
+ #PayListDetail .kq-select-div{margin-top: 16px;width: 320px;}
+  .clear{
+    clear:both;
+  }
+ 
+
+ #PayListDetail .operationInfo{
+  color: #5e6d82;
+  font-size: 12px;
+}
+ #PayListDetail .yf-payrolllist .el-input__inner{
+  width: 70px;
+  height: 28px;
+  text-align: center;
+}
+ #PayListDetail .yf-payrolllist .beizhuinput .el-input__inner{
+  width: 95px;
+  text-align: left;
+}
+ #PayListDetail .payroll-scope {
+    width: 100%;
+    border-top: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+ #PayListDetail .payroll-scope .acombined {
+    flex-grow: 1;
+    padding-right: 25px;
+}
+ #PayListDetail .payroll-scope .payroll-scoperight{
+    width: 112px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition:all .5s;
+}
+
+ #PayListDetail .payroll-scope .save {
+    border-left: 1px solid #e0e6ed;
+    color: #8492a6;
+}
+ #PayListDetail .payroll-scope .submit{
+    color:#fff;
+    background-color: #6699ee;
+}
+#PayListDetail .payroll-scope .submit p{
+  font-size: 14px;
+}
+#PayListDetail .payroll-scope .save:hover{
+  color: #6699ee;
+}
+#PayListDetail .payroll-scope .save:active{
+  color: #517ed6;
+}
+#PayListDetail .payroll-scope .save>p,#createeditpayroll .payroll-scope .submit>p{
+  font-size: 14px
+}
+#PayListDetail .payroll-scope .submit{
+    color:#fff;
+    background-color: #6699ee;
+}
+#PayListDetail .payroll-scope .submit:hover{
+    background-color: #8bb1f2;
+}
+#PayListDetail .payroll-scope .submit:active{
+    background-color: #517ed6;
+}
+ #PayListDetail .falst-acombined {
+    font-size: 12px;
+    color: #8492a6;
+    display: flex;
+    justify-content: flex-end;
+    height: 38px;
+    line-height: 38px;
+}
+ #PayListDetail .falst-acombined span{
+  font-size: 16px;
+  color:#f5974e
+}
+ #PayListDetail .falst-acombined .first-acombinedspan{
+  margin-right: 16px;
+}
+ #PayListDetail .secend-acombined{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
+    color: #99a9bf;
+}
+ #PayListDetail .secend-acombined .secend-acombinedspan{
+  position: relative;
+  margin-right: 25px;
+
+}
+ #PayListDetail .secend-acombined .secend-acombinedspan:after{
+  position: absolute;
+  top: 0;
+  right: -11px;
+  content: '';
+  display: block;
+  width: 1px;
+  height: 10px;
+  background-color: #c0ccda;
+  
+}
+
+ #PayListDetail .el-table__body, .el-table__footer, .el-table__header{
+  text-align: center;
+}
+ #PayListDetail .el-table .el-table_1_column_2.tablefirst .cell{
+  text-align: left;
+}
+ #PayListDetail .el-icon-star-on:before{
+  font-size: 17px;
+  color: #ddd;
+  cursor: pointer;
+}
+ #PayListDetail .selected-star:before{
+  color:#ffaa00;
+}
+ #PayListDetail .alertevaluation .starparent{
+  height: 30px;
+}
+ #PayListDetail .evaluation-div{
+  width: 149px;
+ }
+ #PayListDetail .evaluation-div .el-icon-star-on{
+  vertical-align: middle;    
+  margin-right: 6px;
+}
+
+ #PayListDetail .alertevaluation .el-icon-star-on{
+  margin-right: 15px;
+}
+ #PayListDetail .alertevaluation .evaluation-info{
+  width: 100%;
+  height: 17px;
+  line-height: 17px;
+  font-size: 12px;
+  color: #99a9bf;
+  padding-bottom: 28px;
+}
+ #PayListDetail .alertevaluation .evaluation-tag{
+  display: flex;
+  flex-wrap:wrap;
+  justify-content:space-between
+
+}
+ #PayListDetail .alertevaluation .evaluation-tag li{
+  width: 78px;
+  height: 24px;
+  font-size: 12px;
+  line-height:26px;
+  text-align: center;
+  color: #5e6d82;
+  border: solid 1px #e0e6ed;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+ #PayListDetail .textarealength{
+  font-size: 12px;
+  color: #99a9bf;
+  text-align: right;;
+    line-height: 12px;
+    margin-top: 5px;
+}
+
+#createeditpayroll .kq-wapper .alertevaluation textarea{
+  height: 76px;
+}
+ #PayListDetail .alertevaluation .evaluation-tag .selecttag{
+  color: #f5974e;
+  background-color: rgba(245, 151, 78, 0.05);
+  border: solid 1px #f5974e;
+}
+ #PayListDetail .payrolltitle{
+  font-size: 16px;
+  font-weight: 500;
+  color: #475568;
+  font-style: normal;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+
+ #PayListDetail #selectgroup .groupico:before{
+  display: inline-block;
+  content: '';
+  width: 15px;
+  height: 13px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAnCAYAAACbgcH8AAAAAXNSR0IArs4c6QAAAQ5JREFUWAntmL8KwkAMxi9HF8Fduomrb+GDiKCD6OLm5u4bOErrc2m34hOIizHxz1YytGlpIFkOLr2v3/3IcUcg/AIRYZvfVjQsQ8ApYhj+c03G02ICTdZXrU14cpcX6SYrLmR0RoarvuvVXGTCzxeSYSTDNiL5lgQTthNEmmvYVkQ+dLYsu1sn4AScQF0CsD5f+39v8+4ASnrEZKPB+PB5e9TdcafrEFOiu78/ikCXi60g43NzpgMRt2eaCsNNd3U6nLSTFgh4eQhwVFNOWhWnIOakBTiqKSetilMQc9ICHNWUk1bFKYg5aQGOaipyP0FVsW0x8hu5AdL2fzT12W/kjg0AHHtPnDtM5JP9vgHgMjyE387adgAAAABJRU5ErkJggg==) no-repeat;
+  background-size: 100% 100%;
+  margin-right: 5px;
+}
+ #PayListDetail #selectgroup .personalico:before{
+  display: inline-block;
+  content: '';
+  width: 15px;
+  height: 13px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAnCAYAAACbgcH8AAAAAXNSR0IArs4c6QAAAQ5JREFUWAntmL8KwkAMxi9HF8Fduomrb+GDiKCD6OLm5u4bOErrc2m34hOIizHxz1YytGlpIFkOLr2v3/3IcUcg/AIRYZvfVjQsQ8ApYhj+c03G02ICTdZXrU14cpcX6SYrLmR0RoarvuvVXGTCzxeSYSTDNiL5lgQTthNEmmvYVkQ+dLYsu1sn4AScQF0CsD5f+39v8+4ASnrEZKPB+PB5e9TdcafrEFOiu78/ikCXi60g43NzpgMRt2eaCsNNd3U6nLSTFgh4eQhwVFNOWhWnIOakBTiqKSetilMQc9ICHNWUk1bFKYg5aQGOaipyP0FVsW0x8hu5AdL2fzT12W/kjg0AHHtPnDtM5JP9vgHgMjyE387adgAAAABJRU5ErkJggg==) no-repeat;
+  background-size: 100% 100%;
+  margin-right: 5px;
+}
+
+ #PayListDetail .fl{
+  float: left;
+}
+ #PayListDetail .fr{
+  float: right;
+}
+ #PayListDetail .clearfix:after{
+  content: '';
+  display: block;
+  clear: both;
+}
+#PayListDetail .headertitle h3{
+  font-size: 13px;
+  color: #6699ee;
+  cursor: pointer;
+}
+#PayListDetail .headertitle{
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+ #PayListDetail .frfirst{
+  margin-right: 18px;
+}
+ #PayListDetail .kq-tab{
+  margin-top: 40px;
+ }
+ #PayListDetail .kq-tab h2{
+  font-size: 14px;
+  color: #475568;
+  margin-bottom: 8px;
+}
+ #PayListDetail .kq-tab .labletitel{
+  margin-top: 17px;
+ }
+ #PayListDetail .kq-tab .labletitel em{  
+  display: inline-block;
+  font-size: 12px;
+  color: #8492a6;
+  width: 80px;
+ }
+ #PayListDetail .kq-tab .statusinfo {
+  font-size: 13px;
+  color: #1f2d3d;
+ }
+ #PayListDetail .combined_pay{
+  cursor: pointer;
+}
+ #PayListDetail .combined_pay .moneylabe {
+    color: #99a9bf;
+    font-size: 12px;
+}
+ #PayListDetail .combined_pay .money{
+  font-size: 22px;
+  color: #f5974e;
+  font-weight: bold;
+}
+
+ #PayListDetail .combined_pay .money i{
+  font-size: 20px;
+ }
+ #PayListDetail .combined_pay .el-icon-caret-bottom:before{
+  opacity: 0.3;
+  color: #858c9e;
+}
+.payListDrop.el-dropdown-menu{
+  position: absolute;
+  top: 25px;
+  left: -85px;
+  padding-top: 16px;
+  padding-bottom: 13px;
+  border-color: #edf1f7;
+  box-shadow:0 0 5px 1px #edf1f7;
+  transition:opacity .5s;
+}
+.payListDrop.el-dropdown-menu .el-dropdown-menu__item{
+  width: 156px;
+  font-size: 14px;
+  color: #8492a6;
+  height: 20px;
+  line-height: 20px;
+  padding:0 20px;
+  margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+.payListDrop.el-dropdown-menu .el-dropdown-menu__item:hover{
+  background: #fff;
+}
+.payListDrop.el-dropdown-menu .el-dropdown-menu__item span{
+  display: inline-block;
+  font-size: 14px;
+  color: #8492a6;
+}
+.payListDrop.el-dropdown-menu .el-dropdown-menu__item .labler{
+  text-align: right;
+}
+.payListDrop.el-dropdown-menu .el-dropdown-menu__item .lablel{
+  text-align: left;
+}
+ #PayListDetail .operation-record{
+  position: relative;
+  padding:0 0 25px 20px;
+}
+#PayListDetail .operation-record:last-child{
+  padding-bottom: 0;
+}
+ #PayListDetail .operation-record .left-time{
+  width: 74px;
+  font-size: 12px;
+  color: #8492a6;
+  margin-right: 30px;
+  line-height: 16px;
+}
+#PayListDetail .operation-record .left-time p{
+  font-weight: bold;
+  color: #8492a6;
+}
+ #PayListDetail .operation-record .left-time span{
+  opacity: 0.7;
+  margin-top: 5px;
+  display: block;
+}
+
+ #PayListDetail .operation-record .right-info .operation-status{
+  font-size: 13px;
+  color: #1f2d3d;
+} 
+ #PayListDetail .operation-record .right-info .operation-des span{
+  color:#1f2d3d;
+} 
+ #PayListDetail .operation-record .right-info .operation-des{
+  font-size:12px;
+  color:#8492a6;
+  margin-top: 8px;
+} 
+ #PayListDetail .kq-count-day{
+  margin-top: 25px;
+}
+ #PayListDetail .recordfirst{
+  margin-top: 25px;
+
+}
+ #PayListDetail .operation-recordsSatr:before{
+    position: absolute;
+    content: '';
+    display: block;
+    top: -48px;
+    left: 5px;
+    width: 2px;
+    height: 47px;
+    background: #e0e6ed;
+
+}
+ #PayListDetail .action_idstatus{
+  position: absolute;
+  top:-2px;
+  left: -2px;
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+ #PayListDetail .action_id1{
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAqxJREFUWAnFVztrVEEU/s7Nsiten4WoQWy0SpFGApYKEkVBsLDyF2iZVrAw2G6pv8DKIiAIIoKWgWCTQCptJGwUC19Z8a4bxvONd5bN7r2zZ19mYPdy5zy+b86cOfeMwDicc9VmG5dlFzcdMAfBrACzNNf3hv419H3TzeB5WsEbEWlZXKtNfOw4d0oyPHCCOwpyJK6dSwU/xOGpq+HhIZFPMZtSArri2q8W7qvxknNIY07KZCJoqqx+sIpHGpGsSK+QgF91CysKfLHIaNg5JbLqqrhVFI0+Alnm5tsOL3RfzwwLFNNXoK2K4HqtJhvdensI5Pu9NmnwAEgSmhcL3ZFIgpB7rnm7Mi1w4tC3x1CsgNshwISb1J4H50VPYuTJ7cV+C/Kkez9qthcBxeZ4OjQpz3MrfAT8OR/xqMWAymRcKDEpF1/hWvhiLjJqtPbtFd59f43P2UePcbJ2FheOXsHCsUX/bvrTYpVWcUJ2/rir2MVLi9HP9lc8267jQ3O9UP1cOo/bp5dwuHK8UN43OYNrCWt7n6BkIgZOExKjjnUQO9GjMWcxYNjLVt5tTx3qWgaxE37VLMrcc+sw6yp2oufQRCAknIWEVZfYnUJkcTxpHd0CxxxoWBzzqFnHELrbCTsZi2Oec+sw6yo2c2DT4phFhud80KCOtSARO2EPN8hpkLPIxEiEQhT0Bz2Jvf+lmCybv91jTca7gxhPUq7hf5IekHv6BPb9c5y3SPYiPn4o6qEt8xGgv7wNfzvtrogdsrbpl0Kb3qmEnGDrrIy2xl9gsQf69hhdd4QOAZowLNo635gGCfpkWx5CHyjuIcBJ7dvX2TozVEFp3Ke/mKjP3jsB/fYR4CRZ/tsnLLOB5Nwog7b6W6av3pUHfxqZ+MgvK///ctpLyzevU7ie/wUm5h9uFguLgAAAAABJRU5ErkJggg==') no-repeat;
+  background-size: 100% 100%;
+}
+ #PayListDetail .action_id3{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA8pJREFUWAnFV01IVUEU/ub29L7U1AKppKVQBAlpQYsobaf9EwXWppW1cdOmIChSglZt3FSrNhEEUVm2KdKihVEaJEiBy9BCKLOsd5+vN50z9819c+fd+56i6YHHzJ0z831n5pw5c57APEVKWT7roVUge0hCbKVl9YJ+vFwCE9RMCMgxCaev0sWAECLNulJCGMXll5QbhJe9RKSnIGV18dk5rRAzZMwd6TrdVUJ8KbYm1gDasfs7lb0IIc5Rv7IYSJyOTmGWjL5ekXSuUt+LmhdpgNp1Sj6QkLuiFi10TEAMyaQ4GnUaBQZ4nmzMZGU/kW+yiZwf37Hq0wj9PsD59hXi57SaItfUIrtuPf5ubqRfE7I1a+2lICM+JxzR7rpi1FSGDMjt/K1N7sxMo2zgIRIjryjiKOSKiRDINO3BXOsRZKtrQzPZCDqJneZJBAb4PpeD9rEnPr6He/8W4KVCYCU/3CS8Y53IbNkemsruqEiKFh0TjtZywNnkZUPP4N7tXTg5g5LBvLbszXNNoVrmUMGdG1Un4F81OW5Gu9o5k5c68hB8xAe5xOvoCp0E3w7pigZ2hToBdc+Nq8Y+V8e+WHK2hzAYizG18EaZk78d+ihXSUZrqeWAW7DPjfUFXXKHwjQUzMncDqdXsjLIcHzVVLQbk0PdtuNAy/7QkPqo2wh0ngeqagp1NMKYjB0IcTK3w7k9GKQO3/NYv+87CLQeANpPhI1g8rMXgAZ6Is5QW1ZuQvp9coXCNjTM7eQelmCYk0ysjL4DcsknMEKTUzJSMvwamIt+h2xs5uYgVC+aJuUMFytTk8CNa2Ejui4DmvzpPWCwP3Z5BHY9uSBsgE6vsSi2EcnV/tQS5DzJxmbuIBHFEv5HBSV1STGgiomAhh+WomL7PPXHn24HZgRIBPYknwBXM4HwqxYrNjkfe++VcExEXdEcYAT2BMWAHDMJ+UmNlW07CgPOjonm3dHXkEBtbOYmFzh9JiG/51QFmUP5/ovHwMATwA44bcQ47eUm3ZKoa0iYCjuPRrWk0yc4Hc56csrMhu6j20gMvzSmLr6bad4L7/DpPBDVjZWuqHPoZUpzAZnX0AaomAC950smhKUwDUDmZG51Dbl65SdS67mS4WIi1hV64nxafo4Jy6yO/OfY6eblygBVIlH1auJxJZNu61icEUSebj8ZqgUUB3HpsiyINooFKsOXvyQLDGDLVrQo1ce/omW5NmI5/5ioINTEuuUAUaUz0GPeDq2fb8trycc9jKWDzl4bigFbyd9+xbwCf05tY/yMufR/z/8BALbrG+igOpYAAAAASUVORK5CYII=) no-repeat;
+  background-size: 100% 100%;
+}
+ #PayListDetail .action_id2{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABFxJREFUWAnFV1toXFUUXec6yU2aSSLTNublhyZNsUgtVK3QH6UK2oJQtFCpXwpWio/ij4JQsCUQQYsIShHxwxJQgxSK7Uer6Ee1Vq0Wi9HiM5omaY1pk8zYTB73uNeZubfnnnlk0kqzYbjnsfda+5679z57FCoUrXV1Jot7FIIHNdQqMWtV8qO5BobkMaSg+zW8g3U+PlVKTXNvPhGM8pLWulllg11Cug1aN5TXzu8qNSHO9Grf251UaqScTUkH5I39f6eCF6HUczKuKwdSak9OISNO711S43XLOFtMr6gD5q2n9AENfVcxo4WuKagvdY3aXOw0ChzIZvXq2UAfEvJ2l2hi5h/0Z07gTPokxmZGMDE7ZlQaEimkqpqxMrkWq+rWoaFqqWsKcWIw4amNvq9O25sxB/Jv/rVLPilEH4++h5Pjn0jABbZ9wVjBw9rGDbh32VbUi2O20Ak5iTvsk4gcyH1z/Zl77D+mv0Lf8GvIBpdsrHnHvleLLS07cUvyzpguP8eSGnV3GBNeuMuAc8m/uPARes/2LJicmHSYtscvHAopzJMcJrjzq+YEcqmmf7GjnW9OADGIASx0Im+MbW0vxE6C2aF91clPYU7A5LmVavzmPParJaezxCAWMUPhi5KTc08m1abIhLvyZMAt9Jtb5mBWPNXRjbbam80ysYhpCznJ7bG82hWOqcZov1JZ7rdi54qX0Zm8FQ+3bY9giEnsSKSqkttjbY8WZcA8ny/VbH173F7bgWc7e5CqbsK4kO0feDXaJiaxbSG3l79YonUWmSuRFcnVeFqOPZloxKW5DPb99pIUq/MxKBeb3AxCc6OFmqxwpYQkjGpX1jSux/abdsG/rhYzwTTe/r0bw1MDrpqpns5ia0LgWu1EC8uro4hHbnwG61IbcGbyFPb/uRfp2XGjsn7pA3io7Ql4ykOg5/DuwCv4NfODa27mLja5o0JU1MJa/GnyW4lVjZX1a/B81+voSt6G+2/Yii3tTxpyqvYN7sPpifh3tiAKhvLiOpFvJrrCXabQ6DT7i7h8d/EYllW3YFPLo6ivuh47OnbHFA6P9OL42JHYmjshtiPDPIEYG2+1UnL0fB9OjBWm6LHRwzhy7oNSZtF6EewhSUPdH2nIgFdqOXn/rzfwc/r7SOXUxc/x4dm3onm5gYtNbklD76BtxPucV2opCTCHd/7owbmpQeMIA7KSkk1MYttCbsVymMnqv+1qeGDkTXwzftTWLRinqpqQmZusuGTf3ngfNjfvuIwjfWOdr5Z7cjNNs4G8vAPTTPA+LycsMpXeF8Rig2ILOcltzprdK6/IUIGdDJuJYkUn1Kn0SQxi2d1R7jr2TBoZB0yLJN2rDcpOZmPTY1flBMk3NT0e6wUMh3CFbVlUVyUWpA2/9i1Z5AA9W9SmNDz+RW3LQyeu5R+TohWHAWJaZ2CPnR2hg5U+aSvfeA+xwqBzbWMx4G5ynuuYF+HPqetMrmL+/3/P/wOz/ClA78nPSAAAAABJRU5ErkJggg==) no-repeat;
+  background-size: 100% 100%;
+}
+ #PayListDetail .kq-wapper h2>span{
+  cursor: pointer;
+  font-size: 13px;
+  color: #6699ee;
+  padding-bottom: 0;
+  font-style: normal;
+  margin-bottom: 0;
+}
+ #PayListDetail .toauditico_svg{
+  display: inline-block;
+  width: 12px;
+  height: 15px;
+  margin-left: 6px;
+  background:url(../../assets/imgs/payListDetail/toAudit.svg) no-repeat;    
+  background-size: 12px;
+  vertical-align: middle;
+
+}
+ #PayListDetail .failureico_svg{
+  display: inline-block;
+  width: 12px;
+  height: 15px;
+  margin-left: 6px;
+  background:url(../../assets/imgs/payListDetail/failure.svg) no-repeat;
+  background-size: 12px;
+  vertical-align: middle;
+
+}
+ #PayListDetail .throughico_svg{
+  display: inline-block;
+  width: 12px;
+  height: 15px;
+  margin-left: 6px;
+  background:url(../../assets/imgs/payListDetail/through.svg) no-repeat;
+  background-size: 12px;
+  vertical-align: middle;
+
+}
+ #PayListDetail .thedraftico_svg{
+  display: inline-block;
+  width: 12px;
+  height: 15px;
+  margin-left: 6px;
+  background:url(../../assets/imgs/payListDetail/theDraft.svg) no-repeat;
+  background-size: 12px;
+  vertical-align: middle;
+
+}
+ #PayListDetail .fixedbar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    border-top: 1px solid #e0e6ed;
+    z-index: 98;
+}
+.clickSjBtn{
+  transition: all .2s;
+}
+.transformR{
+  transform:rotate(180deg);
+  -ms-transform:rotate(180deg);   /* IE 9 */
+  -moz-transform:rotate(180deg);  /* Firefox */
+  -webkit-transform:rotate(180deg);
+}
+.transformL{
+  transform:rotate(0deg);
+  -ms-transform:rotate(0deg);   /* IE 9 */
+  -moz-transform:rotate(0deg);  /* Firefox */
+  -webkit-transform:rotate(0deg);
+}
+    .setPayroll_save.el-button--primary:active{
+        background-color: #6699ee;
+    }
+.main #PayListDetail .kq-wapper{
+  overflow-y: scroll;
+  padding: 16px 20px 100px;
+}
+#PayListDetail .checkconfirm .el-dialog--tiny{
+  width: 400px;
+}
+#PayListDetail .checkconfirm .el-dialog__header{
+    padding: 24px 20px 0;
+}
+#PayListDetail .checkconfirm  .el-dialog__body{
+  padding: 30px 40px;
+}
+.alertjected .el-dialog__body{
+  border-bottom:1px solid #e0e6ed
+  
+}
+#PayListDetail .checkconfirm .el-form-item__content{
+  width: 246px;
+}
+#PayListDetail .checkconfirm  .el-form-item{
+  margin-bottom: 0;
+}
+#PayListDetail .checkconfirm  .el-dialog__footer{
+  padding: 16px 20px;
+}
+#PayListDetail .el-dialog__headerbtn .el-dialog__close{
+  font-size: 14px;
+}
+#PayListDetail .el-textarea__inner:focus{
+  border-color: #6699EE
+}
+#PayListDetail .el-dialog__body span{
+  font-size: 14px;
+  color: #5e6d82;
+  line-height: 20px;
+}
+#PayListDetail .el-table--border td{
+  border-right: 0;
+}
+#PayListDetail .headertitle h3:active{
+  color: #517ed6;
+}
+#PayListDetail .kq-count-day .el-table__row td:hover{
+  cursor: default !important;
+}
+.cssHeight{
+  opacity: 0;
+}
+#PayListDetail .operation_pay{
+  font-size: 12px;
+  color: #6699ee;
+  cursor: pointer;
+}
+#PayListDetail .operation_pay:active{
+  color: #517ed6;
+}
+
+.protocol-dialog .el-dialog__body{padding: 24px 20px;}
+#PayListDetail .yf-payrolllist .remark_input{
+  width: 100%;
+  text-align: left;
+}
+#PayListDetail .signerr-sty{
+  border:1px solid #ff0000;
+}
+#PayListDetail .signerr-sty:hover{
+  border:1px solid #ff0000 !important;
+}
+#PayListDetail .signerr-sty:focus{
+  border:1px solid #ff0000 !important;
+}
+
+#PayListDetail .zf_tips {
+  position: fixed; 
+  right: 0px;
+  bottom: 80px;
+  /* width:340px; */
+  height:50px;
+  line-height: 50px;
+  padding: 0 15px;
+  text-align: center;
+  border:1px solid #edeef2;
+  background: #edeef2;
+  border-radius:6px;
+  color: red;
+  /* font-weight: bolder; */
+}
+#PayListDetail .zf_tips::after {
+  content: "";
+  position: absolute;
+  bottom: -6px; 
+  right: 45px;
+  padding: 8px;
+  background: inherit;
+  border: inherit;
+  border-right: 0;
+  border-bottom: 0;
+  transform: rotate(225deg);
+  z-index: 999;
+}
+
+#PayListDetail .report-warp {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+}
+.report-warp .report-tips{
+  font-size: 13px;
+  color: red;
+  margin-right: 20px;
+}
+
+

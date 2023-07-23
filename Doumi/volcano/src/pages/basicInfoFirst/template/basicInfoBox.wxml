@@ -1,0 +1,62 @@
+<template name="basicInfoBox">
+  <view class="dm-box">
+    <view class="dm-box-cell">
+      <label class="dm-box-cell__label">姓名</label>
+      <input
+        class="dm-box-cell__value"
+        placeholder="请填写"
+        placeholder-class="input-placeholder"
+        maxlength="10"
+        value="{{realName}}"
+        data-log-type="name"
+        bindinput="bindNameInput"
+        bindtap="bindSetLog"
+      />
+    </view>
+    <view class="dm-box-cell">
+      <label class="dm-box-cell__label">性别</label>
+      <radio-group class="dm-box-cell__value dm-box-cell__radio_group" bindchange="bindGenderChange">
+        <label
+          class="dm-box-cell__radio {{gender === item.value ? 'active' : ''}}"
+          wx:for="{{select.GENDER}}"
+          wx:key="value"
+          data-log-type="{{item.value === 1 ? 'gender_boy' : 'gender_girl'}}"
+          bindtap="bindSetLog">
+          <radio value="{{item.value}}" checked="{{gender === item.value}}"/>
+          <view>{{item.label}}</view>
+        </label>
+      </radio-group>
+    </view>
+    <dm-picker
+      wx:if="{{select.STATE_ARRAY}}"
+      id="dmPicker1"
+      mode="multiple"
+      column-titles="{{['身份', '出生年份', '学历']}}"
+      range="{{select.STATE_ARRAY}}"
+      range-key="label"
+      default-value="{{[0, 30, 2]}}"
+      bind:confirm="bindStateMultiPickerConfirm"
+      bind:cancel="bindStateMultiPickerCancel">
+      <view
+        class="dm-box-cell dm-box-state-cell"
+        data-log-type="information"
+        bindtap="bindSetLog">
+        <view>
+          <label>身份</label>
+          <text class="input-placeholder" wx:if="{{state[0] === -1}}">请选择</text>
+          <text class="picker input-show" wx:else>{{ select.STATE_ARRAY[0][state[0]].label }}</text>
+        </view>
+        <view>
+          <label>出生年份</label>
+          <text class="input-placeholder" wx:if="{{state[1] === -1}}">请选择</text>
+          <text class="picker input-show" wx:else>{{ select.STATE_ARRAY[1][state[1]] }}</text>
+        </view>
+        <view>
+          <label>学历</label>
+          <text class="input-placeholder" wx:if="{{state[2] === -1}}">请选择</text>
+          <text class="picker input-show" wx:else>{{ select.STATE_ARRAY[2][state[2]].label }}</text>
+        </view>
+      </view>
+    </dm-picker>
+  </view>
+</template>

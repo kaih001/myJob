@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="28px" viewBox="0 0 22 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>气泡坐标</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="轨迹地图_切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-188.000000, -59.000000)">
+        <g id="Group-16" transform="translate(188.000000, 59.000000)">
+            <rect id="Rectangle-13" fill="#D8D8D8" opacity="0" x="0" y="0" width="22" height="28"></rect>
+            <g id="Group-14" transform="translate(1.000000, 2.000000)">
+                <ellipse id="Oval-6" fill-opacity="0.142181839" fill="#000000" cx="10" cy="23.5" rx="4" ry="1.5"></ellipse>
+                <path d="M7.35766423,19.6471935 C3.11700121,18.4883699 0,14.6081923 0,10 C0,4.4771525 4.4771525,0 10,0 C15.5228475,0 20,4.4771525 20,10 C20,14.960515 16.3881533,19.0774379 11.6508527,19.8643759 C10.6487342,20.4689602 10.0307908,21.6228817 9.7970225,23.3261405 L9.53304223,23.2899098 C9.53736467,23.2584161 9.53521215,23.2263714 9.5267165,23.1957387 C9.01927032,21.366043 8.2962529,20.1831946 7.35766423,19.6471935 Z" id="Oval" fill="#8E949F"></path>
+                <circle id="Oval-4" fill="#FFFFFF" cx="10" cy="10" r="3"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

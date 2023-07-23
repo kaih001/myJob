@@ -1,0 +1,348 @@
+<!--
+  Description  职位头部
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-23 17:01:05
+-->
+<template>
+  <!-- 工作图片 -->
+  <view wx:show="{{jobDetail.company_pictures.length > 0}}" class="dm-pannel dm-work-pictures">
+    <dm-preview-image pictures="{{jobDetail.company_pictures}}"></dm-preview-image>
+  </view>
+
+  <!-- 职位标题 -->
+  <view class="dm-pannel dm-job-title">
+    <dm-tag
+      wx:if="{{jobDetail.is_ziying}}"
+      style="position: relative;top: -4px;margin-right: 4px"
+      size="middle"
+      round="2px"
+      text="自营"
+      color="#f80"
+      border-color="#fa0">
+    </dm-tag>
+    <text class="dm-job-title__text">{{jobDetail.title}}</text>
+  </view>
+
+  <!-- 薪资 -->
+  <view class="dm-pannel dm-product-salary">
+    <view class="dm-product-price" wx:if="{{jobDetail.salary != undefined}}">
+      <text class="dm-product-price__value">{{jobDetail.salary}}</text>
+      <block wx:if="{{jobDetail.is_salary_nego != 1}}">{{jobDetail.salary_unit_str}}/{{jobDetail.salary_type_str}}</block>
+    </view>
+    <view class="dm-product-info">
+      <view class="dm-product-info__meta" wx:if="{{jobDetail.work_type === 1}}">兼职</view>
+      <view class="dm-product-info__meta" wx:elif="{{jobDetail.work_type === 2}}">全职</view>
+      <view class="dm-product-info__meta" wx:if="{{jobDetail.job_type_str}}">{{jobDetail.job_type_str}}</view>
+      <view class="dm-product-info__meta" wx:if="{{jobDetail.payment_type_str && jobDetail.work_type !== 2}}">{{jobDetail.payment_type_str}}</view>
+    </view>
+  </view>
+
+  <!--职位福利: 1包工作餐 dm-icon-meal 2包住宿 dm-icon-board 3交通补助 dm-icon-travel 4有提成 dm-icon-income 5带薪年假 dm-icon-annualLeave 6加班补助 dm-icon-overtime 7五险 dm-icon-five -->
+  <view class="dm-pannel dm-product-welfare">
+    <view
+      wx:for="{{jobDetail.tab_treatment_tags}}"
+      wx:key="key"
+      wx:if="{{isShowWelfare}}"
+      class="dm-product-welfare__tag">
+      <dm-tag
+        size="large"
+        text="{{item.value}}"
+        color="#f80"
+        border-color="transparent"
+        bg-color="#fff6ec">
+      </dm-tag>
+    </view>
+  </view>
+
+  <view class="dm-space-line"></view>
+
+  <!-- 职位要求 -->
+  <view wx:if="{{jobDetail.tab_demand_tags_detail.length > 0}}" class="dm-pannel dm-product-demand">
+    <view class="dm-pannel-hd">
+      <view class="dm-pannel-title">职位要求</view>
+    </view>
+    <view class="dm-pannel-bd">
+      <view
+        wx:for="{{jobDetail.tab_demand_tags_detail}}"
+        wx:key="index"
+        class="dm-product-demand__tag">
+        <dm-tag
+          style="margin-right: 4px"
+          size="large"
+          text="{{item}}"
+          color="#404040"
+          border-color="#d9d9d9">
+        </dm-tag>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{jobDetail.tab_demand_tags_detail.length > 0}}" class="dm-space-line"></view>
+
+  <!-- 工作时间 -->
+  <view wx:if="{{jobDetail.work_type != 2 && jobDetail.show_work_time}}" class="dm-pannel dm-product-worktime">
+    <view class="dm-pannel-hd">
+      <view class="dm-pannel-title">工作时间</view>
+    </view>
+    <block wx:if="{{jobDetail.post_type == 5 || jobDetail.special_adv_type == 1 || jobDetail.special_adv_type == 10}}">
+      <view class="dm-product-worktime-week">{{jobDetail.work_day_str}}</view>
+    </block>
+    <block wx:else>
+      <view class="dm-product-worktime-date">
+        {{jobDetail.date_start_str_standard}} <text class="dm-product-worktime-date-line">—</text> {{jobDetail.date_end_str_standard}}
+      </view>
+      <view
+        class="stretch"
+        wx:style="{{ { maxHeight: expend.isExpend === false ? triggerHeight : '' } }}">
+        <view class="dm-product-worktime-day">
+          <view>{{jobDetail.work_day_str}}</view>
+        </view>
+        <view
+          wx:if="{{jobDetail.working_hours_arr && jobDetail.working_hours_arr['1']}}"
+          class="dm-product-worktime-day">
+          <view>白班</view>
+          <view
+            class="dm-product-worktime-day__item"
+            wx:key="index"
+            wx:for="{{jobDetail.working_hours_arr['1']}}"
+            wx:for-item='dayHours'>
+            {{dayHours.am_time}} - {{dayHours.pm_time}}
+          </view>
+        </view>
+        <view
+          wx:if="{{jobDetail.working_hours_arr && jobDetail.working_hours_arr['2']}}"
+          class="dm-product-worktime-day">
+          <view>夜班</view>
+          <view
+            class="dm-product-worktime-day__item"
+            wx:key="index"
+            wx:for="{{jobDetail.working_hours_arr['2']}}"
+            wx:for-item='nightHours'>
+            {{nightHours.am_time}} - {{nightHours.pm_time}}
+          </view>
+        </view>
+      </view>
+    </block>
+    <view
+      wx:if="{{expend.isShow}}"
+      class="dm-product-worktime__flexible-btn {{expend.isExpend ? 'dm-toggle' : ''}}"
+      bindtap="bindToggle">{{expend.isExpend ? '收起' : '展开'}}
+    </view>
+  </view>
+
+  <!-- 薪资构成 -->
+  <view wx:if="{{jobDetail.salary_text}}" class="dm-pannel dm-product-structure">
+    <view class="dm-pannel-hd">
+      <view class="dm-pannel-title">薪资构成</view>
+    </view>
+    <view class="dm-pannel-bd dm-product-structure__describe">{{jobDetail.salary_text}}</view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import jobStore from '~/store/job'
+import stretchMixin from '~/mixins/stretch'
+
+const STE = jobStore.state
+
+createComponent({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+
+  mixins: [stretchMixin],
+
+  // -------------------------------------------------------------------------
+  // 计算属性(在store中共享)
+  // -------------------------------------------------------------------------
+
+  computed: {
+    ...jobStore.mapState(Object.keys(STE)),
+    isShowWelfare () { // 是否显示福利标签
+      return this.jobDetail.post_type !== '5' &&
+            this.jobDetail.special_adv_type !== '1' &&
+            this.jobDetail.special_adv_type !== '10' &&
+            !!this.jobDetail.tab_treatment
+    }
+  },
+
+  ready () {
+    this.initStretch({ selector: '.stretch', rowCount: 2 })
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../../styles/util.styl'
+
+$base-space = 32rpx
+
+// 工作图片
+.dm-work-pictures
+  padding-left 0 !important
+  padding-right 0 !important
+  padding-top 40rpx
+
+// 职位标题
+.dm-job-title
+  padding-top 40rpx
+  padding-bottom 16rpx
+  font-size 22px
+  font-weight 700
+  line-height 30px
+  word-break break-all
+  word-wrap break-word
+  overflow hidden
+
+// 薪资
+.dm-product-salary
+  display flex
+  align-items flex-end
+  justify-content space-between
+  position relative
+  .dm-product-price
+    color #f80
+    font-size 12px
+    line-height 20px
+    vertical-align text-bottom
+    overflow hidden
+    &__value
+      display inline-block
+      position relative
+      top 1px
+      font-size 24px
+      font-weight 700
+      line-height 32px
+      margin-right 4px
+  .dm-product-info
+    display flex
+    &__meta
+      color #999
+      font-size 12px
+      line-height 20px
+      margin-right 6px
+      &:not(:nth-of-type(1))::before
+        content ""
+        display inline-block
+        width 1px
+        height 10px
+        margin-top 2px
+        margin-left -2px
+        margin-right 4px
+        background-color #999
+        position relative
+        top 1px
+
+// 职位福利
+.dm-product-welfare
+  padding-bottom 40rpx
+  &__tag
+    display inline-block
+    margin-right 4px
+    padding-top 24rpx
+
+// 职位要求
+.dm-product-demand
+  padding-bottom $base-space
+  &__tag
+    display inline-block
+    padding-top 16rpx
+
+// 工作时间
+.dm-product-worktime
+  background-color #f7f7f7
+  padding-bottom $base-space
+  color #808080
+  font-size 12px
+  line-height 22px
+  bottomBorder1px(#E5E5E5, $base-space, $base-space)
+  &-date
+    display flex
+    align-items center
+    margin-top 16rpx
+    color #404040
+    font-size 14px
+    font-weight 700
+  &-line
+    position relative
+    display inline-block
+    width 112rpx
+    height 20rpx
+    font-size 0
+    &::after
+      content ""
+      position absolute
+      display block
+      height 2rpx
+      width 32rpx
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      background-color #999
+  &-day
+    display flex
+    flex-wrap wrap
+    padding-left 36px
+    view
+      &:first-child
+        width 2em
+        margin-right 12px
+        margin-left -36px
+        white-space nowrap
+    &__item
+      margin-right 20px
+      &:last-child
+        margin-right 0
+  .stretch
+    overflow hidden
+    position relative
+  &__flexible-btn
+    margin-right 2px
+    color #404040
+    font-size 12px
+    line-height 20px
+    background-image linear-gradient(180deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.90) 40%, #FFFFFF 100%)
+    position absolute
+    right $base-space
+    bottom $base-space
+    &::after
+      content ''
+      display inline-block
+      margin-left 3px
+      position relative
+      top -3px
+      width 6px
+      height 6px
+      border-bottom solid 1px #404040
+      border-left solid 1px #404040
+      transform rotate(-45deg)
+      vertical-align middle
+    &.dm-toggle
+      &::after
+        top 1px
+        transform rotate(135deg)
+
+// 薪资构成
+.dm-product-structure
+  padding-bottom $base-space
+  bottomBorder1px(#E5E5E5, $base-space, $base-space)
+  &__describe
+    margin-top 16rpx
+    padding 24rpx
+    background-color #f7f7f7
+    font-size 14px
+    line-height 22px
+    color #404040
+    text-align justify
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-preview-image": "~/components/dmx/dm-preview-image",
+      "dm-tag": "~/components/dmx/dm-tag"
+    }
+  }
+</script>

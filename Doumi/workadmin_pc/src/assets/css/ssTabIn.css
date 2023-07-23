@@ -1,0 +1,178 @@
+
+/* 弹窗————批量导入 */
+.dialog-import .el-dialog__body{
+	padding: 40px 20px 30px 20px;
+}
+.dialog-import .el-dialog {
+  position: relative;
+}
+.el-dialog--tiny {
+  width: 420px;
+}
+.dialog-import .el-dialog--tiny {
+  top: 25% !important;
+  -webkit-transition: top 25% !important;
+}
+.el-dialog__header {
+  padding: 24px 20px 0 20px;
+}
+.dialog-addmember .el-dialog__body,
+.dialog-info .el-dialog__body,
+.dialog-group-select .el-dialog__body {
+  padding: 45px 20px 38px 20px;
+}
+.dialog-import .title {
+  position: absolute;
+  left: 100px;
+  top: 26px;
+}
+.dialog-import .title span {
+  font-size: 12px;
+  line-height: 1.33;
+  color: #8492a6;
+}
+.dialog-import .title a {
+  font-size: 14px;
+  line-height: 1.14;
+  color: #6699ee;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.dialog-import .title a:active {
+  color: #517ed6;
+}
+.myform {
+  width: 340px;
+  margin: 0 auto;
+}
+.myform h4 {
+  font-size: 14px;
+  text-align: left;
+  color: #8492a6;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+.dialog-import .myform .uploadbtn {
+  padding: 6px 9px;
+}
+.dialog-import .el-dialog__footer {
+  border-top: 1px solid #e0e6ed;
+  padding: 0px 20px 15px;
+}
+.dialog-import .dialog-footer {
+  overflow: hidden;
+}
+.dialog-import .dialog-footer .el-button {
+  margin-top: 16px;
+  border-radius: 2px;
+  padding: 10px 18px;
+}
+
+.upload-box .file {
+  position: relative;
+  display: inline-block;
+  background: #6699ee;
+  border: 1px solid #6699ee;
+  border-radius: 4px;
+  padding: 3px 9px;
+  overflow: hidden;
+  color: #ffffff;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+  border-radius: 2px;
+}
+.upload-box .file:hover {
+  background: #8bb1f2;
+  border-color: #8bb1f2;
+  color: #ffffff;
+  text-decoration: none;
+}
+.upload-box .file:active {
+  background-color: #517ed6;
+  border-color: #517ed6;
+  color: #ffffff;
+}
+.upload-box .disabled_file {
+  background: #eff2f7;
+  border: 1px solid #e0e6ed;
+  color: #c0ccda;
+}
+.upload-box .disabled_file:hover {
+  background: #eff2f7;
+  border: 1px solid #e0e6ed;
+  color: #c0ccda;
+}
+.upload-box .file input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.upload-box p {
+  color: #475669;
+  font-size: 14px;
+  padding: 5px 25px 5px 29px;
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.upload-box p:hover {
+  background: #f5f5f5;
+  color: #6699ee;
+}
+.upload-box p:hover i.file_close {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(../imgs/x.png) no-repeat right center;
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+}
+.upload-box p i.file_icon {
+  display: block;
+  width: 15px;
+  height: 18px;
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  background: url(../imgs/excel.svg) no-repeat left center;
+}
+.speed-div{
+	background-color: #eaf1f9;
+	width: 340px;
+	height: 2px;
+	border-radius: 100px;
+	position: relative;
+}
+.speed-div span{
+	height: 2px;
+	display: block;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	border-radius: 100px;
+	background-color: #6699ee;
+}
+.progressWrap {
+  width: 800px;
+}  
+.progressWrap .circleWrap{
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 10px 0;
+}
+.progressWrap .progressMes{
+  text-align: center;
+  font-size: 14px;
+}
+.progressWrap .progressMes.green{
+  color: #13ce66;
+}

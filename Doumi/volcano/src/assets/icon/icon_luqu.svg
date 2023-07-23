@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>录取@1x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="分组-10-copy" transform="translate(8.000000, 5.000000)">
+            <path d="M-1,2 L18,2 L18,21 L-1,21 L-1,2 Z" id="Rectangle-190" stroke="#404040" stroke-width="2" fill="#FFFFFF"></path>
+            <rect id="Rectangle-7" fill="#404040" x="3" y="10" width="3" height="2"></rect>
+            <rect id="Rectangle-7-Copy-2" fill="#404040" x="3" y="14" width="11" height="2"></rect>
+            <polyline id="Path-21" stroke="#FFAA00" stroke-width="1.8" points="8 9.19609389 9.95324888 11 14 8"></polyline>
+            <rect id="矩形" fill="#404040" x="3" y="0" width="2" height="4"></rect>
+            <rect id="矩形-copy" fill="#404040" x="12" y="0" width="2" height="4"></rect>
+        </g>
+    </g>
+</svg>

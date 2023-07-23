@@ -1,0 +1,185 @@
+<!--
+  Description  用于快速登录的dialog弹窗组件
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-11-30 11:20:44
+-->
+<template>
+  <dm-popup-wrapper
+    wx:ref="dmPopupWrapper"
+    entry="{{ { animationName: enableAnimation ? 'pulse' : 'none' } }}"
+    leave="{{ { animationName: enableAnimation ? 'fadeOut' : 'none' } }}"
+    position-x="center"
+    position-y="center">
+    <view class='wx-dialog'>
+      <view class='wx-dialog-title'>
+        {{ title }}
+        <image
+          wx:if="{{closable}}"
+          class='wx-dialog-close'
+          src="https://cdn.doumistatic.com/209,01b4296b2a18c171.png"
+          bindtap="bindClose"
+        />
+      </view>
+      <button
+        wx:if="{{openType === 'getUserInfo'}}"
+        class="wx-dialog-button"
+        open-type="getUserInfo"
+        type="primary"
+        bindgetuserinfo="bindGetUserInfo"
+        bindtap="bindBtnClick">{{ confirmText }}
+      </button>
+      <button
+        wx:elif="{{openType === 'getPhoneNumber'}}"
+        class="wx-dialog-button"
+        open-type="getPhoneNumber"
+        type="primary"
+        bindgetphonenumber="bindGetPhoneNumber"
+        bindtap="bindBtnClick">{{ confirmText }}
+      </button>
+      <button
+        wx:if="{{showCancel}}"
+        class="wx-dialog-button"
+        bindtap="bindCancel">{{ cancelText }}
+      </button>
+    </view>
+  </dm-popup-wrapper>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import api from '~/utils/api'
+
+createComponent({
+  properties: {
+    // title
+    title: {
+      type: String,
+      value: '授权用户信息快速登录'
+    },
+    // 确定按钮文案
+    confirmText: {
+      type: String,
+      value: '微信极速登录'
+    },
+    // 取消按钮文案
+    cancelText: {
+      type: String,
+      value: '跳过'
+    },
+    // 是否可关闭
+    closable: {
+      type: Boolean,
+      value: false
+    },
+    // 点击按钮后是否自动隐藏
+    autoHide: {
+      type: Boolean,
+      value: true
+    },
+    // 授权类型 getUserInfo | getPhoneNumber
+    openType: {
+      type: String,
+      value: 'getUserInfo'
+    },
+    // 是否可关闭, `true` 显示取消按钮
+    showCancel: {
+      type: Boolean,
+      value: true
+    },
+    // 是否激活动画过渡, 实验特性, 默认关闭
+    enableAnimation: {
+      type: Boolean,
+      value: false
+    }
+  },
+
+  methods: {
+    // 主按钮点击
+    bindBtnClick () {
+      if (this.autoHide) this.hideDialog()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=t_login_wechat')
+    },
+    // 副按钮点击
+    bindCancel () {
+      if (this.autoHide) this.hideDialog()
+      this.triggerEvent('cancel')
+      if (this.cancelText === '跳过') {
+        api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=skip')
+      } else if (this.cancelText === '账号登录' || this.cancelText === '账户登录') {
+        api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=t_login_phone')
+      }
+    },
+    // 关闭按钮点击
+    bindClose () {
+      this.hideDialog()
+      this.triggerEvent('close')
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=t_login_close')
+    },
+    // 同意获取用户信息授权的回调
+    bindGetUserInfo (e) {
+      this.triggerEvent('getUserInfo', e.detail)
+    },
+    // 同意获取手机号的回调
+    bindGetPhoneNumber (e) {
+      this.triggerEvent('getPhoneNumber', e.detail)
+    },
+    // 隐藏弹框
+    hideDialog () {
+      this.$nextTick(() => this.$refs.dmPopupWrapper.hide())
+    },
+    // 展示弹框
+    showDialog () {
+      this.$nextTick(() => this.$refs.dmPopupWrapper.show())
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.wx-dialog
+  width 80%
+  max-width 600rpx
+  padding-bottom 20rpx
+  background-color #fff
+  text-align center
+  border-radius 4px
+  overflow hidden
+  &-title
+    font-size 16px
+    line-height 22px
+    padding 40rpx 52rpx 48rpx
+    position relative
+    .wx-dialog-close
+      display block
+      width 28rpx
+      height 28rpx
+      padding 24rpx
+      position absolute
+      top 0
+      right 0
+  &-content
+    padding 30rpx 30rpx 10rpx
+    min-height 80rpx
+    font-size 16px
+    line-height 1.3
+    word-wrap break-word
+    word-break break-all
+    color #999
+  &-button
+    width 80%
+    height 80rpx
+    margin-bottom 20rpx
+    line-height 2.5
+    font-size 16px
+    border-radius 2px
+    color #404040
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-popup-wrapper": "../dmx/dm-popup-wrapper"
+    }
+  }
+</script>

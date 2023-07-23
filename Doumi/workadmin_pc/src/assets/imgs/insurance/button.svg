@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="142px" height="34px" viewBox="0 0 142 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>button</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="105.357422%" y1="12.2619048%" x2="0%" y2="64.6875%" id="linearGradient-1">
+            <stop stop-color="#FFB948" offset="0%"></stop>
+            <stop stop-color="#F5974E" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="35.7105655%" x2="0%" y2="72.1800595%" id="linearGradient-2">
+            <stop stop-color="#FFA766" offset="0%"></stop>
+            <stop stop-color="#F78329" offset="100%"></stop>
+        </linearGradient>
+        <path d="M458,535 L566,535 C574.836556,535 582,542.163444 582,551 L582,551 C582,559.836556 574.836556,567 566,567 L458,567 C449.163444,567 442,559.836556 442,551 L442,551 C442,542.163444 449.163444,535 458,535 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-441.000000, -534.000000)">
+            <g id="bg">
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#linearGradient-2)" stroke-width="1" d="M458,534.5 L566,534.5 C575.112698,534.5 582.5,541.887302 582.5,551 C582.5,560.112698 575.112698,567.5 566,567.5 L458,567.5 C448.887302,567.5 441.5,560.112698 441.5,551 C441.5,541.887302 448.887302,534.5 458,534.5 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

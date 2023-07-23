@@ -1,0 +1,98 @@
+<template>
+  <view>
+    <view class="cell" bindtap="goDetail(0)">
+      <text class="title title2">人力资源许可</text>
+      <view class="arrow"></view>
+    </view>
+    <view class="cell" bindtap="goDetail(1)">
+      <text class="title title2">电子营业执照</text>
+      <view class="arrow"></view>
+    </view>
+    <view class="cell" bindtap="goDetail(2)">
+      <text class="title title2">服务规则及投诉举报电话</text>
+      <view class="arrow"></view>
+    </view>
+    <view class="cell" bindtap="goDetail(3)">
+      <text class="title title2">增值电信业务经营许可证</text>
+      <view class="arrow"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+import mpx, { createPage } from '@mpxjs/core'
+import util from '~/utils/util'
+
+const app = getApp()
+createPage({
+  data: {
+
+  },
+
+  computed: {
+
+  },
+  watch: {
+
+  },
+  async onLoad (options) {
+
+  },
+
+  onShow (options) {
+
+  },
+
+  async onReady () {
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage (res) {
+  },
+
+  methods: {
+    goDetail:function(type){
+      mpx.navigateTo({ url: `../../pages/certification/certification?type=${type}`})
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.cell
+  display flex
+  align-items center
+  box-sizing border-box
+  width 100%
+  height 96rpx
+  background-color #fff
+  text-align left
+  padding 0 32rpx
+  .icon2
+    width 36rpx
+    height 36rpx
+    margin-right 24rpx
+  .title
+    display block
+    flex 1
+    color #404040
+    font-size 32rpx
+    line-height 48rpx
+  .arrow
+    display block
+    width 28rpx
+    height 28rpx
+    background url('https://cdn.doumistatic.com/164,01542a8c4967aa23.png') no-repeat
+    background-size 28rpx
+</style>
+
+<script type="application/json">
+{
+  "disableScroll": true,
+  "navigationBarTitleText": "查看资质",
+  "usingComponents": {
+  }
+}
+</script>

@@ -1,0 +1,59 @@
+<template name="error">
+  <view class="dm-page dm-page-error">
+    <view class="dm-section">
+      <!-- 拒绝定位授权 -->
+      <view class="dm-status dm-status-location" wx:if="{{type === 'noLocation'}}">
+        <image class="dm-status-image dm-status-image" src="https://cdn.doumistatic.com/174,015ff5fca95c4bca.png"></image>
+        <text class="dm-status-text">未获取到您的地理位置，请打开定位权限！</text>
+        <view class="dm-btn-group">
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            type="button"
+            bindtap="openAuthSetting">点击尝试获取定位
+          </button>
+        </view>
+      </view>
+
+      <!-- 拒绝微信授权 -->
+      <view class="dm-status dm-status-location" wx:if="{{type === 'noUserInfo'}}">
+        <text class="dm-status-text">未获取到用户信息，请打开授权</text>
+        <view class="dm-btn-group">
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            type="button"
+            bindtap="openAuthSetting">点击尝试获取用户信息
+          </button>
+        </view>
+      </view>
+
+      <!-- 服务器异常 -->
+      <view class="dm-status dm-status-loadfail" wx:if="{{type === 'loadFail'}}" bindtap="init">
+        <image class="dm-status-image" src="https://cdn.doumistatic.com/175,015ff5e02eeea845.png"></image>
+        <text class="dm-status-text">服务器开小差，点击重新加载</text>
+      </view>
+
+      <!-- 无数据 -->
+      <view class="dm-status dm-status-nothing" wx:if="{{type === 'noData'}}">
+        <image class="dm-status-image" src="https://cdn.doumistatic.com/172,015ff5f1efac7dc9.png"></image>
+        <text class="dm-status-text">{{noListTxt ? noListTxt : '无数据'}}</text>
+      </view>
+
+      <!-- 无网络 -->
+      <view class="dm-status dm-status-offline" wx:if="{{type === 'offline'}}" bindtap="init">
+        <!-- <image class="dm-status-image" src="https://cdn.doumistatic.com/174,015ff5fca95c4bca.png"></image> -->
+        <image class="dm-status-image" src="../../assets/image/offline.png"></image>
+        <text class="dm-status-text">您还木有连接到网络哦，请检查网络</text>
+        <view class="dm-btn-group">
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            type="button"
+            bindtap="init">重新加载
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

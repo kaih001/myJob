@@ -1,0 +1,249 @@
+<template>
+  <!-- <dm-formid-collector bind:complate="bindCollectComplate"> -->
+    <view class="dm-job-item"
+      data-id="{{listItem.id}}"
+      data-query="id={{listItem.id}}&jobType={{listItem.job_type}}&source=sy_postlist{{from}}&reqid={{reqid}}&ca_campaign={{jobAdviser}}"
+      data-item="{{listItem}}"
+      hover-class="dm-touch"
+      catchtap="bindItemClick">
+      <view class="dm-job-content">
+        <view class="dm-job-title" wx:style="{{ { color: isVisited ? '#808080' : '#404040' } }}">{{listItem.title}}</view>
+      </view>
+      <view class="dm-job-content">
+        <view class="dm-job-des">
+          <rich-text nodes="{{listItem.job_description}}"></rich-text>
+        </view>
+      </view>
+      <view class="dm-job-info-container">
+        <view class="dm-job-info">
+          <view wx:if="{{listItem.post_area}}" class="dm-job-meta">
+            <icon class="dmx-icon dmx-icon-location"></icon>{{listItem.post_area}}
+          </view>
+          <view wx:if="{{showDistance && listItem.distance_long}}" class="dm-job-meta" style="margin-left: -6px">
+            {{listItem.distance_long}}
+          </view>
+        </view>
+        <view class="tel-btn"
+          data-id="{{listItem.id}}"
+          data-query="id={{listItem.id}}&jobType={{listItem.job_type}}&source=sy_postlist{{from}}&reqid={{reqid}}&ca_campaign={{jobAdviser}}"
+          data-item="{{listItem}}">电话联系</view>
+      </view>
+      <view class="dm-job-bottom">
+        <slot></slot>
+      </view>
+    </view>
+  <!-- </dm-formid-collector> -->
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+// import commonApi from '../interface/common'
+// import { app } from '../allJS.js'
+import jobDetailPath from '../pages/jobDetail/jobDetail.mpx?resolve'
+import jobDetailInterviewPath from '../pages/jobDetailInterview/jobDetailInterview.mpx?resolve'
+import util from '~/utils/util'
+
+createComponent({
+  properties: {
+    jobType: {
+      type: String,
+      value: ''
+    },
+    // - 请求标识
+    reqid: {
+      type: String,
+      value: '-'
+    },
+    // - 是否显示距离
+    showDistance: {
+      type: Boolean,
+      value: true
+    },
+    notShowinfo: {
+      type: Boolean,
+      vlaue: false
+    },
+    openType: {
+      type: String,
+      value: 'navigateTo'
+    },
+    listItem: {
+      type: Object,
+      value: null
+    },
+    // - 求职顾问
+    jobAdviser: {
+      type: String,
+      value: ''
+    },
+    fromCompanydetail: {
+      type: Boolean,
+      value: false
+    }
+  },
+
+  data: {
+    isVisited: false // - 该职位是否点击过(点击过的职位标题颜色会不一样)
+  },
+
+  watch: {
+    listItem () {
+      this.__updateVisited()
+    }
+  },
+
+  created () {
+    this.__updateVisited()
+  },
+
+  methods: {
+    contactPhoneNumber({
+      currentTarget: {
+        dataset: { id, query, item }
+      }
+    }){
+      this.triggerEvent('contactPhoneNumber', {id,query,item})
+    },
+    /**
+     * 职位列表的点击
+     */
+    bindItemClick ({
+      currentTarget: {
+        dataset: { id, query, item }
+      }
+    }) {
+      if (!this.isVisited) {
+        const visitedJobList = wx.getStorageSync('visitedJobList') || []
+        wx.setStorageSync('visitedJobList', [...visitedJobList, +id]) // - 点击过的职位列表
+        this.isVisited = true
+      }
+
+      wx.$addClickIds(id) // - 缓存算法所需参数
+      wx.navigateTo({ url: `/pages/workDet/workDet?apply_id=11&jobId=${id}` })
+    },
+
+    // // 收集formid完成时触发
+    // bindCollectComplate ({ detail: { formId } }) {
+    //   const param = {
+    //     formId,
+    //     openId: app.globalData.openId,
+    //     pushType: 12
+    //   }
+    //   commonApi.collectFormid(param)
+    //   this.setData({
+    //     theFormId: formId
+    //   })
+    // },
+
+    __updateVisited () {
+      const visitedJobList = wx.getStorageSync('visitedJobList') || []
+      this.isVisited = visitedJobList.includes(this.listItem.id)
+    }
+  }
+})
+</script>
+
+<style lang="stylus" src="../styles/icon.styl"></style>
+<style lang="stylus">
+.dm-job-item
+  line-height 1
+  position relative
+  padding 14px 16px
+  background-color white
+  &::after
+    content ""
+    position absolute
+    right 0
+    bottom 0
+    left 0
+    height 1px
+    background-color #e5e5e5
+    transform-origin 0 100%
+    transform scale3d(1, 0.5, 1)
+  &.dm-touch
+    background-color #f5f5f5
+.dm-job-content
+  display flex
+.dm-job-title
+  flex 1
+  font-size 16px
+  font-weight 700
+  line-height 24px
+  // margin-right 8px
+  margin-top -4px
+  white-space nowrap
+  text-overflow ellipsis
+  overflow hidden
+.dm-job-des
+  flex 1
+  font-size 28rpx
+  line-height 40rpx
+  margin-top 16rpx
+  display -webkit-box
+  -webkit-box-orient vertical
+  -webkit-line-clamp 2
+  overflow hidden
+.dm-job-price
+  color #f60
+  font-size 16px
+  white-space nowrap
+  overflow hidden
+  &-value
+    font-size 18px
+    font-weight 600
+    margin-right 2px
+.dm-job-info-container
+  display flex
+  justify-content space-between
+  align-items center
+  margin-top 8px
+.dm-job-info
+  // max-width:70%
+  // margin-top 8px
+  overflow hidden
+  display flex
+  align-items center
+.tel-btn
+  width 160rpx
+  height 52rpx
+  background #FFCC00
+  border-radius 26rpx
+  line-height 52rpx
+  text-align center
+  font-size 28rpx
+  color #404040
+.dm-job-meta
+  color #808080
+  height 12px
+  font-size 12px
+  margin-right 12px
+  flex none
+  &-corp
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
+    flex auto
+  .dmx-icon
+    float left
+    margin 1px 4px 5px -1px
+    width 10px
+    height 10px
+.dm-job-bottom
+  display flex
+  justify-content space-between
+  align-items flex-end
+  margin-top 10px
+  .dm-job-label
+    height 17px
+    overflow hidden
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-tag": "./dmx/dm-tag",
+      "dm-formid-collector": "./dmx/dm-formid-collector"
+    }
+  }
+</script>

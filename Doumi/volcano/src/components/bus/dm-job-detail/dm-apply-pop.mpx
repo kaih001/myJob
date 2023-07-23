@@ -1,0 +1,358 @@
+<!--
+  Description  普通报名的弹层
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-26 14:03:08
+-->
+<template>
+  <view
+    class="dm-pannel product-confirm {{isIpx ? 'iphonex-fixed' : ''}}"
+    wx:if="{{isShowApplyPop}}"
+  >
+    <view class="dm-pannel-hd">
+      <view class="dm-pannel-title">报名确认信息</view>
+    </view>
+    <view class="dm-pannel-bd">
+      <view class="dm-product-title" wx:if="{{showApplyAccount}}"
+        >今日还能报名 <text class="dm-text-bold">{{ applyAccount }}</text
+        >次
+      </view>
+      <scroll-view scroll-y>
+        <!-- <view class="dm-product-tips dm-product-tips2" wx:if="{{showApplyBtnWarming}}">{{applyBtnWarmingText}}</view> -->
+        <view class="dm-product-tips">正规兼职不会收取费用，若收费请提高警惕</view>
+        <!-- <view class="direct_contact">
+          <text class="direct_text">投递简历反馈太慢？点击直接与招聘者联系</text>
+          <button
+            v:if=""
+            class="dm-btn dm-btn-primary dm-btn-large tel_contact"
+            hover-class="dm-touch"
+            formType="submit"
+            bindtap="bindCallPhone"
+            style="border-left:1px solid #FFF"
+          >
+            电话联系1
+          </button>
+          <button
+            v:if=""
+            class="dm-btn dm-btn-primary dm-btn-large tel_contact"
+            hover-class="dm-touch"
+            type="button"
+            open-type="share"
+            style="border-left:1px solid #FFF"
+          >
+            电话联系2
+          </button>
+        </view> -->
+        <view
+          class="dm-product-dlist"
+          wx:if="{{!!jobBtnStatus.post_demand && jobBtnStatus.post_demand.length > 0}}"
+        >
+          <view class="dm-product-dlist-dt">确定工作要求</view>
+          <view class="dm-product-dlist-dd">
+            <view class="dm-product-label">
+              <view
+                class="dm-product-label-item"
+                wx:for="{{jobBtnStatus.post_demand}}"
+                wx:key="index"
+                >{{ item }}
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="dm-product-dlist" wx:if="{{jobDetail.work_type != 2 && checkFormWorkTimeId}}">
+          <view class="dm-product-dlist-dt"
+            >选择上班时间
+            <text class="dm-text-tiny">({{ jobBtnStatus.post_work_date }})</text>
+          </view>
+          <scroll-view class="dm-product-dlist-dd dm-work-times" scroll-y>
+            <radio-group
+              class="radio-group dm-radio-group dm-radio-vertical"
+              data-work-type="0"
+              bindchange="bindCheckWork"
+            >
+              <label
+                class="dm-radio-label dm-radio-flip"
+                wx:for="{{jobBtnStatus.post_work_times}}"
+                wx:key="id"
+              >
+                <radio
+                  class="dm-radio-input"
+                  value="{{item.id}}"
+                  checked="{{formWorkTimeId === (item.id+'')}}"
+                />
+                <text class="dm-radio-text">{{ item.time }}</text>
+              </label>
+            </radio-group>
+          </scroll-view>
+        </view>
+        <view
+          class="dm-product-dlist"
+          wx:if="{{jobBtnStatus.post_address.post_address_list.length > 0 && checkFormWorkAddressId}}"
+        >
+          <view class="dm-product-dlist-dt">{{
+            jobDetail.work_type == 2 ? '确认工作地点' : '选择工作地点'
+          }}</view>
+          <scroll-view class="dm-product-dlist-dd dm-word-address" scroll-y>
+            <radio-group
+              class="radio-group dm-radio-group dm-radio-vertical"
+              data-work-type="1"
+              bindchange="bindCheckWork"
+            >
+              <label
+                class="dm-radio-label dm-radio-flip"
+                wx:for="{{jobBtnStatus.post_address.post_address_list}}"
+                wx:key="id"
+              >
+                <radio
+                  class="dm-radio-input"
+                  value="{{item.id}}"
+                  checked="{{formWorkAddressId === item.id}}"
+                />
+                <text class="dm-radio-text">{{ item.address }}</text>
+              </label>
+            </radio-group>
+          </scroll-view>
+        </view>
+      </scroll-view>
+      <view class="dm-btn-group">
+        <button
+          class="dm-btn dm-btn-primary dm-btn-large"
+          hover-class="dm-touch"
+          bindtap="bindGoTofastApplyPage"
+        >
+          投简历
+        </button>
+        <button
+          class="dm-btn dm-btn-default dm-btn-large"
+          hover-class="dm-touch"
+          bindtap="bindCancelFastApply"
+        >
+          取消
+        </button>
+      </view>
+    </view>
+  </view>
+  <view class="dm-mask" wx:if="{{isShowApplyPop}}" bindtap="bindCancelFastApply"></view>
+</template>
+
+<script>
+  import { createComponent } from '@mpxjs/core'
+  import jobStore from '~/store/job'
+  import globalDataStore from '~/store/globalData'
+
+  const STE = jobStore.state
+
+  createComponent({
+    options: {
+      styleIsolation: 'apply-shared'
+    },
+
+    data: {
+      isShowApplyPop: false
+    },
+
+    computed: {
+      ...globalDataStore.mapState(['isIpx']),
+      ...jobStore.mapState(Object.keys(STE))
+    },
+
+    methods: {
+      ...jobStore.mapActions(['postEv']),
+
+      // -------------------------------------------------------------------------
+      // 页面bind的事件
+      // -------------------------------------------------------------------------
+
+      // 选择地址时更新工作时间 或者 工作地址的 id
+      bindCheckWork({
+        currentTarget: {
+          dataset: { workType }
+        },
+        detail: { value }
+      }) {
+        STE[+workType === 0 ? 'formWorkTimeId' : 'formWorkAddressId'] = value
+      },
+
+      // 极速报名
+      bindGoTofastApplyPage() {
+        this.postEv({ append: '@ca_from=fast_apply' })
+        if (this.__checkGeneralApplyJobForm()) {
+          this.hide()
+          this.triggerEvent('apply')
+        }
+      },
+
+      // 极速报名->取消
+      bindCancelFastApply() {
+        this.postEv({ append: '@ca_from=cancel' })
+        this.hide()
+      },
+
+      // -------------------------------------------------------------------------
+      // 页面方法, 双下划线开头表示私有方法, 供内部调用
+      // -------------------------------------------------------------------------
+
+      show() {
+        this.isShowApplyPop = true
+        STE.isScrollY = false
+        this.triggerEvent('show')
+      },
+
+      hide() {
+        this.isShowApplyPop = false
+        STE.isScrollY = true
+        this.triggerEvent('hide')
+      },
+
+      // 普通报名的弹层数据校验
+      __checkGeneralApplyJobForm() {
+        if (+STE.jobDetail.work_type !== 2 && STE.checkFormWorkTimeId) {
+          if (STE.formWorkTimeId === '') {
+            wx.showToast({ title: '请选择工作时间', icon: 'none' })
+            return false
+          }
+        }
+        if (STE.checkFormWorkAddressId) {
+          if (STE.formWorkAddressId === '') {
+            wx.showToast({ title: '请选择工作地址', icon: 'none' })
+            return false
+          }
+        }
+        return true
+      }
+    }
+  })
+</script>
+
+<style lang="stylus">
+  .dm-pannel.product-confirm
+    position fixed
+    right 0
+    bottom 0
+    left 0
+    z-index 1001
+    padding 0
+    background-color white
+    &::after
+      display none
+    &.dm-active
+      display block
+    .dm-pannel-hd
+      display none
+    scroll-view
+      max-height 334px
+    .dm-word-address
+      max-height 121px
+    .dm-work-times
+      max-height 121px
+    .dm-product-title
+      .dm-text-bold
+        display inline-block
+        position relative
+        top 1px
+        font-size 16px
+        font-weight 400
+        margin 0 4px
+    .dm-product-tips
+      position relative
+      border-top 12px solid #fff
+      color #fb0
+      font-size 12px
+      line-height 20px
+      padding 6px 12px
+      margin 0 20px
+      box-shadow inset 0 0 0 1px #fb0
+    .direct_contact
+      margin 5px 0
+      padding 0 20px
+      .direct_text
+        height 50px
+        font-size 12px
+      .tel_contact
+        width 80px
+        height 46px
+    .dm-product-tips2
+      color #f60
+      padding 0
+      box-shadow none
+    .dm-product-tips3
+      color #f60
+      padding 0
+      box-shadow none
+      background-color #fff5ed
+      line-height 36px
+      height 36px
+    .dm-product-dlist
+      position relative
+      padding 12px 0
+      &::after
+        content ''
+        position absolute
+        top 0
+        right 20px
+        left 20px
+        height 1px
+        background-color #e5e5e5
+        transform-origin 0 0
+        transform scale3d(1, 0.5, 1)
+      &.first
+        &::after
+          display none
+    .dm-product-dlist-dt
+      color #404040
+      font-size 16px
+      font-weight 700
+      line-height 24px
+      padding 0 20px
+      .dm-text-tiny
+        display inline-block
+        font-size 14px
+        font-weight 400
+        line-height 24px
+        margin-left 8px
+    .dm-product-label
+      padding 0 20px 4px
+      overflow hidden
+    .dm-product-label-item
+      float left
+      background-color #f1f1f1
+      font-size 12px
+      line-height 20px
+      padding 2px 8px
+      margin-top 12px
+      margin-right 12px
+    .dm-radio-group
+      padding-bottom 4px
+    .dm-radio-label
+      padding 0 20px
+    .dm-btn-group
+      position relative
+      flex-direction row-reverse
+      &::after
+        content ''
+        position absolute
+        top 0
+        right 0
+        left 0
+        height 1px
+        background-color #e5e5e5
+        transform-origin 0 0
+        transform scale3d(1, 0.5, 1)
+    .dm-btn
+      border-radius 0
+      &::after
+        display none
+    .dm-btn-large
+      line-height 50px
+    .product-confirm
+      .dm-product-title
+        background-color #f5f5f5
+        color #999
+        font-size 12px
+        font-weight 400
+        line-height 20px
+        text-align center
+        padding 6px 12px
+  @media only screen and (max-device-height: 480px)
+    .product-confirm scroll-view
+      max-height 224px
+</style>

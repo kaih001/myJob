@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>标签</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-87.000000, -201.000000)">
+            <g id="Group" transform="translate(87.000000, 201.000000)">
+                <path d="M0,2.71050543e-20 L18,5.99523144e-16 L18,-7.14983628e-14 C19.1045695,-7.3663379e-14 20,0.8954305 20,2 L20,20 L0,2.71050543e-20 Z" id="Rectangle-3" fill="#6699EE"></path>
+                <path d="M13.77599,8.7626097 C13.4521428,9.21412604 12.8779374,9.26336732 12.487328,8.86635437 L9.67751279,6.01047522 L10.8770014,4.68309505 L13.0163019,6.21779646 L16.374453,2.55339434 L17.5375129,3.51819418 L13.77599,8.7626097 Z" id="Path" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

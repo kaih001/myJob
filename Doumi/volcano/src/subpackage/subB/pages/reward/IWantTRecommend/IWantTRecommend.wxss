@@ -1,0 +1,120 @@
+/* pages/reward/IWantTRecommend/IWantTRecommend.wxss */
+.wantRecommend {
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.wantRecommend .section {
+  border-bottom: 1rpx solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 16px;
+  height: 48px;
+  font-size: 16px;
+  line-height: 48px;
+}
+
+.wantRecommend .section .section__title {
+  flex: none;
+  font-size: 16px;
+  color: #404040;
+  letter-spacing: 0;
+  width: 88px;
+  line-height: 48px;
+}
+
+.wantRecommend .section .icon {
+  color: #999;
+  line-height: 48px;
+  font-size: 16px;
+}
+
+.wantRecommend .section input {
+  text-align: left;
+  flex: 1;
+}
+
+.wantRecommend .section .genderSelect {
+  /* width: 200rpx; */
+  display: flex;
+
+  /* justify-content: space-between; */
+  flex: 1;
+}
+
+radio {
+  margin-right: 4px;
+}
+
+radio .wx-radio-input {
+  /* 自定义样式.... */
+  height: 16px;
+  width: 16px;
+  margin-top: -4rpx;
+  border-radius: 50%;
+  border: 2rpx solid #999;
+  background: transparent;
+}
+
+/* 选中后的 背景样式 （红色背景 无边框 可根据UI需求自己修改） */
+radio .wx-radio-input.wx-radio-input-checked {
+  background-color: #fc0 !important;
+  border: 2rpx solid #fc0 !important;
+}
+
+.wantRecommend .section .pickerC {
+  width: 100%;
+}
+
+.wantRecommend .section .pickerC .picker {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wantRecommend .genderChecked {
+  color: #fc0;
+}
+
+.wantRecommend .submit button {
+  width: 626rpx;
+  height: 44px;
+  font-size: 16px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 44px;
+  background-color: #fc0;
+  margin-top: 60px;
+}
+
+.choose-next {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  padding-right: 12px;
+}
+
+.choose-next view {
+  flex: none;
+  width: 460rpx;
+  margin-right: 20rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.choose-icon {
+  flex: none;
+  width: 8px;
+  height: 12px;
+}
+
+.wantRecommend .submit button.submit-btn_disabled {
+  background-color: #fc0;
+  opacity: 0.5;
+}

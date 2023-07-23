@@ -1,0 +1,301 @@
+<template>
+  <!-- 授权弹窗组件调用 -->
+  <dialog
+    id="dialog"
+    enable-animation
+    open-type="getPhoneNumber"
+    cancel-text="账号登录"
+    auto-hide="{{false}}"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack">
+  </dialog>
+
+  <view class="body-wrapper">
+    <view class="section-wrapper">
+      <view class="basicinfo-title">
+        <text style="vertical-align:middle">基本信息</text>
+        <text class="required">*</text>
+      </view>
+      <view class="section-body">
+        <view class="form-control">
+          <input
+            class="input"
+            disabled="{{isAuth}}"
+            placeholder="请输入姓名"
+            placeholder-class="input-placeholder"
+            maxlength="10"
+            value="{{realName}}"
+            bindinput="bindNameInput"
+          />
+          <label>姓名</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            disabled="{{isAuth}}"
+            bindchange="bindGenderPickerChange"
+            value="{{genderIndex}}"
+            range="{{select.GENDER}}"
+            range-key="label"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view wx:if="{{!genderText}}" class="input-placeholder">请选择性别</view>
+            <view class="picker input-show" wx:else>{{genderText}}</view>
+          </picker>
+          <label>性别</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            disabled="{{isAuth}}"
+            mode="date"
+            bindchange="bindBirthdayPickerChange"
+            value="{{birthDate}}"
+            start="1963-01-01"
+            end="{{endYear}}"
+            fields="year"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!birthDate}}">请选择出生年份</view>
+            <view class="picker input-show" wx:else>{{birthDate}}年</view>
+          </picker>
+          <label>出生年份</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            bindchange="bindEducationPickerChange"
+            value="{{degreeIndex}}"
+            range="{{select.DEGREES}}"
+            range-key="label"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!degreeText}}">请选择学历</view>
+            <view class="picker input-show" wx:else>{{degreeText}}</view>
+          </picker>
+          <label>学历</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            bindchange="bindWorkExperiencePickerChange"
+            value="{{workYearIndex}}"
+            range="{{select.WORK_YEARS}}"
+            range-key="label"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!workYearText}}">请选择工作经验</view>
+            <view class="picker input-show" wx:else>{{workYearText}}</view>
+          </picker>
+          <label>工作经验</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            mode="multiSelector"
+            bindchange="bindStateMultiPickerChange"
+            value="{{stateIndex}}"
+            range="{{select.STATE_ARRAY}}"
+            range-key="label"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!stateText}}">请选择当前状态</view>
+            <view class="picker input-show" wx:else>{{stateText}}</view>
+          </picker>
+          <label>当前状态</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <view class="input">{{mobile}}</view>
+          <label>联系方式</label>
+        </view>
+      </view>
+    </view>
+    <view class="section-wrapper" style="padding-bottom:124rpx;">
+      <view class="basicinfo-title">
+        <text style="vertical-align:middle">求职意向</text>
+        <text class="required">*</text>
+      </view>
+      <view class="section-body">
+        <view class="form-control">
+          <picker
+            class="input"
+            bindchange="bindCareerTypePickerChange"
+            value="{{careerTypeIndex}}"
+            range="{{select.JOB_DATE_TYPE}}"
+            range-key="label"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!careerText}}">请选择求职类型</view>
+            <view class="picker input-show" wx:else>{{careerText}}</view>
+          </picker>
+          <label>求职类型</label>
+        </view>
+        <view class="line"></view>
+        <view class="form-control">
+          <picker
+            class="input"
+            mode="multiSelector"
+            bindchange="bindregionPickerChange"
+            bindcolumnchange="bindColumnchange"
+            range-key="short_name"
+            range="{{region}}"
+            value="{{[0,0,0]}}"
+          >
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="input-placeholder" wx:if="{{!cityLabel}}">请选择期望城市</view>
+            <view class="picker input-show" wx:else>
+              {{provinceLabel === cityLabel ? (cityLabel + ' ' + townLabel) : (provinceLabel + ' ' + cityLabel + ' ' + townLabel)}}
+            </view>
+          </picker>
+          <label>期望城市</label>
+        </view>
+        <view class="line" wx:if="{{careerTypeIndex !== 3}}"></view>
+        <view class="form-control" wx:if="{{careerTypeIndex !== 3}}">
+          <view class="input {{ expectPost.text ? '' : 'input-placeholder' }}" bindtap="bindSelectPost">
+            <image src="../../../../assets/image/arrow.png" class="arrow arrow-middle right" />
+            <view class="post-label">{{expectPost.text || '请选择期望岗位'}}</view>
+
+          </view>
+          <label>期望岗位</label>
+        </view>
+      </view>
+    </view>
+    <button
+      disabled="{{buttonState}}"
+      class="{{buttonStyle}}"
+      bindtap="bindSubmit"
+      style="border-radius:0;padding:0;padding-bottom:{{isIpx ? '68rpx' : '0rpx'}}"
+    >保存</button>
+  </view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+.body-wrapper
+  background-color #f7f7f7
+  height 100vh
+.section-wrapper
+  padding 0 32rpx
+  margin-bottom 24rpx
+  background-color #fff
+  .edit
+    font-size 28rpx
+    line-height 32rpx
+    height 32rpx
+    font-weight normal
+    color #404040
+  .section-body
+    .section-add
+      padding-top 48rpx
+      text-align center
+      background-color #f7f7f7
+      border 1px #e5e5e5 dashed
+      padding-bottom 48rpx
+      .section-add-button
+        height 36rpx
+        line-height 36rpx
+        font-size 28rpx
+        margin-bottom 24rpx
+      .section-add-tip
+        height 28rpx
+        line-height 28rpx
+        font-size 28rpx
+        color #999
+    .section-line
+      height 60rpx
+      line-height 60rpx
+      font-size 28rpx
+      display block
+.required
+  color #f60
+  margin-left 8rpx
+  vertical-align middle
+.button
+  height 98rpx
+  line-height 98rpx
+  font-size 32rpx
+  text-align center
+  border-radius 0
+  &::after
+    border none
+.bottom
+  position fixed
+  bottom 0
+  left 0
+  right 0
+.arrow
+  width 28rpx
+  height 28rpx
+  vertical-align middle
+.arrow-middle
+  margin 32rpx
+.right
+  float right
+.active
+  background-color #fc0
+  color #404040
+.line
+  height 1px
+  background-color #e5e5e5
+  transform scaleY(0.5)
+.form-control
+  height 92rpx
+  background-color #fff
+  .post-label
+    width calc(100% - 92rpx)
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+    font-size 28rpx
+  label
+    font-size 28rpx
+    line-height 92rpx
+    color #404040
+    text-align justify
+    width 116rpx
+    display inline-block
+    height 92rpx
+    &::after
+      content ""
+      width 100%
+      display inline-block
+      height 0
+      font-size 0
+      line-height 1
+      margin 0
+  .input-placeholder
+    font-size 28rpx
+    color #999
+    line-height 92rpx
+  .input-show
+    font-size 28rpx
+    line-height 92rpx
+  .input
+    float right
+    width 75%
+    height 92rpx
+    line-height 92rpx
+    font-size 28rpx
+.basicinfo-title
+  height 96rpx
+  line-height 96rpx
+  font-size 32rpx
+  color #404040
+  font-weight 600
+</style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "基本信息",
+  "usingComponents": {
+    "dialog": "../../../../components/dialog/dialog"
+  }
+}
+</script>

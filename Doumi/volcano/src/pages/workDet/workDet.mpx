@@ -1,0 +1,479 @@
+<template>
+  <view class="workDetBox_wrap">
+    <view class="workDetBox">
+      <view class="work_title">{{ details.title }}</view>
+      <view class="headImage">
+        <view class="left_section">
+          <image class="dm-product-company__logo" src="{{details.publisher.logo}}" mode="aspectFit" />
+        </view>
+        <view class="center_section">
+          <view>{{ details.publisher.user_name }}  {{details.publisher.position}}</view>
+          <view>{{ tel_number }}</view>
+        </view>
+        <button wx:if="{{!loginFlag}}" class="right_section" open-type="getPhoneNumber" bindgetphonenumber="onContactPhoneNumber">
+          电话联系
+        </button>
+        <view wx:else class="right_section"  bindtap="onContactPhoneNumber">
+          电话联系
+        </view>
+      </view>
+      <view class="workDiscribe">
+        <view class="work_dis_title">职位描述</view>
+        <view class="work_auth">
+          <rich-text
+            class="letter-wrap"
+            wx:style="{{ { maxHeight: expend.isExpend === false ? triggerHeight : '' } }}"
+            nodes="{{details.post_detail_content}}">
+          </rich-text>
+          <view
+            wx:if="{{expend.isShow}}"
+            class="dm-product-summary__flexible-btn letter-wrap {{expend.isExpend ? 'dm-toggle' : ''}}"
+            bindtap="bindToggle">{{expend.isExpend ? '收起' : '展开'}}
+          </view>
+      </view>
+      <view class="position" bindtap="bindGoToMap(addressOne)">
+        <view class="position_name" wx:if="{{details.post_addr_list}}">
+          <view class="name"
+            >{{ details.post_addr_list[0].city_name }}{{ details.post_addr_list[0].district_name
+            }}{{ details.post_addr_list[0].street_name
+            }}{{ details.post_addr_list[0].address }}</view
+          >
+          <view class="distance" wx:if="{{nearestDistances}}">距你{{ nearestDistances }}</view>
+        </view>
+        <view
+          class="position_more"
+          wx:if="{{details.post_addr_list&&details.post_addr_list.length > 1}}"
+          catchtap="bindShowMoreAddress"
+        >
+          <view>更多地点</view>
+          <view>{{ details.post_addr_list.length }}</view>
+        </view>
+        <dm-address-pop-ff
+          wx:ref="dmAddressPop"
+          bind:item-tap="bindGoToMap"
+          det="{{details}}"
+        ></dm-address-pop-ff>
+      </view>
+    </view>
+    <view class="work_tips">
+      <view class="tips_image"> </view>
+      <view class="tips_text">
+        该职位100%真实，如在求职过程遇到不满意情况，可反馈给我们
+      </view>
+    </view>
+    <workListNearby
+      recommendList="{{recommendList}}"
+    ></workListNearby>
+    <button wx:if="{{!loginFlag}}" class="telContact" open-type="getPhoneNumber" bindgetphonenumber="onContactPhoneNumber">电话联系</button>
+    <button wx:else class="telContact"  bindtap="onContactPhoneNumber">电话联系</button>
+  </view>
+  </view>
+</template>
+
+<script>
+  import { app } from '../../allJS.js'
+  import { createPage } from '@mpxjs/core'
+  import commonApi from '../../interface/common.js'
+  import cityStore from '../../store/city.js'
+  import jobStore from '~/store/job'
+  import util from '~/utils/util'
+  import stretchMixin from '~/mixins/stretch'
+  const STE = jobStore.state
+  const appg = getApp()
+
+  createPage({
+    mixins: [stretchMixin],
+    data: {
+      isFold: true,
+      details: {},
+      nearestDistances: '',
+      recommendList: [],
+      jobId: '',
+      tel_number: '',
+      addressOne: {},
+      loginFlag: false,
+      consumePointFlag: false,
+      showTelNumber: false,
+    },
+
+    onLoad(options) {
+      console.log('onLoad', options)
+      this.setData({
+        jobId: options.jobId,
+      })
+      this.getTel()
+      // 消耗过积分后再次进来直接展示电话号码
+      // if(wx.getStorageSync(options.jobId)) {
+      //   this.showTelNumber = wx.getStorageSync(options.jobId)
+      // }
+    },
+    onShow() {
+      console.log('onShow====')
+      const userId = wx.getStorageSync('userId')
+      const loginFlag = userId > 0 // userId === 0 表示未授权手机号但是已经授权了微信信息, userId === '' 表示未登录
+      console.log('bbbbbbbbbbbbbb', loginFlag)
+      this.loginFlag = loginFlag
+      this.getDetail()
+      this.getRecommendList()
+    },
+    onReady() {},
+    onPageScroll() {
+      console.log(111)
+    },
+    computed: {
+      ...jobStore.mapState(Object.keys(STE)),
+    },
+    methods: {
+      async getTel() {
+        const id = this.data.jobId
+        console.log('id===', id)
+        const res = await util.getData(`client/score/sub/record/${id}`, {}, 'GET')
+        let { code, data } = res.data
+        this.tel_number = data.tel
+        if (code != 1001) {
+          this.showTelNumber = true
+        }
+      },
+      loadMore() {
+        this.isFold = !this.isFold
+      },
+      /**
+       * 进入地图页面
+       * @param {object} e.currentTarget.dataset
+       * ├─ @property {string} address - 地址名
+       * ├─ @property {string} longitude - 经度
+       * └─ @property {string} latitude - 纬度
+       */
+      bindGoToMap({ detail: { city_name, district_name, street_name, address, lat, lng } }) {
+        wx.openLocation({
+          name: `${city_name}${district_name}${street_name}${address}`,
+          latitude: +lat,
+          longitude: +lng,
+        })
+        // this.postEv({ append: '@ca_from=workplace' })
+      },
+      // 显示<更多地址>
+      bindShowMoreAddress() {
+        console.log('22222====', this.details)
+        this.$refs.dmAddressPop.show()
+        // this.postEv({ append: '@ca_from=shop' })
+      },
+    },
+    // 计算距离
+    getDistance(details) {
+      const { post_addr_list } = details
+      const { latitude, longitude } = cityStore.state
+
+      if (latitude && longitude) {
+        const currentLocation = { lat: latitude, lng: longitude }
+        let distance = -1
+
+        if (post_addr_list.length === 1 && post_addr_list[0].lat && post_addr_list[0].lng) {
+          distance = post_addr_list[0].distance = util.getDistance(currentLocation, {
+            lat: post_addr_list[0].lat,
+            lng: post_addr_list[0].lng,
+          })
+        } else {
+          post_addr_list.sort((addr1, addr2) => {
+            if (addr1.lat && addr1.lng) {
+              addr1.distance = util.getDistance(currentLocation, {
+                lat: addr1.lat,
+                lng: addr1.lng,
+              })
+            } else {
+              addr1.distance = -1
+            }
+            if (addr2.lat && addr2.lng) {
+              addr2.distance = util.getDistance(currentLocation, {
+                lat: addr2.lat,
+                lng: addr2.lng,
+              })
+            } else {
+              addr2.distance = -1
+            }
+
+            return addr1.distance - addr2.distance
+          })
+
+          distance = post_addr_list[0].distance
+        }
+
+        for (const item of post_addr_list) item.distance = util.transfromDistance(item.distance)
+
+        this.nearestDistances = util.transfromDistance(distance)
+      }
+    },
+    async getDetail() {
+      const { latitude, longitude } = cityStore.state
+      const { data } = await commonApi.getJobDetailData({
+        postId: this.data.jobId,
+        lng: longitude,
+        lat: latitude,
+      })
+      this.details = data || {}
+      console.log('tttttttttttttttt', data)
+      this.addressOne = { detail: this.details.post_addr_list[0] }
+      this.getDistance(this.details)
+      console.log('detaillllllllllllllll', this.details)
+      setTimeout(() => {
+        this.initStretch({ selector: '.work_auth' })
+      }, 100)
+    },
+    async getRecommendList() {
+      const { latitude, longitude } = cityStore.state
+      const citydomain = wx.getStorageSync('selectedCity').domain || app.globalData.cityInfo.domain
+      const postsid = this.data.jobId
+      console.log('citydomain===', app, citydomain, postsid)
+      const res = await util.getData(
+        `client/recommend/linggonglist`,
+        { citydomain, postsid, lng: longitude, lat: latitude },
+        'GET'
+      )
+      // console.log('getRecommendListgetRecommendList', res)
+      const { code, data } = res.data
+      if (code == 1000) {
+        this.setData({
+          recommendList: data,
+        })
+        console.log('this.data.recommendList===', this.data.recommendList)
+      }
+    },
+    async onContactPhoneNumber(e) {
+      console.log('点击了点击率', this.loginFlag)
+      if (!this.loginFlag) {
+        await appg.getPhoneNumber(e)
+        this.loginFlag = true
+      }
+      let { id } = this.details
+      if (!id) {
+        wx.showToast({ title: '该职位无效！', icon: 'none' })
+        return
+      }
+      // 查询是否已经消耗积分
+      const res = await util.getData(`client/score/sub/record/${id}`, {}, 'GET')
+      let { code, data } = res.data
+      if (code == 1001) {
+        //查询剩余积分
+        const points = await util.getData('client/score/myscore', {}, 'GET')
+        let { my_score } = points.data.data
+        if (my_score == 0) {
+          wx.showToast({
+            title: '积分不足,请下载斗米app赚取积分',
+            icon: 'none',
+            mask: true,
+            duration: 1500,
+          })
+          return
+        } else {
+          //消耗积分
+          const points = await util.getData(`client/score/subscore/${id}/2`)
+          // 查询消耗积分后获取的电话
+          const res = await util.getData(`client/score/sub/record/${id}`, {}, 'GET')
+          let { code, data } = res.data
+          this.tel_number = data.tel
+          this.showTelNumber = true
+          wx.makePhoneCall({
+            phoneNumber: data.tel,
+            success: async () => {},
+            fail: () => {
+              wx.showToast({
+                title: '获取电话失败',
+                icon: 'none',
+                mask: true,
+                duration: 1500,
+              })
+            },
+          })
+        }
+      } else {
+        wx.makePhoneCall({
+          phoneNumber: data.tel,
+          success: async () => {},
+          fail: () => {
+            wx.showToast({
+              title: '获取电话失败',
+              icon: 'none',
+              mask: true,
+              duration: 1500,
+            })
+          },
+        })
+      }
+    },
+  })
+</script>
+
+<style lang="stylus">
+  .workDetBox_wrap
+    overflow auto
+    .workDetBox
+      background #FFF
+      padding 0 16px
+      .work_title
+        font-family PingFangSC-Semibold
+        font-size 22px
+        color #333333
+        line-height 30px
+        white-space nowrap
+        text-overflow ellipsis
+        overflow hidden
+        margin 0 10px 24px 0
+        font-weight bold
+      .headImage
+        display flex
+        background-image linear-gradient(90deg, #FCFCFC 0%, #F8F8F8 100%)
+        border-radius 8px
+        padding 15px
+        // justify-content center
+        align-items center
+        .left_section
+          width 44px
+          height 44px
+          border-radius 100%
+          margin-right 12px
+          .dm-product-company__logo
+            display block
+            width 44px
+            height 44px
+            border-radius 100%
+        .center_section
+          flex 1
+        .right_section
+          padding 0 12px
+          height 26px
+          background #FFCC00
+          border-radius 13px
+          text-align center
+          line-height 26px
+          font-size 16px
+          color #404040
+      .workDiscribe
+        margin-top 34px
+        .work_dis_title
+          margin 22px 0 10px 0
+          font-family PingFangSC-Semibold
+          font-size 16px
+          color #404040
+          text-align justify
+          line-height 24px
+          font-weight bold
+        .work_auth
+          color #808080
+          text-align justify
+          font-size 14px
+          line-height 22px
+          .letter-wrap
+            word-wrap break-word
+            word-break break-all
+            display block
+            overflow hidden
+          .dm-product-summary__flexible-btn
+            height 54px
+            margin-top -32px
+            position relative
+            color #f80
+            font-size 14px
+            line-height 80px
+            text-align center
+            background-image linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 40%, #fff 100%)
+            &::after
+              content ''
+              display inline-block
+              margin-left 4px
+              position relative
+              top -4px
+              width 8px
+              height 8px
+              border-bottom solid 1px #f80
+              border-left solid 1px #f80
+              transform rotate(-45deg)
+              vertical-align middle
+              border-bottom-width 1px
+              border-bottom-style solid
+              border-bottom-color rgb(255, 136, 0)
+              border-left-width 1px
+              border-left-style solid
+              border-left-color rgb(255, 136, 0)
+            &.dm-toggle
+              margin-top -10px
+              &::after
+                top 1px
+                transform rotate(135deg)
+      .position
+        margin-top 38px
+        padding-bottom 16px
+        margin-bottom 8px
+        display flex
+        align-items center
+        .position_name
+          flex 1
+          margin-right 6px
+          background url('../../assets/image/arrow.png') no-repeat right center
+          background-size 14px
+          .name
+            font-family PingFangSC-Regular
+            font-size 14px
+            color #404040
+            line-height 22px
+          .distance
+            font-family PingFangSC-Regular
+            font-size 12px
+            color #808080
+            line-height 20px
+        .position_more
+          width 76px
+          text-align center
+          font-family PingFangSC-Regular
+          font-size 12px
+          color #404040
+          line-height 20px
+          position relative
+          &::before
+            content ''
+            display block
+            width 1px
+            height 40px
+            border-left 1px solid #E5E5E5
+            position absolute
+            left 0
+            top 0
+    .work_tips
+      display flex
+      padding 12px
+      align-items center
+      background #ffffff
+      .tips_image
+        width 40px
+        height 40px
+        background url('../../assets/image/jingshi.png') no-repeat
+        background-size 40px
+        margin-right 12px
+      .tips_text
+        flex 1
+        font-size 12px
+        color #FF8800
+        letter-spacing 1px
+    .telContact
+      position fixed
+      left 0
+      right 0
+      bottom 0
+      height 50px
+      line-height 50px
+      text-align center
+      background #FFCC00
+      font-family PingFangSC-Regular
+      font-size 16px
+      color #404040
+      letter-spacing 2
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "usingComponents": {
+      "workListNearby": "../../components/workListNearby",
+      "dm-address-pop-ff": "../../components/bus/dm-job-detail/dm-address-pop-ff"
+    }
+  }
+</script>

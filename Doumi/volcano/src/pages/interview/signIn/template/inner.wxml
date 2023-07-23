@@ -1,0 +1,128 @@
+<template name="inner">
+  <view class="dm-banner">
+    <image src="https://cdn.doumistatic.com/193,019919b1b6b50545.png" />
+  </view>
+
+  <view class="dm-title">
+    <view class="dm-h1">HI.你来啦</view>
+    <view class="dm-h2" wx:if="{{jobItem.post.corp_name}}">欢迎来到<text style="font-weight: 700">{{jobItem.post.corp_name}}</text>面试</view>
+  </view>
+
+  <job-selector
+    wx:if="{{jobList.length > 0 && signInStatus === 'unsign-select'}}"
+    list="{{jobList}}"
+    bind:submit="bindSubmitJob">
+  </job-selector>
+
+  <block wx:else>
+    <!-- 签到成功 -->
+    <view wx:if="{{signInStatus === 'success'}}" class="dm-pannel success">
+      <view class="dm-pannel-hd">
+        <image src="https://cdn.doumistatic.com/184,018c52abf9d426a1.png" />
+      </view>
+      <view class="dm-pannel-bd">
+        <view class="info">
+          <view class="avatar">
+            <open-data type="userAvatarUrl"></open-data>
+          </view>
+          <view class="user-box">
+            <view class="nickname">
+              嗨，<open-data type="userNickName"></open-data>
+            </view>
+            <view class="greet">很高兴您能来{{jobItem.post.corp_name}}面试</view>
+            <view class="greet">祝您面试顺利！</view>
+          </view>
+        </view>
+        <view class="dm-box contact">
+          <view class="tips">搜索“{{wxNumber}}”公众号，</view>
+          <view class="tips">关注更多求职动态！</view>
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            bindtap="bindCopyWxNumber"
+          >复制微信号
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 签到失败 -->
+    <view wx:elif="{{signInStatus === 'fail'}}" class="dm-pannel fail">
+      <view class="dm-pannel-hd">
+        <image src="https://cdn.doumistatic.com/184,018c527ed1b34e16.png" />
+      </view>
+      <view class="dm-pannel-bd">
+        <image class="icon" src="https://cdn.doumistatic.com/186,018c52caf12fc496.png" />
+        <!-- <view class="dm-box contact"> -->
+        <view class="tips">{{signInFailText[0]}}</view>
+        <view class="tips">{{signInFailText[1]}}</view>
+        <view class="mobile">{{mobile}}</view>
+        <button
+          class="dm-btn dm-btn-primary dm-btn-large"
+          hover-class="dm-touch"
+          bindtap="bindCallMobile"
+        >拨打电话
+        </button>
+        <!-- </view> -->
+      </view>
+    </view>
+
+    <!-- 未签到 -->
+    <view wx:elif="{{signInStatus === 'unsign'}}" class="dm-pannel unsign">
+      <view class="dm-pannel-hd">
+        <image
+          class="sign-btn"
+          bindtap="bindSignIn"
+          src="https://cdn.doumistatic.com/195,01a2fb128597f570.png" />
+      </view>
+      <view class="dm-pannel-bd">
+        <view class="job-card">
+          <view class="job-title">{{jobItem.post.title}}</view>
+          <view class="job-info">
+            <view class="job-meta">
+              <icon class="dmx-icon dmx-icon-location"></icon>{{jobItem.post.post_area}}
+            </view>
+            <view class="job-meta job-meta-corp">
+              <icon class="dmx-icon dmx-icon-corp"></icon>{{jobItem.post.date}}
+            </view>
+          </view>
+          <view class="job-label">
+            <view class="price">
+              <!-- text标签随后的文字不能折行否则间距会变大 -->
+              <text class="price-value">{{jobItem.post.salary}}</text><block wx:if="{{jobItem.post.is_salary_nego != 1}}">{{jobItem.post.salary_unit_str}}/{{jobItem.post.salary_type_str}}</block>
+            </view>
+            <view
+              class="tag"
+              wx:for="{{jobItem.post.tab_treatment_tags}}"
+              wx:key="index">
+              {{item}}
+            </view>
+          </view>
+        </view>
+
+        <view class="dm-box interview">
+          <view class="time">
+            <text class="title">面试时间</text>
+            <text class="text">{{time}}</text>
+          </view>
+          <view class="place">
+            <text class="title">面试地点</text>
+            <text class="text">{{jobItem.interview_addr.address}}</text>
+          </view>
+        </view>
+
+        <view class="dm-box contact">
+          <view class="tips">如使用中有异常情况</view>
+          <view class="tips">请联系我们工作人员{{jobItem.counselor.contact_name}}</view>
+          <view class="mobile">{{mobile}}</view>
+          <button
+            class="dm-btn dm-btn-primary dm-btn-large"
+            hover-class="dm-touch"
+            bindtap="bindCallMobile"
+          >拨打电话
+          </button>
+        </view>
+      </view>
+    </view>
+  </block>
+</template>

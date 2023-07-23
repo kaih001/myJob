@@ -1,0 +1,91 @@
+<!--
+  Description  全部更多地点的弹层
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-26 14:03:08
+-->
+<template>
+  <view
+    hidden="{{!isShowAddress}}"
+    class="dm-mask pop-allPlace"
+    catchtap="hide">
+    <view
+      wx:if="{{jobDetail.post_addr_list.length > 0}}"
+      class="popup-wrapper popup-main-box {{isIpx ? 'iphonex-fixed' : ''}}"
+      catchtap>
+      <view class="popup-title">全部工作地点</view>
+      <scroll-view class="popup-list" scroll-y>
+        <view
+          class="popup-item"
+          wx:for="{{jobDetail.post_addr_list}}"
+          wx:key="index"
+          catchtap="catchGoToMap(item)">
+          <view class="dm-pannel-bd">
+            <view class="title">
+              {{item.city_name + item.district_name + item.street_name + item.address}}
+            </view>
+            <view class="place">
+              {{item.district_name}}
+              <view wx:if="{{item.distance}}" class="place-name">{{item.distance}}</view>
+            </view>
+          </view>
+          <view class="dm-product-info">
+            <icon class="dm-icon-address"></icon>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="short-line"></view>
+      <view class="popup-btn" bindtap="hide">取消</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import jobStore from '~/store/job'
+import globalDataStore from '~/store/globalData'
+
+const STE = jobStore.state
+
+createComponent({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+
+  data: {
+    isShowAddress: false
+  },
+
+  computed: {
+    ...globalDataStore.mapState(['isIpx']),
+    ...jobStore.mapState(Object.keys(STE))
+  },
+
+  methods: {
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    // 显示<更多地址>
+    show () {
+      this.isShowAddress = true
+      STE.isScrollY = false
+    },
+
+    // 隐藏<更多地址>
+    hide () {
+      this.isShowAddress = false
+      STE.isScrollY = true
+    },
+
+    catchGoToMap (item) {
+      this.triggerEvent('item-tap', item)
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.popup-item
+  display flex
+  align-items center
+</style>

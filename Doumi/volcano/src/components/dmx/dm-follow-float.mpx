@@ -1,0 +1,128 @@
+<template>
+  <view class="float-container"
+    wx:style="{{{bottom:BottomHeight}}}"
+    wx:if="{{ifFollow}}">
+    <view class="home" bindtap="goIndex">
+      <image class="icon" src="https://cdn.doumistatic.com/204,01c9dc429397a570.png"></image>
+      <view class="txt">首页</view>
+    </view>
+    <view class="follow" bindtap="goToService">
+      <image class="icon" src="https://cdn.doumistatic.com/204,01c9dc43f8bc00bc.png"></image>
+      <view class="txt">
+        <view>关注</view>
+        <view>公众号</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import addCounselorPath from '~/subpackage/subB/pages/operationalActivities/addCounselor/addCounselor?resolve'
+// import homePath from '~/pages/index/index'
+import homePath from '~/pages/index/index?resolve'
+import globalDataStore from '~/store/globalData'
+import api from '~/utils/api'
+createComponent({
+  properties: {
+    hasBottom: {
+      type: Boolean,
+      value: false
+    }
+  },
+  data: {
+    ifFollow: true
+  },
+  computed: {
+    ...globalDataStore.mapState(['isIpx']),
+    BottomHeight () {
+      if (this.hasBottom) {
+        return this.isIpx ? '195px' : '161px'
+      } else {
+        return this.isIpx ? '145px' : '111px'
+      }
+    },
+  },
+  created () {
+    this.getCode()
+  },
+  methods: {
+    getCode () {
+      wx.login({
+        success (res) {
+          console.log(res)
+        }
+      })
+    },
+    goIndex () {
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@ca_from=FloatingButtonHome`,
+        null,
+        true
+      )
+      wx.switchTab({ url: `${homePath}` })
+    },
+    goToService () {
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@ca_from=FloatingButtonGongzhonghao`,
+        null,
+        true
+      )
+      wx.navigateTo({ url: `${addCounselorPath}` })
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.float-container
+  position:fixed
+  right:24rpx
+  bottom:222rpx
+  padding:28rpx 16rpx
+  display:flex
+  flex-direction:column
+  width:60rpx
+  min-height:180rpx
+  background: #FFFFFF
+  box-shadow: 0 2px 14px 0 rgba(0,0,0,0.20)
+  border-radius: 23px
+  align-items:center
+  // justify-content:space-around
+  .home
+    display:flex
+    flex-direction:column
+    align-items:center
+    .icon
+      width:28rpx
+      height:26rpx
+      margin-bottom:6rpx
+    .txt
+      font-family: PingFangSC-Regular
+      font-size: 10px
+      color: #404040
+  .follow
+    margin-top:24rpx
+    display:flex
+    flex-direction:column
+    align-items:center
+    .icon
+      width:48rpx
+      height:48rpx
+      margin-bottom:6rpx
+    .txt
+      font-family: PingFangSC-Regular
+      font-size: 10px
+      color: #404040
+      letter-spacing: 0
+      text-align: center
+      line-height: 11px
+</style>
+
+<script type="application/json">
+{
+  "component": true
+}
+</script>

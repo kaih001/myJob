@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="35px" viewBox="0 0 30 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>默认状态</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="-7.07396842%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFC100" offset="0%"></stop>
+            <stop stop-color="#FF8900" offset="100%"></stop>
+        </linearGradient>
+        <path d="M8.3612212,25.1479627 C3.47224335,23.2799669 0,18.5454764 0,13 C0,5.82029825 5.82029825,0 13,0 C20.1797017,0 26,5.82029825 26,13 C26,18.9283995 22.0316738,23.9299468 16.6064172,25.4932461 C16.5406002,25.5496651 16.424078,25.6102029 16.25,25.675 C14.495,26.3282642 13.4326821,27.8899747 13.0630463,30.3601314 L12.7080478,30.3070092 C12.7111148,30.286513 12.7096276,30.2655927 12.7036918,30.2457365 C11.8449504,27.3731091 10.5353865,25.741197 8.775,25.35 C8.43848285,25.2752184 8.31705362,25.2075344 8.3612212,25.1479627 Z" id="path-2"></path>
+        <filter x="-11.5%" y="-9.6%" width="123.1%" height="119.2%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.675116922   0 0 0 0 0.600854915   0 0 0 0 0.507842746  0 0 0 0.335795969 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-217.000000, -39.000000)">
+            <g id="Pin" transform="translate(219.000000, 41.000000)">
+                <ellipse id="Oval-6" fill-opacity="0.142181839" fill="#000000" cx="12.5" cy="30.5" rx="4.5" ry="1.5"></ellipse>
+                <g id="Oval">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

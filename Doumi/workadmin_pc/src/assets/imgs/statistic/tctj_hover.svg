@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>套餐统计点击</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M5,8 C6.65685425,8 8,6.65685425 8,5 C8,3.34314575 6.65685425,2 5,2 C3.34314575,2 2,3.34314575 2,5 C2,6.65685425 3.34314575,8 5,8 Z M5,10 C2.23857625,10 0,7.76142375 0,5 C0,2.23857625 2.23857625,0 5,0 C7.76142375,0 10,2.23857625 10,5 C10,7.76142375 7.76142375,10 5,10 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="套餐统计点击">
+            <path d="M0,2.20000005 L0,13.8 C1.48797828e-16,15.0150264 0.984973572,16 2.20000005,16 L13.8,16 C15.0150264,16 16,15.0150264 16,13.8 L16,2.20000005 C16,0.984973572 15.0150264,-2.23196743e-16 13.8,0 L2.20000005,0 C0.984973572,2.23196743e-16 -1.48797828e-16,0.984973572 0,2.20000005 Z" id="Combined-Shape-Copy-3" fill="#6699EE"></path>
+            <g id="矩形" transform="translate(3.000000, 3.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#FFFFFF" fill-rule="nonzero" xlink:href="#path-1"></use>
+                <path d="M4,-1.65256076 L13,-1.65256076 L13,6 L4,6 L4,-1.65256076 Z" id="路径-2" stroke="#6699EE" stroke-width="2" fill="#FFFFFF" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

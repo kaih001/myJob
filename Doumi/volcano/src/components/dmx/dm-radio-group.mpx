@@ -1,0 +1,61 @@
+<template>
+  <view class="dm-radio">
+    <radio-group
+      class="dm-radio-group"
+      bindchange="handleChange">
+      <label
+        wx:for="{{options}}"
+        wx:key="value"
+        class="dm-radio-label">
+        <radio
+          class="dm-radio-input"
+          name="{{name}}"
+          value="{{item.value}}"
+          checked="{{value !== '' && ~~item.value === ~~value}}"
+        />
+        <view class="dm-radio-text">
+          {{item.label}}
+        </view>
+      </label>
+    </radio-group>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+createComponent({
+  externalClasses: [],
+
+  properties: {
+    // radio 的 name
+    name: {
+      type: String,
+      value: ''
+    },
+    // - 选项
+    options: {
+      type: Array,
+      value: []
+    },
+    // - 默认选中的值, 可以用 `wx:model` 双向绑定
+    value: {
+      type: String,
+      value: ''
+    }
+  },
+
+  methods: {
+    handleChange (e) {
+      this.triggerEvent('input', e.detail)
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../styles/radio.styl'
+dm-cell .dm-radio-label
+  width 40%
+</style>
+

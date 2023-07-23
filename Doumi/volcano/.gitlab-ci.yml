@@ -1,0 +1,9 @@
+stages:
+ - build
+job:
+ stage: build
+ only:
+ - online
+ script:
+ - git pull origin online
+ - sonar-scanner

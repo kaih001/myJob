@@ -1,0 +1,122 @@
+<view class="wantRecommend">
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="section">
+      <view class="section__title">姓名</view>
+      <input
+        name="name"
+        placeholder="请输入"
+        placeholder-style="color:#999999;"
+        bindinput="watchChange"
+        data-apply-type="inputName"
+        maxlength="16"
+      />
+    </view>
+    <view class="section">
+      <view class="section__title">手机号</view>
+      <input
+        name="phone"
+        placeholder="请输入"
+        placeholder-style="color:#999999;"
+        type="number"
+        bindinput="watchChange"
+        data-apply-type="inputMobile"
+      />
+    </view>
+    <view class="section">
+      <view class="section__title">性别</view>
+      <radio-group
+        class="genderSelect"
+        name="gender"
+        bindchange="radioChange"
+      >
+        <label><radio value="1" />男生</label>
+        <label style="margin-left:32px"><radio value="2" />女生</label>
+      </radio-group>
+    </view>
+    <view class="section">
+      <picker
+        class="pickerC"
+        name="age"
+        value="{{ageList[ageIndex]}}"
+        range="{{ageList}}"
+        bindchange="bindAgeChange"
+      >
+        <view class="picker">
+          <text class="section__title">年龄</text>
+          <view class="choose-next">
+            <view wx:if="{{ageList[ageIndex]}}">{{ageList[ageIndex]}}</view>
+            <view wx:else class="icon">请选择</view>
+            <image src="https://cdn.doumistatic.com/141,012dff03dfeb30eb.png" class="choose-icon"></image>
+          </view>
+        </view>
+      </picker>
+    </view>
+    <view class="section">
+      <picker
+        class="pickerC"
+        name="education"
+        value="{{educationList[education]}}"
+        range="{{educationList}}"
+        bindchange="bindEducationChange"
+      >
+        <view class="picker">
+          <text class="section__title">学历</text>
+          <view class="choose-next">
+            <view wx:if="{{educationList[education]}}">{{educationList[education]}}</view>
+            <view wx:else class="icon">请选择</view>
+            <image src="https://cdn.doumistatic.com/141,012dff03dfeb30eb.png" class="choose-icon"></image>
+          </view>
+        </view>
+      </picker>
+    </view>
+    <view class="section">
+      <picker
+        class="pickerC"
+        name="address"
+        value="{{addressList[address]}}"
+        range="{{addressList}}"
+        bindchange="bindAddressChange"
+      >
+        <view class="picker">
+          <text class="section__title">工作地点</text>
+          <view class="choose-next">
+            <view wx:if="{{addressList[address]}}">{{addressList[address]}}</view>
+            <view wx:else class="icon">请选择</view>
+            <image src="https://cdn.doumistatic.com/141,012dff03dfeb30eb.png" class="choose-icon"></image>
+          </view>
+        </view>
+      </picker>
+    </view>
+    <view class="section">
+      <picker
+        class="pickerC"
+        name="scene"
+        value="{{sceneList[scene]}}"
+        range="{{sceneList}}"
+        disabled="{{!isAddress}}"
+        bindchange="bindSceneChange"
+      >
+        <view class="picker">
+          <text class="section__title">面试场次</text>
+          <view class="choose-next">
+            <view wx:if="{{sceneList[scene]}}">{{sceneList[scene]}}</view>
+            <view wx:else class="icon">请选择</view>
+            <image src="https://cdn.doumistatic.com/141,012dff03dfeb30eb.png" class="choose-icon"></image>
+          </view>
+        </view>
+      </picker>
+    </view>
+    <view class="submit">
+      <button
+        class="submit-btn"
+        wx:if="{{isName && isMobile && isSex && isAge && isDegree && isInterview && submitFlag}}"
+        form-type="submit"
+      >确认推荐</button>
+      <button
+        class="submit-btn submit-btn_disabled"
+        wx:else
+        disabled="{{!submitFlag}}"
+      >确认推荐</button>
+    </view>
+  </form>
+</view>

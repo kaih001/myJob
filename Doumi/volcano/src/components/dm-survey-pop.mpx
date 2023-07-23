@@ -1,0 +1,144 @@
+<template>
+  <!-- 面试调研框 -->
+  <dm-modal
+    wx:ref="dmSurveyPop"
+    title="{{title}}"
+    position="bottom"
+    confirm-text="去了"
+    cancel-text="没去"
+    bind:confirm="bindSurveyConfirm"
+    bind:cancel="bindSurveyCancel">
+    <view class="dm-modal-content">
+      <view class="dm-modal-time">{{startTime}}-{{endTime}}</view>
+      <view class="dm-modal-title">{{postTitle}}</view>
+      <view class="dm-modal-company">{{companyName}}</view>
+    </view>
+  </dm-modal>
+  <!-- 没去面试原因弹框 -->
+  <dm-reason-pop
+    wx:ref="dmReasonPop"
+    placeholder="其他原因可在此处填写，限3-30个字"
+    options="{{reasonList}}"
+    bind:cancel="bindCancelReason"
+    bind:confirm="bindSubmitReason">
+  </dm-reason-pop>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import api from '../utils/api'
+import util from '../utils/util'
+import interviewApi from '../interface/interview'
+import { REASONS } from '../data/options'
+
+const app = getApp()
+
+createComponent({
+  data: {
+    title: '今天的面试去了么?',
+    startTime: '',
+    endTime: '',
+    companyName: '',
+    postTitle: '',
+    postId: '',
+    reasonList: REASONS
+  },
+
+  methods: {
+    // 去了
+    bindSurveyConfirm () {
+      wx.showTabBar()
+      util.showToast('感谢您的回答，我们已收到！', {
+        showCancel: false,
+        confirmText: '返回'
+      })
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=qule')
+    },
+
+    // 没去
+    bindSurveyCancel () {
+      this.$refs.dmReasonPop.show()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=meiqu')
+    },
+
+    // 选择原因 -> 取消
+    bindCancelReason () {
+      wx.showTabBar()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=cancel')
+    },
+
+    // 选择原因 -> 确定
+    async bindSubmitReason ({ detail: { selectedId, customReason } }) {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=true')
+
+      const param = {
+        postId: this.postId,
+        applyId: this.applyId,
+        reason: selectedId.toString(),
+        customReason
+      }
+      try {
+        await interviewApi.putFeedback(param)
+        await util.showToast('提交成功', { showCancel: false })
+        this.$refs.dmReasonPop.hide()
+      } catch (err) {
+        if (err.code) {
+          wx.showToast({ title: err.msg, icon: 'none' })
+        } else {
+          app.showErrorToastHandler(err)
+        }
+      }
+
+      wx.showTabBar()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=submit_success')
+    },
+
+    // 检查面试调研消息
+    async check () {
+      // 已登录才进行检查
+      const isLogin = wx.getStorageSync('userId') > 0
+      if (!isLogin) return
+      try {
+        const { data } = await interviewApi.checkSignRemind()
+        this.$refs.dmSurveyPop.show()
+        this.startTime = data.start_time
+        this.endTime = data.end_time
+        this.companyName = data.company_name
+        this.postTitle = data.post_title
+        this.postId = data.post_id
+        this.applyId = data.apply_id
+        wx.hideTabBar()
+        api.setLog(2, '@atype=show@ca_name=doumi@ca_source=h5@ca_from=jgdc')
+      } catch (error) {
+        console.log('error',error);
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-modal
+  &-content
+    text-align center
+    line-height 22px
+    font-size 16px
+  &-title
+    margin-top 20rpx
+    line-height 24px
+    font-weight 700
+  &-company
+    margin-top 10rpx
+    font-size 14px
+    color #808080
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-modal": "./dmx/dm-modal",
+      "dm-reason-pop": "./dm-reason-pop"
+    }
+  }
+</script>

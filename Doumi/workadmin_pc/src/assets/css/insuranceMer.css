@@ -1,0 +1,960 @@
+.insuranceMer {
+  padding: 16px 20px;
+  overflow: hidden;
+}
+
+.insuranceMer .head-titledo {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.insuranceMer .head-titledo h2 {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  color: #475568;
+}
+
+.insurancebanner {
+  position: relative;
+  display: block;
+  height: 248px;
+}
+
+.insuranceBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(#8eafe7, #f7f8fe);
+  border-radius: 4px;
+}
+
+.insuranceBerImg {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  margin: auto;
+  width: 100%;
+}
+
+.insuranceBerImg img {
+  margin: auto;
+  display: block;
+  width: 784px;
+  border-radius: 4px;
+}
+
+.insuranceCent {
+  position: relative;
+  top: -55px;
+  left: 0px;
+  padding: 0 10px;
+  z-index: 99;
+}
+
+.Cent_head {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 0 0 rgba(203, 211, 221, 0.2);
+  border: solid 1px rgba(234, 238, 243, 0.8);
+}
+
+.head_main {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 35px 0;
+  border-right: 1px solid #f1f5f7;
+  padding: 0 54px;
+}
+
+.head_main:last-child {
+  border-right: none;
+}
+
+.head_mainw {
+  display: flex;
+  margin: auto;
+  align-items: center;
+}
+
+.insuranceCent h2 {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: left;
+  color: #475669;
+  line-height: 1.28;
+  margin-right: 39px;
+  min-width: 42px;
+}
+
+.insuranceMer .head_mainct {
+  justify-content: center;
+}
+
+.insuranceMer .mainset_title h4 {
+  font-size: 14px;
+  color: #475669;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.insuranceMer .mainset_title span {
+  display: inline-block;
+  width: 44px;
+  height: 20px;
+  border-radius: 2px;
+  border: solid 1px #6699ee;
+  letter-spacing: 1px;
+  text-align: center;
+  line-height: 20px;
+  color: #6699ee;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.insuranceMer .head_mainset p {
+  font-size: 13px;
+  line-height: 1.54;
+  text-align: left;
+  color: #99a9bf;
+  margin-top: 7px;
+}
+
+.insuranceMer .insurance_block {
+  display: flex;
+}
+
+.insuranceMer .block_main {
+  display: block;
+  padding: 20px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 0 0 rgba(203, 211, 221, 0.2);
+  border: solid 1px rgba(234, 238, 243, 0.8);
+  margin-top: 24px;
+  flex-grow: 1;
+  margin-right: 30px;
+}
+
+.insuranceMer .block_main:last-child {
+  margin-right: 0;
+}
+
+.insuranceMer .block_main h3 {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.38;
+  text-align: left;
+  color: #475669;
+}
+
+.insuranceMer .block_main p {
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  color: #99a9bf;
+  margin-top: 4px;
+}
+
+.insuranceMer .block_set p {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: #6699ee;
+  display: inline-block;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.insuranceMer .block_set p:hover {
+  color: #8bb1f2;
+}
+
+.insuranceMer .block_set p:active {
+  color: #517ed6;
+}
+
+.insuranceMer .mainset_title span:active {
+  color: #517ed6;
+  border: 1px solid #517ed6;
+}
+
+.insuranceMer .block_main .set_memberinfo {
+  width: 195px;
+  height: 37px;
+}
+
+.insuranceMer .el-switch {
+  display: inline-block;
+  position: relative;
+  font-size: 14px;
+  line-height: 22px;
+  height: 22px;
+  vertical-align: middle;
+}
+
+.insuranceMer .all_add {
+  margin-left: 12px;
+}
+
+.insuranceMer .all_add_icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 16px;
+  line-height: 24px;
+  margin-right: 5px;
+  font-size: 13px;
+  color: #6699ee;
+  background: url(../imgs/shareIcon/add_hover.svg) left no-repeat;
+  text-indent: 18px;
+  cursor: pointer;
+  background-position-y: -1px;
+}
+
+.insuranceMer .import-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 16px;
+  line-height: 24px;
+  margin-right: 5px;
+  font-size: 13px;
+  color: #6699ee;
+  background: url(../../assets/imgs/shareIcon/import_icon.svg) left no-repeat;
+  text-indent: 18px;
+  cursor: pointer;
+  background-position-y: -1px;
+}
+
+.view_icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 15px;
+  background: url(../imgs/peple_ico.svg) no-repeat;
+  background-size: 14px 13px;
+  margin-right: 5px;
+}
+
+.head_mainw .el-switch--wide .el-switch__label.el-switch__label--left span {
+  left: 15px;
+}
+
+.head_mainw .el-switch--wide .el-switch__label.el-switch__label--right span {
+  right: 13px;
+}
+
+.insuranceMer .dialog-invit .el-dialog__body {
+  padding: 30px 40px 50px 40px;
+}
+
+.insuranceMer .dialog-invit .el-form-item {
+  margin-left: 2px;
+}
+
+.insuranceMer .dialog-invit h3 {
+  font-size: 14px;
+  line-height: 1.14;
+  color: #1f2d3d;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.insuranceMer .dialog-invit .ewm {
+  width: 230px;
+  height: 200px;
+  margin: 0 auto;
+  margin-bottom: 32px;
+}
+
+.insuranceMer .dialog-invit .ewm dl dt img {
+  -webkit-filter: opacity(0.05);
+  filter: opacity(0.05);
+  -ms-filter: opacity(0.05);
+}
+
+.insuranceMer .dialog-invit .ewm dl dt {
+  width: 160px;
+  height: 160px;
+  background: #fff;
+  margin: 0 auto;
+  margin-bottom: 8px;
+}
+
+.insuranceMer .dialog-invit .ewm dl dt #canvas {
+  width: 160px !important;
+  height: 160px !important;
+}
+
+.insuranceMer .dialog-invit .ewm dl dd {
+  font-size: 13px;
+  line-height: 1.23;
+  color: #8492a6;
+  text-align: center;
+}
+
+.insuranceMer .dialog-invit .el-form-item__label {
+  font-size: 14px;
+  color: #8492a6;
+  padding-right: 6px;
+}
+
+.insuranceMer .dialog-invit .el-form-item__content {
+  width: 290px;
+  position: relative;
+}
+
+.insuranceMer .dialog-invit .myinput .btn2 {
+  position: absolute;
+  right: 0px;
+  top: 27px;
+}
+
+.insuranceMer .dialog-invit .myinput {
+  position: relative;
+}
+
+.insuranceMer .dialog-invit .myinput label {
+  font-size: 14px;
+  color: #8492a6;
+}
+
+.insuranceMer .dialog-invit .myinput input {
+  margin-top: 12px;
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #e0e6ed;
+  width: 260px;
+  padding: 0 15px;
+  color: #1f2d3d;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+.insuranceMer .dialog-invit .myinput input:hover {
+  border-color: #c0ccda;
+}
+
+.insuranceMer .dialog-invit .myinput input:focus {
+  border-color: #6699ee;
+}
+
+.insuranceMer .dialog-invit .el-dialog--tiny {
+  width: 470px;
+}
+
+.insuranceMer .maskplan .el-dialog--tiny {
+  width: 470px;
+}
+
+.maskplan .el-dialog__body {
+  position: relative;
+  margin-top: 40px;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.maskplan .el-dialog__body .radio_plan {
+  height: 318px;
+  overflow: auto;
+  padding: 0 40px;
+  padding-bottom: 30px;
+  max-height: 318px;
+  overflow-x: auto;
+}
+
+.maskplan .el-dialog__body .second_radio_plan {
+  height: 50px;
+  overflow-x: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  left: 105px;
+  top: -16px;
+}
+
+.maskplan .el-radio {
+  display: flex;
+  align-items: center;
+}
+
+.insurance_plantext h4 {
+  font-size: 14px;
+  text-align: left;
+  color: #1f2d3d;
+}
+
+.insurance_plantext p {
+  font-size: 12px;
+  text-align: left;
+  color: #5e6d82;
+}
+
+.insuranceMer .dialog-addmember .el-dialog--tiny {
+  width: 420px;
+}
+
+.insuranceMer .dialog-addmember .el-dialog__header {
+  padding: 24px 20px 0 20px;
+}
+
+.insuranceMer .dialog-addmember .el-dialog__body {
+  padding: 27px 40px 0px 38px;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.insuranceMer .dialog-addmember .el-dialog__body .el-dialog__footer {
+  padding: 16px 20px;
+}
+
+.insuranceMer .dialog-addmember .myform {
+  width: 381px;
+  height: 245px;
+  padding: 5px 40px 5px 0;
+  overflow-y: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.insuranceMer .dialog-addmember .el-form-item {
+  margin-bottom: 16px;
+  width: 342px;
+}
+
+.insuranceMer .dialog-addmember .el-form-item__label {
+  text-align: center;
+}
+
+.insuranceMer .dialog-addmember .el-form-item.is-required .el-form-item__label {
+  position: relative;
+  padding-left: 15px;
+  text-align: left;
+}
+
+.insuranceMer .dialog-addmember .el-input.is-disabled .el-input__inner,
+.dialog-addmember .el-textarea.is-disabled .el-textarea__inner {
+  background-color: #eff2f7;
+  border-color: #e0e6ed;
+  color: #bfcbd9;
+  cursor: not-allowed;
+}
+
+.insuranceMer .el-form-item.is-required .el-form-item__label:before {
+  /*content: "*";*/
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: url(../imgs/x_icon.svg) no-repeat center left;
+  color: #ffaa00;
+  position: absolute;
+  left: 0px;
+  top: 14px;
+}
+
+.insuranceMer
+  .dialog-invit
+  .el-form-item.is-required
+  .el-form-item__label:before {
+  content: "";
+  display: none;
+}
+
+.insuranceMer .el-form-item__error {
+  position: static;
+  margin-bottom: -7px;
+}
+
+.insuranceMer .maskplan .radio_btn {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #e0e6ed;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin-right: 12px;
+}
+
+.insuranceMer .maskplan .radio_btn:hover {
+  border-color: #6699ee;
+}
+
+.insuranceMer .maskplan .radio_btn.is-checked {
+  border-color: #6699ee;
+  background: #6699ee;
+}
+
+.insuranceMer .maskplan .radio_btn::after {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #fff;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s cubic-bezier(0.71, -0.46, 0.88, 0.6);
+}
+
+.insuranceMer .maskplan .radio_btn.is-checked::after {
+  -ms-transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.insuranceMer .maskplan .radio_list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.insuranceMer .maskplan .radio_list h4 {
+  font-size: 14px;
+  line-height: 1.43;
+  text-align: left;
+  color: #1f2d3d;
+}
+
+.insuranceMer .maskplan .radio_list p {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+  width: 344px;
+  color: #5e6d82;
+}
+
+.insuranceMer .maskplan .note {
+  margin-top: 24px;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  color: #99a9bf;
+}
+
+.insuranceMer .maskplan .el-dialog__footer {
+  padding: 16px 20px 16px;
+}
+
+.insuranceMer .maskplan .title_info {
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  color: #99a9bf;
+  position: absolute;
+  top: -52px;
+  left: 97px;
+}
+
+.insuranceMer .maskplan .second_title_info {
+  font-size: 12px;
+  line-height: 1;
+  color: #99a9bf;
+  margin-left: 93px;
+  margin-right: 60px;
+  margin-bottom: 10px;
+}
+
+.insuranceMer .maskplan .second_title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: left;
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
+.insuranceMer .insurance-terms .el-dialog--tiny {
+  width: 470px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent h2 {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.43;
+  text-align: left;
+  color: #475669;
+  margin-top: 8px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent li {
+  font-size: 13px;
+  text-align: justify;
+  color: #5e6d82;
+  margin-top: 8px;
+  line-height: 1.5;
+  position: relative;
+  padding-left: 15px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent .p1 {
+  font-size: 13px;
+  /*font-weight: 900;*/
+  line-height: 1.7;
+  text-align: justify;
+  color: #475669;
+  margin-top: 8px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent .item_2 {
+  padding-left: 15px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent h3 {
+  position: relative;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.54;
+  text-align: left;
+  color: #475669;
+  margin-top: 8px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent h3:after {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  content: "";
+  display: block;
+  background-color: #475669;
+  top: 7px;
+  left: -15px;
+  position: absolute;
+}
+
+.insuranceMer .insurance-terms .insurancecontent .p2 {
+  font-size: 13px;
+  text-align: left;
+  color: #5e6d82;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.insuranceMer .insurance-terms .insurancecontent h3 {
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.54;
+  text-align: left;
+  color: #475669;
+  margin-top: 8px;
+}
+
+.insuranceMer .insurance-terms .el-dialog__body {
+  margin-top: 20px;
+  padding: 0 40px;
+  margin-bottom: 40px;
+  height: 400px;
+  overflow-x: auto;
+}
+
+.termsanchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: block;
+  width: 100%;
+  height: 192px;
+}
+
+.termsanchor a {
+  display: block;
+  width: 165px;
+  height: 27px;
+  margin-top: 118px;
+  margin-left: 136px;
+  border-radius: 14px;
+  line-height: 27px;
+  text-align: center;
+  color: #6699ee;
+  font-size: 13px;
+  padding-right: 20px;
+}
+
+.termsanchor a:hover {
+  color: #8bb1f2;
+}
+
+.termsanchor a:active {
+  color: #517ed6;
+}
+
+.termsanchor .termcenter {
+  width: 784px;
+  height: 100%;
+  margin: auto;
+  padding-top: 1px;
+  position: relative;
+}
+
+.termsanchor .termcenter .termcenter-numbers {
+  width: 250px;
+  position: absolute;
+  top: 125px;
+  left: 104px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.insuranceMer .add_icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 20px;
+  line-height: 24px;
+  margin-right: 5px;
+  font-size: 13px;
+  color: #6699ee;
+  background: url(../imgs/insurance/auto_add.svg) left no-repeat;
+  text-indent: 18px;
+  cursor: pointer;
+  background-position-y: 1px;
+}
+
+.insuranceMer .statistical_icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 16px;
+  line-height: 24px;
+  margin-right: 5px;
+  font-size: 13px;
+  color: #6699ee;
+  background: url(../imgs/insurance/view_statistical.svg) left no-repeat;
+  text-indent: 18px;
+  cursor: pointer;
+  background-position-y: -1px;
+}
+
+.insuranceMer .insurance-terms .insurancecontent li:after {
+  width: 6px;
+  height: 6px;
+  content: "";
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  background-color: #d8d8d8;
+  top: 7px;
+  left: 0px;
+}
+
+.head_mainset.head_mainct {
+  max-width: 275px;
+}
+
+.defaultewm {
+  width: 130px;
+  height: 130px;
+  margin: auto;
+  display: block;
+  line-height: 160px;
+  padding-top: 14px;
+}
+
+/* 弹窗————批量导入 */
+#insuranceM .dialog-import .el-dialog__body{
+	padding: 40px 20px 30px 20px;
+}
+#insuranceM .dialog-import .el-dialog {
+  position: relative;
+}
+/* #insuranceM .el-dialog--tiny {
+  width: 420px;
+} */
+#insuranceM .dialog-import .el-dialog--tiny {
+  top: 25% !important;
+  -webkit-transition: top 25% !important;
+}
+#insuranceM .el-dialog__header {
+  padding: 24px 20px 0 20px;
+}
+#insuranceM .dialog-addmember .el-dialog__body,
+.dialog-info .el-dialog__body,
+.dialog-group-select .el-dialog__body {
+  padding: 45px 20px 38px 20px;
+}
+#insuranceM .dialog-import .title {
+  position: absolute;
+  left: 100px;
+  top: 26px;
+}
+#insuranceM .dialog-import .title span {
+  font-size: 12px;
+  line-height: 1.33;
+  color: #8492a6;
+}
+#insuranceM .dialog-import .title a {
+  font-size: 14px;
+  line-height: 1.14;
+  color: #6699ee;
+  cursor: pointer;
+  margin-left: 10px;
+}
+#insuranceM .dialog-import .title a:active {
+  color: #517ed6;
+}
+#insuranceM .myform {
+  width: 340px;
+  margin: 0 auto;
+}
+#insuranceM .myform h4 {
+  font-size: 14px;
+  text-align: left;
+  color: #8492a6;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+#insuranceM .dialog-import .myform .uploadbtn {
+  padding: 6px 9px;
+}
+#insuranceM .dialog-import .el-dialog__footer {
+  border-top: 1px solid #e0e6ed;
+  padding: 0px 20px 15px;
+}
+#insuranceM .dialog-import .dialog-footer {
+  overflow: hidden;
+}
+#insuranceM .dialog-import .dialog-footer .el-button {
+  margin-top: 16px;
+  border-radius: 2px;
+  padding: 10px 18px;
+}
+.upload-box .file {
+  position: relative;
+  display: inline-block;
+  background: #6699ee;
+  border: 1px solid #6699ee;
+  border-radius: 4px;
+  padding: 3px 9px;
+  overflow: hidden;
+  color: #ffffff;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+  border-radius: 2px;
+}
+.upload-box .file:hover {
+  background: #8bb1f2;
+  border-color: #8bb1f2;
+  color: #ffffff;
+  text-decoration: none;
+}
+.upload-box .file:active {
+  background-color: #517ed6;
+  border-color: #517ed6;
+  color: #ffffff;
+}
+.upload-box .disabled_file {
+  background: #eff2f7;
+  border: 1px solid #e0e6ed;
+  color: #c0ccda;
+}
+.upload-box .disabled_file:hover {
+  background: #eff2f7;
+  border: 1px solid #e0e6ed;
+  color: #c0ccda;
+}
+.upload-box .file input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.upload-box p {
+  color: #475669;
+  font-size: 14px;
+  padding: 5px 25px 5px 29px;
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.upload-box p:hover {
+  background: #f5f5f5;
+  color: #6699ee;
+}
+.upload-box p:hover i.file_close {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(../imgs/x.png) no-repeat right center;
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+}
+.upload-box p i.file_icon {
+  display: block;
+  width: 15px;
+  height: 18px;
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  background: url(../imgs/excel.svg) no-repeat left center;
+}
+
+#insuranceM .speed-div{
+	background-color: #eaf1f9;
+	width: 340px;
+	height: 2px;
+	border-radius: 100px;
+	position: relative;
+}
+#insuranceM .speed-div span{
+	height: 2px;
+	display: block;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	border-radius: 100px;
+	background-color: #6699ee;
+}
+.progressWrap .circleWrap{
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 30px 0;
+}
+.progressWrap .progressMes{
+  text-align: center;
+  font-size: 14px;
+}
+.progressWrap .progressMes.green{
+  color: #13ce66;
+}
+.notClick {
+  color: #707070!important;
+}
+.notClick .all_add_icon{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHhJREFUOE9jZKAQMOLTX1BQUAaSnzBhQhcudYQMqGRkZOTp7++vHjWAQBjk5+eXMzExsaIH1P///+0YGRnZGBgY9mALxP7+/hZwLIAMYGRk5MaiyJqBgQFkwH4scn8nTJjQOBqNDAy0DwMGBgamCRMmtJKVF4jJ6QCoRz4RafEN1AAAAABJRU5ErkJggg==) left no-repeat;
+  margin-top: -3px;
+}
+.redText {
+  color: red;
+}

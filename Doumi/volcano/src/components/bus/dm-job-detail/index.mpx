@@ -1,0 +1,349 @@
+<!--
+  Description  职位详情页的框架布局
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-24 11:22:54
+-->
+<template>
+  <import src="../../../template/error/error.wxml" />
+
+  <!-- <dm-formid-collector bind:complate="bindCollectComplate"> -->
+    <!-- 114px = 50px(底部按钮高) + 64px(顶部navBar高) -->
+    <!-- 148px = 114px(基础距离) + ipx额外留白距离 -->
+    <scroll-view
+      scroll-y="{{isScrollY}}"
+      style="height: calc(100vh - {{isIpx ? '148px' : '114px'}})"
+      bindscroll="bindScroll">
+      <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+      <view
+        wx:elif="{{jobDetail}}"
+        class="dm-footbar-show"
+        wx:class="{{ { iphonex: isIpx } }}">
+        <dm-job-header></dm-job-header>
+        <dm-job-container></dm-job-container>
+      </view>
+
+      <!-- 推荐职位列表 -->
+      <recommend-job-list
+        subscribe="{{showSubscribe}}"
+        wx:if="{{jobDetail && isShowRecommend}}"
+        wx:ref="recommendJobList"
+        job-id="{{id}}"
+        is-chao-jian-zhi="{{isChaoJianZhi}}"
+        job-type="{{jobType}}"
+        bind:complete="bindComplete">
+      </recommend-job-list>
+
+      <!-- 占位view(用于滚动容器的底部留白) -->
+      <view style="height: 24rpx"></view>
+    </scroll-view>
+    <dm-follow-float hasBottom="true"></dm-follow-float>
+    <dm-subscribe
+    caFrom="ToastDingyuexiaoxi"
+    hasBottom="true"
+    subscribeTxt="{{jobCategory}}"
+    bind:closeSubscribe="bindCloseSubscribe"
+    bind:showSubscribe="bindShowSubscribe"
+    ></dm-subscribe>
+    <dm-job-footer></dm-job-footer>
+  <!-- </dm-formid-collector> -->
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import jobStore from '~/store/job'
+import globalDataStore from '~/store/globalData'
+// import commonApi from '~/interface/common'
+// import api from '~/utils/api'
+const STE = jobStore.state
+// const app = getApp()
+
+createComponent({
+  options: {
+    styleIsolation: 'shared'
+  },
+
+  // -------------------------------------------------------------------------
+  // 计算属性(在store中共享)
+  // -------------------------------------------------------------------------
+  data: {
+    showSubscribe: false
+  },
+  computed: {
+    ...globalDataStore.mapState(['isIpx']),
+    ...jobStore.mapState(Object.keys(STE)),
+    isShowRecommend () { // 是否显示推荐职位列表
+      // 显示条件: 非自营贴(普通贴) 或者 为自营贴的通过列表直接进入而非扫描顾问二维码进来
+      // 备注: `XCX-92` 包括顾问分享（带顾问id）出去的, 职位详情页 和 报名(约面)成功页，不展示推荐职位列表。
+      return !this.jobDetail.is_ziying || (!this.consultantId && this.jobDetail.post_detail_content)
+    }
+  },
+  detached () {
+    // 离开当前详情页, 将当前store中的详情数据销毁
+    this.DESTROY_JOB()
+  },
+
+  methods: {
+    ...jobStore.mapMutations(['DESTROY_JOB']),
+    ...jobStore.mapActions(['postEv']),
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    // 收集formid完成时触发
+    // bindCollectComplate ({ detail: { formId } }) {
+    //   const param = {
+    //     formId,
+    //     openId: app.globalData.openId,
+    //     pushType: 12
+    //   }
+    //   commonApi.collectFormid(param)
+    //   STE.theFormId = formId
+    // },
+    bindCloseSubscribe (val) {
+      this.showSubscribe = false
+    },
+    bindShowSubscribe () {
+      this.showSubscribe = true
+    },
+    // 页面滚动时曝光埋点采集
+    bindScroll (evt) {
+      wx.$tracker.emit('scroll', evt)
+    },
+
+    /**
+     * 下方的职位推荐列表数据加载完成
+     * 由子组件派发, 父组件接收
+     * @param {Array} listData
+     */
+    bindComplete (listData) {
+      this.__initTracker()
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    // 曝光埋点初始化
+    __initTracker () {
+      // 由于不能在页面内使用 `createSelectorQuery` 来获取组件的节点, 所以将方法写在组件内
+      const context = this.$refs.recommendJobList
+      const from = STE._options.from || 'direct_visits'
+
+      wx.$tracker.trackExposure(
+        STE.dmch,
+        {
+          el: {
+            container: '.dm-recommend-list-body',
+            list: '.dm-recommend-list-item'
+          },
+          offsetBottom: 50,
+          dmalog: list => {
+            list = JSON.stringify(list)
+            return `@atype=scroll@ca_name=doumi@ca_source=h5@from=${from}@ca_from=post_list@show_post_id=${list}`
+          }
+        },
+        context
+      )
+        .success(arg => console.log('曝光埋点发起成功: ', arg))
+        .fail(err => console.warn('曝光埋点发起失败: ', err))
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../../styles/util.styl'
+
+.dm-space-line
+  height 1px
+  margin-top -1px
+  bottomBorder1px(#E5E5E5, 32rpx, 32rpx)
+
+.dm-icon
+  &::after
+    background-image url("https://cdn.doumistatic.com/172,015fd6497ae31891.png")
+  &-arrow-sm
+    width 10px
+    height 10px
+    &::after
+      width 10px
+      height 10px
+      background-position -80px 0
+  &-share
+    &::after
+      background-position 0 -80px
+  &-chat
+    &::after
+      background-position -20px -80px
+
+.dm-pannel
+  padding-left 32rpx
+  padding-right 32rpx
+  position relative
+  background-color white
+  // 布局头部
+  .dm-pannel-hd
+    display flex
+    align-items center
+    justify-content space-between
+  // 通用小标题
+  .dm-pannel-title
+    padding-top 32rpx
+    color #808080
+    font-size 12px
+    line-height 20px
+    font-weight 400
+    &.h1
+      padding-bottom 32rpx
+      color #404040
+      font-size 18px
+      font-weight 700
+      line-height 24px
+      position relative
+      &::after
+        content ''
+        display block
+        widht 27px
+        height 3px
+        background-color #f7f7f7
+        position absolute
+        left 0
+        bottom 0
+
+.popup-wrapper
+  position fixed
+  left 0
+  bottom 0
+  right 0
+  color #404040
+  padding-bottom 0
+  background-color #fff
+  z-index 1010
+  .popup-title
+    font-size 16px
+    line-height 24px
+  .popup-item
+    &.active
+      color #404040
+      background-color #fffcf5
+      &::after
+        border-color #fa0
+      &::before
+        content ""
+        position absolute
+        top -4px
+        right -4px
+        z-index 1
+        width 32rpx
+        height 32rpx
+        vertical-align middle
+        background url("https://cdn.doumistatic.com/165,015350759fe1c754.png") no-repeat
+        background-size 32rpx
+  .popup-btn
+    margin-left -16px
+    margin-right -16px
+    view
+      position relative
+      display inline-block
+      width 50%
+      padding-top 12px
+      padding-bottom 12px
+      font-size 16px
+      color #404040
+      text-align center
+      line-height 24px
+    .btn-sure
+      &::after
+        border-color #fc0
+  .btn-cancel
+    background-color #fff
+  .btn-sure
+    background-color #fc0
+
+.popup-wrapper .popup-btn
+  .btn-cancel::after,
+  .btn-sure::after
+    content ""
+    display block
+    position absolute
+    left 0%
+    top 0%
+    width 200%
+    height 1px
+    border-top 1px solid #e5e5e5
+    transform-origin 0 0
+    transform scale(0.5)
+
+.pop-allPlace
+  .popup-list
+    max-height 296px
+  .popup-title
+    font-size 18px
+    line-height 26px
+    text-align center
+    padding 12px 16px
+  .popup-item
+    position relative
+    padding 14px 16px 12px
+    .title
+      font-size 16px
+      line-height 20px
+      font-weight 700
+    .place
+      color #808080
+      font-size 14px
+      line-height 22px
+      margin-top 4px
+    .place-name
+      position relative
+      display inline-block
+      padding-left 16px
+      &::after
+        content ""
+        position absolute
+        top 50%
+        left 8px
+        margin-top -5px
+        width 1px
+        height 20px
+        background-color #808080
+        transform-origin 0 0
+        transform scale(0.5)
+  .short-line
+    width 100%
+    height 12px
+    background-color #f7f7f7
+  .popup-btn
+    padding-top 16px
+    padding-bottom 16px
+    font-size 16px
+    color #404040
+    line-height 16px
+    text-align center
+.pop-bookPlace .place-box::after,
+.pop-allPlace .popup-item:not(:last-child)::after
+  position absolute
+  left 0
+  bottom 0
+  content ""
+  display block
+  width 200%
+  height 1px
+  background-color #e5e5e5
+  transform-origin 0 0
+  transform scale(0.5)
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-job-header": "./dm-job-header",
+      "dm-subscribe": "~/components/dmx/dm-subscribe",
+      "dm-follow-float": "~/components/dmx/dm-follow-float",
+      "dm-job-container": "./dm-job-container",
+      "dm-job-footer": "./dm-job-footer",
+      "recommend-job-list": "~/components/recommendJobList/recommendJobList"
+    }
+  }
+</script>

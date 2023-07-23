@@ -1,0 +1,69 @@
+<template>
+  <view class="container">
+    <block wx:if="{{isShowWebView}}">
+      <web-view src="{{url}}" bindmessage="setMessage"></web-view>
+    </block>
+    <block wx:else>
+      <jump-outside-tips
+        entry="{{ { animationName: 'pulse' } }}"
+        leave="{{ { animationName: 'fadeOut' } }}"
+        wx:ref="jobOutsideTips"
+        bindcountdownfinsh="onCountdownfinsh">
+      </jump-outside-tips>
+    </block>
+  </view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import api from '~/utils/api'
+import util from '~/utils/util'
+
+const app = getApp()
+
+createPage({
+  mixins: [],
+
+  data: {
+    isShowWebView: false,
+    url:'http://wd717-sim.doumistatic.com/'
+  },
+
+  computed: {
+  },
+
+  onLoad ({ }) {
+  },
+
+  onShow () {
+    this.$nextTick(()=>{
+      this.$refs.jobOutsideTips.showDialog()
+    })
+  },
+
+  methods: {
+    onCountdownfinsh(){
+      this.isShowWebView=true
+    },
+    setMessage(e){
+      // wx.setStorageSync('biz_id',e.detail.data)
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+  .container
+    width 100%
+    height 100%
+    background-image linear-gradient(to right, #fa709a 0%, #fee140 100%)
+</style>
+
+<script type="application/json">
+  {
+    "navigationBarTitleText": "报名成功",
+    "usingComponents": {
+      "jump-outside-tips":"~/components/jumpOutsideTips/jumpOutsideTips"
+    }
+  }
+</script>

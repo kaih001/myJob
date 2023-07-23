@@ -1,0 +1,270 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+
+  <nav-bar title="详情" backShow="{{true}}"></nav-bar>
+
+  <!-- 授权弹窗组件调用 -->
+  <dialog
+    id="dialog"
+    open-type="getPhoneNumber"
+    cancel-text="账号登录"
+    auto-hide="{{false}}"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack">
+  </dialog>
+
+  <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+
+  <view class="dm-page detail" wx:else>
+    <view class="dm-section">
+      <view class="dm-pannel product">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">面试详情</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <myProgressDetail id="myProgressDetail" item="{{interviewDetailData}}">
+            <view
+              wx:if="{{interviewDetailData.listing_status && interviewDetailData.listing_status != -10}}"
+              slot="sign-entry"
+              style="margin-top: 24rpx">
+              <dm-button
+                wx:if="{{signInStatus === 'success'}}"
+                size="middle"
+                type="primary"
+                round
+                disabled>签到成功
+              </dm-button>
+              <button
+                wx:else
+                class="sign-btn"
+                bindtap="bindSignIn">
+                <!-- 面试签到按钮 -->
+              </button>
+            </view>
+          </myProgressDetail>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import api from '../../utils/api'
+import util from '../../utils/util'
+import { dateFormat } from '../../utils/date'
+import interviewApi from '../../interface/interview'
+import login from '~/pages/login/login?resolve'
+
+const app = getApp()
+
+createPage({
+  // -------------------------------------------------------------------------
+  // 页面初始数据
+  // -------------------------------------------------------------------------
+
+  data: {
+    applyId: '',
+    showErrorTemp: false,
+    errorType: '',
+    interviewDetailData: {},
+    signInStatus: null // null 表示 `未签到` 或者 `签到失败`
+  },
+
+  // -------------------------------------------------------------------------
+  // 小程序生命周期
+  // -------------------------------------------------------------------------
+
+  onLoad ({ apply_id }) {
+    if (apply_id) this.applyId = apply_id
+
+    const userId = wx.getStorageSync('userId')
+    if (userId <= 0) {
+      this.selectComponent('#dialog').showDialog()
+    } else {
+      this.getInterviewData()
+    }
+  },
+
+  onShow () {
+    if (this.interviewDetailData.id) this.__checkSignIn()
+    api.setLog(1, '/jianzhi/interview')
+  },
+
+  methods: {
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    /**
+     * 登录组件手机号授权反馈
+     */
+    async bindGetPhoneNumberCallBack (e) {
+      await app.getPhoneNumber(e)
+      this.getInterviewData()
+    },
+
+    /**
+     * 账号登录
+     */
+    bindAccountLogin () {
+      wx.navigateTo({ url: `${login}?callbackName=getInterviewData` })
+    },
+
+    bindSignIn () {
+      const { id } = this.interviewDetailData
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=msqd')
+      wx.navigateTo({ url: `../interview/signIn/signIn?id=${id}` })
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    // 获取约面详情页的数据
+    async getInterviewData () {
+      util.showLoading()
+      this.selectComponent('#dialog').hideDialog()
+
+      try {
+        if (!app.globalData.locationData) await app.checkAuthAndGetLocation(false)
+      } catch (err) {} // - 拒绝地理位置授权或者授权失败
+      const { locationData } = app.globalData
+
+      let lat = ''
+      let lng = ''
+      if (locationData) {
+        lat = locationData.latitude
+        lng = locationData.longitude
+      }
+
+      try {
+        const params = {
+          apply_id: this.applyId,
+          lat,
+          lng
+        }
+        const res = await util.getData('interview/detail', params)
+        const { code, data, msg } = res.data
+        if (code === 1000) {
+        // 格式化面试时间
+          const start = data.interview_times.start_time
+          const end = data.interview_times.end_time
+          data.interview_times.time = `${dateFormat(
+            start,
+            'YYYY/MM/DD'
+          )}  ${dateFormat(start, 'HH:mm')} - ${dateFormat(end, 'HH:mm')}`
+
+          this.interviewDetailData = data
+          this.__checkSignIn()
+        } else {
+          wx.showToast({ title: msg, icon: 'none' })
+        }
+        util.hideLoading()
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // 检查签到状态
+    async __checkSignIn () {
+      const params = { postId: this.interviewDetailData.id }
+      await interviewApi.checkSignIn('direct', params)
+      this.signInStatus = 'success'
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-section
+  padding-bottom 66rpx
+  box-sizing border-box
+
+.product
+  .dm-pannel-hd
+    display none
+  .dm-product-title
+    max-width 80%
+    font-size 32rpx
+    font-weight 700
+    line-height 48rpx
+    text-overflow ellipsis
+    white-space nowrap
+    overflow hidden
+
+.tab
+  width 100%
+  box-sizing border-box
+  font-size 0
+  letter-spacing 0
+  text-align center
+  padding 32rpx
+  background-color #fff
+  .tab-item
+    position relative
+    display inline-block
+    overflow visible
+    width 25%
+    font-size 32rpx
+    color #404040
+    text-align center
+    background-color #fff
+    &.active
+      font-weight 700
+      &::before
+        position absolute
+        left 50%
+        bottom -32rpx
+        content ''
+        transform translateX(-50%)
+        width 22%
+        height 8rpx
+        background #fa0
+        border-radius 100px
+        z-index 10
+  .tips
+    display block
+    line-height 32rpx
+.tab-item
+  &.spot
+    ::after
+      position absolute
+      right 34rpx
+      top -4rpx
+      content ''
+      width 12rpx
+      height 12rpx
+      background #f60
+      border-radius 100px
+
+.sign-btn
+  padding 0 24rpx
+  width 100%
+  height 88rpx
+  background-image linear-gradient(137deg, #ffe94c 0%, #ffbd00 100%)
+  box-shadow 0 2px 2px 0 rgba(239,146,0,0.25)
+  border-radius 4px
+  border-radius 4px
+  &::after
+    content '面试签到'
+    line-height 176rpx
+    font-size 32px
+    background-image url('https://cdn.doumistatic.com/190,019e4810bfb55802.png')
+    background-repeat no-repeat
+    background-size 100% 100%
+</style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "面试详情",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "myProgressDetail": "../../components/myProgressDetail/myProgressDetail",
+    "myProgressPop": "../../components/myProgressPop/myProgressPop",
+    "dialog": "../../components/dialog/dialog",
+    "nav-bar": "../../components/navBar/navBar",
+    "dm-button": "../../components/dmx/dm-button"
+  }
+}
+</script>

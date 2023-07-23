@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.1 (43504) - http://www.bohemiancoding.com/sketch -->
+    <title>编辑</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-78.000000, -229.000000)">
+            <g id="Group-Copy-2-+-Rectangle-817-+-Triangle-2" transform="translate(86.000000, 235.500000) scale(-1, 1) rotate(-180.000000) translate(-86.000000, -235.500000) translate(80.000000, 229.000000)">
+                <g id="Group-Copy-2" stroke-width="2" stroke="#6699EE">
+                    <polyline id="Rectangle-138" points="5 11 0 11 0 0"></polyline>
+                    <polyline id="Rectangle-138-Copy" transform="translate(5.000000, 4.000000) rotate(-180.000000) translate(-5.000000, -4.000000) " points="10 7 4.54969395e-13 7 9.11049014e-13 1"></polyline>
+                </g>
+                <g id="Rectangle-817-+-Triangle-2" transform="translate(7.536386, 8.101577) rotate(-41.000000) translate(-7.536386, -8.101577) translate(6.036386, 3.101577)" fill="#6699EE">
+                    <polygon id="Rectangle-817" points="0.0820730221 4.26760312 -1.13620224e-12 1 2 1 2.21248651 9.45980263 0.212486506 9.45980263"></polygon>
+                    <polygon id="Triangle-2" points="1 1.52766688e-13 2 1 2.94653191e-13 1"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

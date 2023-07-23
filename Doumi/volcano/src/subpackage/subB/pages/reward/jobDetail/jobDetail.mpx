@@ -1,0 +1,410 @@
+<template>
+  <!-- 授权弹窗组件调用 -->
+  <dialog
+    id="dialog"
+    title="微信账号快速登录"
+    content="微信账号快速登录"
+    bind:cancel="clickCancelBtn"
+    bind:getUserInfo="getUserInfoCallBack"
+  ></dialog>
+  <getPhoneNumber
+    id="getPhoneNumber"
+    title="{{bindPhoneTitle}}"
+    bind:allow="_allow"
+    bind:refuse="_refuse"
+  ></getPhoneNumber>
+
+  <scroll-view
+    class="dm-page"
+    scroll-y="{{!appyConfirmAsheet}}"
+    style="height: 100%"
+  >
+    <view class="dm-section detail dm-footbar-show {{isIpx ? 'iphonex' : ''}}">
+      <view class="dm-pannel product-basic">
+        <view class="dm-pannel-bd {{jobDetail.zhipin ? 'line' : ''}}">
+          <view class="dm-product-title">{{jobDetail.title}}</view>
+          <view class="dm-product-box">
+            <view class="dm-product-price" wx:if="{{jobDetail.salary != undefined}}">
+              <text class="dm-product-price-value">{{jobDetail.salary}}</text>
+              <block wx:if="{{jobDetail.is_salary_nego != 1}}">
+                {{jobDetail.salary_unit_str}}/{{jobDetail.salary_type_str}}
+              </block>
+            </view>
+            <view class="dm-product-info">
+              <view class="dm-product-meta" wx:if="{{!!jobDetail.payment_type_str}}">
+                {{jobDetail.payment_type_str}}
+              </view>
+              <view class="dm-product-meta" wx:if="{{!!jobDetail.job_type_str}}">
+                {{jobDetail.job_type_str}}
+              </view>
+              <view class="dm-product-meta" wx:if="{{jobDetail.hire_number}}">
+                {{jobDetail.hire_number}}人
+              </view>
+              <view class="dm-product-meta" wx:if="{{jobDetail.new}}">最新</view>
+            </view>
+            <view class="dm-product-label" wx:if="{{isWagesGuarantee}}">
+              <icon class="dm-icon dm-icon-danbao-lg"></icon>工资保障
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{isZhiPin}}" class="zhipin-flag">
+          <image src="https://cdn.doumistatic.com/187,018d4fabce06f4ce.jpg"></image>
+        </view>
+      </view>
+      <view class="dm-pannel product-summary" style="background-image:none">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">职位描述</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="dm-product-text desc-text">
+            <view
+              class="dm-pannel-label"
+              wx:if="{{jobDetail.work_type == 2 && jobDetail.tab_quanzhi_demand_tags.length > 0}}"
+            >
+              <text
+                class="dm-pannel-label-item"
+                wx:for="{{jobDetail.tab_quanzhi_demand_tags}}"
+                wx:key="index"
+              >{{item}}</text>
+            </view>
+            <rich-text
+              wx:if="{{canIUseFlag}}"
+              class="letter-wrap {{expendList[0].expendShow ? (expendList[0].isExpend == 'dm-toggle' ? '' : 'dm-flexible-body') : ''}}"
+              nodes="{{jobDetail.post_detail_content}}"
+            ></rich-text>
+            <text class="letter-wrap" wx:else>
+              {{jobDetail.post_detail_content}}
+            </text>
+            <view
+              class="dm-flexible letter-wrap dm-active {{expendList[0].isExpend}}"
+              wx:if="{{expendList[0].expendShow}}"
+              data-index="0"
+              bindtap="setToggle"
+            >{{expendList[0].isExpendText}}</view>
+          </view>
+        </view>
+      </view>
+      <!--职位福利:1包工作餐 2包住宿 3交通补助 4有提成 5带薪年假 6加班补助 7五险-->
+      <view
+        class="dm-pannel product-welfare"
+        wx:if="{{jobDetail.post_type != '5' && jobDetail.special_adv_type != '1' && jobDetail.special_adv_type != '10' && !!jobDetail.tab_treatment}}"
+      >
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">薪资福利</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="dm-product-tag" wx:if="{{jobDetail.tab_treatment_tags.length > 0}}">
+            <block wx:for="{{jobDetail.tab_treatment_tags}}" wx:key="index">
+              <view class="dm-product-tag-item" wx:if="{{item.key==1}}">
+                <icon class="dm-icon dm-icon-meal"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <view class="dm-product-tag-item" wx:if="{{item.key==2}}">
+                <icon class="dm-icon dm-icon-board"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <view class="dm-product-tag-item" wx:if="{{item.key==3}}">
+                <icon class="dm-icon dm-icon-travel"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <view class="dm-product-tag-item" wx:if="{{item.key==4}}">
+                <icon class="dm-icon dm-icon-income"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <!-- 全职 -->
+              <view class="dm-product-tag-item" wx:if="{{item.key==5}}">
+                <icon class="dm-icon dm-icon-overtime"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <view class="dm-product-tag-item" wx:if="{{item.key==6}}">
+                <icon class="dm-icon dm-icon-annualLeave"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <view class="dm-product-tag-item" wx:if="{{item.key==7}}">
+                <icon class="dm-icon dm-icon-five"></icon>
+                <text>{{item.value}}</text>
+              </view>
+              <!-- 全职 -->
+            </block>
+          </view>
+          <view class="dm-product-remark">
+            <text>{{jobDetail.salary_text}}</text>
+          </view>
+        </view>
+      </view>
+      <view
+        class="dm-pannel product-worktime"
+        wx:if="{{jobDetail.work_type != 2 && jobDetail.show_work_time}}"
+      >
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">工作时间</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view
+            class="dm-product-text"
+            wx:if="{{jobDetail.post_type == 5 || jobDetail.special_adv_type == 1 || jobDetail.special_adv_type == 10}}"
+          >
+            <text>{{jobDetail.work_day_str}}</text>
+          </view>
+          <view wx:else>
+            <view class="dm-product-dlist product-worktime-start">
+              <view class="dm-product-dlist-dt">开始日期</view>
+              <view class="dm-product-dlist-dd">
+                <view class="product-worktime-date">{{jobDetail.date_start_str_standard}}</view>
+                <view class="product-worktime-week">{{jobDetail.work_day_str}}</view>
+                <view class="product-worktime-day {{expendList[1].expendShow ? (expendList[1].isExpend == 'dm-toggle' ? '' : 'dm-flexible-body') : ''}}">
+                  <view
+                    class="product-worktime-duty"
+                    wx:if="{{!!jobDetail.working_hours_arr && !!jobDetail.working_hours_arr['1']}}"
+                  >
+                    <view class="product-worktime-duty-label">白班</view>
+                    <view class="product-worktime-duty-list desc-text">
+                      <text
+                        class="product-worktime-duty-item"
+                        wx:for="{{jobDetail.working_hours_arr['1']}}"
+                        wx:for-item="dayHours"
+                        wx:key="index"
+                      >{{dayHours.am_time}} - {{dayHours.pm_time}}</text>
+                    </view>
+                  </view>
+                  <view
+                    class="product-worktime-duty"
+                    wx:if="{{!!jobDetail.working_hours_arr && !!jobDetail.working_hours_arr['2']}}"
+                  >
+                    <view class="product-worktime-duty-label">夜班</view>
+                    <view class="product-worktime-duty-list">
+                      <text
+                        class="product-worktime-duty-item"
+                        wx:key="index"
+                        wx:for="{{jobDetail.working_hours_arr['2']}}"
+                        wx:for-item="nightHours"
+                      >{{nightHours.am_time}} - {{nightHours.pm_time}}</text>
+                    </view>
+                  </view>
+                </view>
+                <view
+                  class="dm-flexible dm-active {{expendList[1].isExpend}}"
+                  wx:if="{{expendList[1].expendShow}}"
+                  data-index="1"
+                  bindtap="setToggle"
+                >{{expendList[1].isExpendText}}</view>
+              </view>
+            </view>
+            <view class="dm-product-dlist product-worktime-end">
+              <view class="dm-product-dlist-dt">结束日期</view>
+              <view class="dm-product-dlist-dd">
+                <view class="product-worktime-date">{{jobDetail.date_end_str_standard}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view
+        class="dm-pannel product-address"
+        wx:if="{{jobDetail.post_addr_list.length !== 0 && jobDetail.show_work_addr}}"
+      >
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">工作地点</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view
+            class="dm-product-text"
+            wx:if="{{jobDetail.post_type == '5' || jobDetail.special_adv_type == '1' || jobDetail.special_adv_type == '10'}}"
+          >
+            <text>{{jobDetail.post_addr_list[0].city_name}}{{jobDetail.post_addr_list[0].district_name}}{{jobDetail.post_addr_list[0].street_name}}{{jobDetail.post_addr_list[0].address}}</text>
+          </view>
+          <view class="dm-product-box" wx:else>
+            <view class="dm-product-image">
+              <image src="{{jobDetail.post_addr_image}}"></image>
+            </view>
+            <view
+              class="dm-product-info"
+              data-latitude="{{jobDetail.post_addr_list[0].lat}}"
+              data-longitude="{{jobDetail.post_addr_list[0].lng}}"
+              data-address-name="{{jobDetail.post_addr_list[0].city_name}}{{jobDetail.post_addr_list[0].district_name}}{{jobDetail.post_addr_list[0].street_name}}{{jobDetail.post_addr_list[0].address}}"
+              bindtap="goToMap"
+            >
+              <icon class="dm-icon dm-icon-location"></icon>
+              <view id="dm-icon-location-box">
+                <view class="dm-product-title">
+                  <view class="dm-product-location">
+                    <icon class="dm-icon dm-icon-arrow-sm"></icon>{{nearestDistance}}
+                  </view>
+                  <text>{{jobDetail.post_addr_list[0].city_name}}{{jobDetail.post_addr_list[0].district_name}}{{jobDetail.post_addr_list[0].street_name}}{{jobDetail.post_addr_list[0].address}}</text>
+                </view>
+                <!-- <view class="sline">
+                  <view></view>
+                </view> -->
+              </view>
+              <view class="addrIcon">
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view
+        class="dm-pannel product-interview"
+        wx:if="{{!((jobDetail.post_type != '5' && jobDetail.special_adv_type != '1' && jobDetail.special_adv_type != '10') && !!jobDetail.interview_addr_list && jobDetail.interview_addr_list.length != 0 && jobDetail.is_interview != '0')&&jobReward.address!=undefined&&jobReward.address.city_name != undefined && isReward==0}}"
+      >
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">面试地点</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="dm-list">
+            <view class="dm-list-item">{{jobReward.address.city_name}}{{jobReward.address.detail_address}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view
+        class="dm-pannel product-interview"
+        wx:if="{{((jobDetail.post_type != '5' && jobDetail.special_adv_type != '1' && jobDetail.special_adv_type != '10') && !!jobDetail.interview_addr_list && jobDetail.interview_addr_list.length != 0 && jobDetail.is_interview != '0' )}}"
+      >
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">面试地点</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view
+            class="dm-list"
+            wx:if="{{jobDetail.interview_addr_list.length == 1 && !jobDetail.interview_addr_list[0].city_name}}"
+          >
+            <view class="dm-list-item">{{jobDetail.interview_addr_list[0].address}}</view>
+          </view>
+          <view class="dm-list {{expendList[2].expendShow ? (expendList[2].isExpend == 'dm-toggle' ? '' : 'dm-flexible-body') : ''}}" wx:else>
+            <block
+              wx:for="{{jobDetail.interview_addr_list}}"
+              wx:for-item="interviewAddr"
+              wx:key="index"
+            >
+              <view class="dm-list-item">
+                {{interviewAddr.city_name}}{{interviewAddr.district_name}}{{interviewAddr.street_name}}{{interviewAddr.address}}
+              </view>
+              <!-- <view class="dm-list-item" wx:if="{{index > 1 && expendList[2].isExpend == 'dm-toggle'}}">
+                                {{interviewAddr.city_name}}{{interviewAddr.district_name}}{{interviewAddr.street_name}}{{interviewAddr.address}}
+                            </view> -->
+            </block>
+          </view>
+          <!-- <view wx:if="{{expendList[2].expendShow}}" class="dm-flexible dm-active {{expendList[2].isExpend}}" data-index="2" bindtap='setToggle'>{{expendList[2].isExpendText}}{{interviewAddrCount}}</view> -->
+        </view>
+      </view>
+      <view class="dm-pannel product-company" wx:if="{{!!jobDetail.corp_name}}">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">公司信息</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="dm-product-dlist">
+            <!-- <view class="dm-product-dlist-dt">公司名称</view> -->
+            <view class="dm-product-dlist-dd">
+              <view style="font-size:14px;" class="dm-product-text">
+                <icon
+                  class="dm-icon dm-icon-cert"
+                  wx:if="{{jobDetail.is_company_certified == 1}}"
+                ></icon>{{jobDetail.corp_name}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 奖金 start -->
+      <view class="dm-pannel recommend-reward" wx:if="{{isReward == 0}}">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">推荐有奖</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="product-views" wx:if="{{isCertified}}">
+            <view class="product-reward" wx:if="{{jobReward.entry_reward_days}}">
+              预估奖金
+              <view class="product-reward-text">
+                <text>{{jobReward.reward}}</text>元
+              </view>
+            </view>
+            <view class="product-progress">
+              <view class="product-progress-item">
+                报名
+                <view class="product-progress-status"></view>
+              </view>
+              <view class="product-progress-item">
+                面试
+                <view class="product-progress-status"></view>
+                <text class="product-progress-reward" wx:if="{{jobReward.interviewed_reward}}">+{{jobReward.interviewed_reward}}</text>
+              </view>
+              <view class="product-progress-item">
+                通过
+                <view class="product-progress-status"></view>
+                <text class="product-progress-reward" wx:if="{{jobReward.offer_reward}}">+{{jobReward.offer_reward}}</text>
+              </view>
+              <view class="product-progress-item">
+                入职
+                <view class="product-progress-status"></view>
+              </view>
+              <view class="product-progress-item" wx:if="{{jobReward.entry_reward_days}}">
+                入职{{jobReward.entry_reward_days}}天
+                <view class="product-progress-status"></view>
+                <text class="product-progress-reward" wx:if="{{jobReward.entry_reward}}">+{{jobReward.entry_reward}}</text>
+              </view>
+              <view class="product-progress-item" wx:else>
+                在岗奖励
+                <view class="product-progress-status"></view>
+                <text class="product-progress-reward" wx:if="{{jobReward.entry_reward}}"><text class="product-progress-reward-text">每月预估</text> +{{jobReward.entry_reward}}</text>
+              </view>
+            </view>
+          </view>
+          <view
+            class="product-guide"
+            wx:else
+            bind:tap="bindAuthHandle"
+          >
+            <view class="product-guide-text">现在注册<text>即可赚取高额代招奖金</text></view>
+            <view class="product-guide-btn">马上注册</view>
+          </view>
+        </view>
+      </view>
+      <!-- 奖金 end -->
+    </view>
+</scroll-view>
+
+<view
+  class="dm-resu-phone"
+  style="{{isIpx ? 'padding-bottom:68rpx;background-color:#fff' : ''}}" wx:if="{{isReward == 0}}"
+>
+  <form bindsubmit="bindShowShare" report-submit="true">
+    <button class="dm-btn-share" form-type="submit" type="button">
+      <view class="rm-icon-share"></view>分享</button>
+  </form>
+  <!-- 我要推荐 -->
+  <button bindtap="IWantReFuc" class="rm-btn-recommend">我要推荐</button>
+</view>
+<view class="bg-show-dialog" hidden="{{!isShowShare}}"></view>
+<view class="dm-resu-share-box" hidden="{{!isShowShare}}">
+  <view class="dm-resu-share-box-top">
+    <form bindsubmit="onClickShare" class="dm-resu-share-box-top-item" report-submit="true">
+      <button form-type="submit" open-type="share" class="dm-resu-share-box-top-item">
+        <image src="https://cdn.doumistatic.com/135,01161370ec1d664b.png"></image>
+        <text>转发给好友</text>
+      </button>
+    </form>
+    <form bindsubmit="onClickSave" class="dm-resu-share-box-top-item" report-submit="true">
+      <button form-type="submit" class="dm-resu-share-box-top-item">
+        <image src="https://cdn.doumistatic.com/136,0116137a40e43ba5.png"></image>
+        <text>保存图片发朋友圈</text>
+      </button>
+    </form>
+  </view>
+  <view class="line-share-box"></view>
+  <view class="share-cancel" bindtap="bindCancelShare">取消</view>
+</view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style type="stylus" src="./jobDetail.styl"></style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "职位详情",
+  "usingComponents": {
+    "dialog": "../../../../../components/dialog/dialog",
+    "getPhoneNumber": "../../../../../components/getPhoneNumber/getPhoneNumber",
+    "dm-tag": "../../../../../components/dmx/dm-tag"
+  }
+}
+</script>

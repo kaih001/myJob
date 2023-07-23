@@ -1,0 +1,12 @@
+<script type="application/json">
+  {
+    "pages": [
+      "./pages/applyExpectPost/applyExpectPost",
+      "./pages/apply/apply",
+      "./pages/interview/applyInterview/applyInterview",
+      "./pages/applySuccess/applySuccess",
+      "./pages/basicInfo/basicInfo",
+      "./pages/videoResume/videoResume"
+    ]
+  }
+</script>

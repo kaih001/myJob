@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="38px" viewBox="0 0 26 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>起点</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="12" y="23" width="2" height="13"></rect>
+        <circle id="path-2" cx="13" cy="13" r="13"></circle>
+        <text id="text-3" font-family="PingFang-SC-Medium, PingFang SC" font-size="12" font-weight="400" line-spacing="16" fill="#FFFFFF">
+            <tspan x="7" y="18">起</tspan>
+        </text>
+        <filter x="-12.5%" y="-9.4%" width="125.0%" height="118.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.445034876   0 0 0 0 0.596836417   0 0 0 0 0.855309311  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="轨迹地图_切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-230.000000, -144.000000)">
+        <g id="Group-4" transform="translate(230.000000, 144.000000)">
+            <ellipse id="Oval" fill="#6B6B6B" cx="13" cy="36.5" rx="3" ry="1.5"></ellipse>
+            <g id="Rectangle-5">
+                <use fill="#7194D1" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <rect stroke="#5273AA" stroke-width="0.5" x="12.25" y="23.25" width="1.5" height="12.5"></rect>
+            </g>
+            <g id="Oval-3">
+                <use fill="#709DE9" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <circle stroke="#536E9A" stroke-width="0.8" cx="13" cy="13" r="12.6"></circle>
+            </g>
+            <g id="起" fill="#FFFFFF" fill-opacity="1">
+                <use filter="url(#filter-4)" xlink:href="#text-3"></use>
+                <use xlink:href="#text-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>

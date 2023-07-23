@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>手机</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-50.000000, -65.000000)" fill="#8492A6">
+            <path d="M51,65 L57,65 C57.5522847,65 58,65.4477153 58,66 L58,76 C58,76.5522847 57.5522847,77 57,77 L51,77 C50.4477153,77 50,76.5522847 50,76 L50,66 C50,65.4477153 50.4477153,65 51,65 Z M54,76 C54.5522847,76 55,75.5522847 55,75 C55,74.4477153 54.5522847,74 54,74 C53.4477153,74 53,74.4477153 53,75 C53,75.5522847 53.4477153,76 54,76 Z M52,67 L52,73 L56,73 L56,67 L52,67 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

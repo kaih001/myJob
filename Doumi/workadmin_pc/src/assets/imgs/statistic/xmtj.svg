@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>项目统计_默认</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="招聘" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-81.000000, -25.000000)" fill="#8492A6">
+            <path d="M81,27 L81,27 C81,25.8954305 81.8954305,25 83,25 L83,25 L95,25 C96.1045695,25 97,25.8954305 97,27 L97,27 L97,39 C97,40.1045695 96.1045695,41 95,41 L83,41 C81.8954305,41 81,40.1045695 81,39 L81,27 Z M84,33 L84,38 L86,38 L86,33 L84,33 Z M88,29 L88,38 L90,38 L90,29 L88,29 Z M92,32 L92,38 L94,38 L94,32 L92,32 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

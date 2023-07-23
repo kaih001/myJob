@@ -1,0 +1,163 @@
+<template>
+  <view class="worklist_wrap">
+    <view class="nearby_work_title">附近赚钱零工</view>
+    <view class="workDetBoxWrap" wx:if="{{ listLength > 0 }}">
+      <view
+        class="workDetBox"
+        wx:for="{{recommendList}}"
+        wx:for-index="listIndex"
+        wx:for-item="listItem"
+        data-id="{{listItem.id}}"
+        data-ca_kw="{{listIndex}}"
+        bindtap="bindItemClick"
+      >
+        <view class="title" wx:style="{{ { color: isVisited ? '#808080' : '#404040' } }}">{{
+          listItem.title
+        }}</view>
+        <view class="headImage">
+          <view class="center_section">
+            <!-- <view class="order">服务员<text class="line">|</text>3-5年<text class="line">|</text>职位描述</view> -->
+            <view class="order">{{ listItem['job_description'] }}</view>
+            <view class="position">
+              <text class="position_det">{{ listItem.post_area }}</text
+              ><text>{{ listItem.distance_long }}</text></view
+            >
+          </view>
+          <!-- <view class="right_section">
+            电话联系
+          </view> -->
+        </view>
+      </view>
+    </view>
+    <view class="noWorkWrap" wx:else>
+      <text class="noWork">抱歉~暂无符合条件的职位</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import { createComponent } from '@mpxjs/core'
+
+  createComponent({
+    properties: {
+      recommendList: {
+        type: Array,
+        value: []
+      }
+    },
+    data: {
+      isVisited: false // - 该职位是否点击过(点击过的职位标题颜色会不一样)
+    },
+
+    watch: {
+      // listItem() {
+      //   this.__updateVisited()
+      // }
+    },
+    computed: {
+      listLength() {
+        return this.recommendList.length
+      }
+    },
+    created() {
+      // this.__updateVisited()
+    },
+
+    methods: {
+      /**
+       * 详情中的职位列表的点击
+       */
+      bindItemClick({
+        currentTarget: {
+          dataset: { id }
+        }
+      }) {
+        if (!this.isVisited) {
+          const visitedJobList = wx.getStorageSync('visitedJobList') || []
+          wx.setStorageSync('visitedJobList', [...visitedJobList, +id]) // - 点击过的职位列表
+          this.isVisited = true
+        }
+
+        wx.$addClickIds(id) // - 缓存算法所需参数
+        wx.navigateTo({ url: `/pages/workDet/workDet?apply_id=11&jobId=${id}` })
+      },
+      __updateVisited() {
+        const visitedJobList = wx.getStorageSync('visitedJobList') || []
+        this.isVisited = visitedJobList.includes(this.listItem.id)
+      }
+    }
+  })
+</script>
+
+<style lang="stylus">
+  .worklist_wrap
+    background #fff
+    margin-top 8px
+    padding 0 16px
+    .nearby_work_title
+      font-family PingFangSC-Medium
+      font-size 18px
+      color #404040
+      height 55px
+      line-height 55px
+      border-bottom 1px solid #F5F5F5
+    .workDetBoxWrap
+      margin-bottom 50px
+      .workDetBox
+        background #FFF
+        .title
+          font-family PingFangSC-Semibold
+          font-size 18px
+          color #333333
+          letter-spacing 0
+          line-height 24px
+          white-space nowrap
+          text-overflow ellipsis
+          overflow hidden
+          margin 22px 10px 8px 0
+          font-weight bold
+        .headImage
+          display flex
+          border-radius 8px
+          align-items center
+          padding-bottom 32px
+          border-bottom 1px solid #F5F5F5
+          .center_section
+            .order
+              width 100%
+              box-sizing border-box
+              display -webkit-box
+              -webkit-box-orient vertical
+              -webkit-line-clamp 2
+              overflow: hidden
+              .line
+                margin 0 6px
+            .position
+              font-family PingFangSC-Regular
+              font-size 14px
+              color #808080
+              letter-spacing 0
+              line-height 20px
+              .position_det
+                margin-right 10px
+          .right_section
+            width 80px
+            height 26px
+            background #FFCC00
+            border-radius 13px
+            font-weight bold
+            text-align center
+            line-height 26px
+    .noWorkWrap
+      text-align center
+      .noWork
+        height 50px
+        line-height 60px
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {}
+  }
+</script>

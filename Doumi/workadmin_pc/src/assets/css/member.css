@@ -1,0 +1,804 @@
+html,body{background-color: #ffffff;}
+.member-wapper{
+	padding: 0 20px 0 20px;
+	height: 100%;
+	overflow: hidden;
+}
+.member-wapper h2{
+	font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	color: #475568;
+	height: 54px;
+	line-height: 54px;
+	border-bottom: 1px solid #e0e6ed;
+	margin-bottom: 25px;
+}
+.member-wapper span.groupMgtBtns{
+	float: right;
+	font-size: 13px;
+	color: #6699ee;
+	cursor: pointer;
+	position: relative;
+	top: -58px;
+}
+.member-wapper .group_icon{
+  background: url(../imgs/shareIcon/group_icon.svg) no-repeat left center;
+  width: 14px;
+  height: 15px;
+  position: absolute;
+  left: -9px;
+  top: -1px;
+  display: block;
+}
+.member-wapper span.groupMgtBtns:active{
+	color: #517ed6;
+}
+.member-wapper .from-item-list{
+	/* float: left; */
+	margin-right: 13px;
+}
+.member-wapper .someTips {
+	display: flex;
+}
+.ssText {
+	width: 400px;
+	color: red;
+	margin: 10px 0 0 0;
+	font-size: 13px;
+}
+.member-wapper .buttons{
+	flex: 1;
+	display: flex;
+	justify-content: flex-end;
+}
+.member-wapper .buttons .btn-item{
+	color: #6699ee;
+	margin-right: 16px;
+	cursor: pointer;
+}
+.member-wapper .el-table .cell{line-height: 40px;}
+.member-wapper .buttons .export{margin-right: 0}
+.member-wapper .user-img{
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin-right: 8px;
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: -7px;
+}
+.member-wapper .user-name{
+	position: relative;
+	padding-left: 37px;
+   /* float: left;
+
+    margin-left: 8px;
+    width: 50px;*/
+}
+#memberAdmin .member-wapper .el-table tr{height: 36px;line-height: 36px;}
+#memberAdmin .member-error .el-table tr{height: 36px;line-height: 36px;}
+#memberAdmin .member-wapper .el-table td{cursor: pointer;height: 44px;line-height: 44px;border-right: none;}
+#memberAdmin .member-wapper .buttons .el-button span{
+	font-size: 13px;
+	color: #6699ee;
+}
+#memberAdmin .member-wapper .buttons .add_icon{
+	display: block;
+	width: 13px;
+	height: 13px;
+	margin-right: 6px;
+	float: left;
+	margin-top: 10px;
+	background-image:url(../../assets/imgs/shareIcon/add_hover.svg);
+}
+#memberAdmin .member-wapper .buttons .export-icon{
+	display: block;
+	width: 12px;
+	height: 12px;
+	margin-right: 6px;
+	float: left;
+	margin-top: 11px;
+	background-image:url(../../assets/imgs/shareIcon/export.svg);
+}
+#memberAdmin .member-wapper .buttons .export-icon:active{
+	display: block;
+	width: 12px;
+	height: 12px;
+	margin-right: 6px;
+	margin-top: 11px;
+	float: left;
+	background-image:url(../../assets/imgs/shareIcon/export_active.svg);
+}
+#memberAdmin .member-wapper .buttons .import-icon{
+	display: block;
+	width: 14px;
+	height: 14px;
+	margin-right: 6px;
+	float: left;
+	margin-top: 10px;
+	background-image:url(../../assets/imgs/shareIcon/import_icon.svg);
+}
+#memberAdmin .member-wapper .buttons .invite_icon{
+	display: block;
+	width: 14px;
+	height: 14px;
+	margin-right: 6px;
+	float: left;
+	margin-top: 10px;
+	background-image:url(../../assets/imgs/shareIcon/invite_icon.svg);
+}
+#memberAdmin .member-wapper .buttons .el-button span:active{color: #517ed6}
+#memberAdmin .member-wapper .from-member{position: relative;}
+#memberAdmin .member-wapper .select-list{
+	position: absolute;
+	right: 0px;
+	top: 40px;
+	width: 180px;
+	padding: 6px 0 0px 0;
+	border-radius: 2px;
+	background-color: #ffffff;
+	box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.04), 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+	border: solid 1px #e4e9ef;
+	z-index: 99;
+}
+#memberAdmin .member-wapper .select-list .select-cont{
+	height: 260px;
+	overflow-y:auto;
+}
+#memberAdmin .member-wapper .select-list .el-checkbox{
+	height: 36px;
+    line-height: 36px;
+    width: 148px;
+    padding: 0 16px;
+}
+#memberAdmin .member-wapper .select-list .el-checkbox:hover{background: #f5f5f5}
+#memberAdmin .member-wapper .select-list .el-checkbox+.el-checkbox{margin-left: 0}
+#memberAdmin .member-wapper .select-list .el-checkbox__label{padding-left: 12px;}
+#memberAdmin .member-wapper .select-list .el-checkbox__inner{width: 16px;height: 16px;border-radius: 2px; border: solid 1px #c0ccda}
+#memberAdmin .member-wapper .select-list .is-checked{border: none;background: #6699ee;border-radius: 2px;height: 17px;}
+#memberAdmin .member-wapper .select-list .seach-foot{
+	height: 56px;
+	line-height: 56px;
+	border-top: 1px solid #e4e9ef;
+}
+#memberAdmin .member-wapper .select-list .seach-foot .confirm{
+	padding: 10px 0px;
+    margin-left: 12px!important;
+    width: 158px!important;
+}
+
+#memberAdmin .member-wapper .el-table{border-right: none;}
+#memberAdmin .member-wapper .el-table__body{border-right: 1px solid #e0e6ed;}
+/*#memberAdmin .member-wapper .seach-cout{overflow: hidden; min-width: 1000px;}*/
+#memberAdmin .member-wapper .seach-cout .el-form{overflow: hidden; min-width: 1000px;}
+#memberAdmin .member-wapper .from-member .el-table{border-bottom: none;}
+#memberAdmin .member-wapper .el-form-item{margin-bottom: 24px;}
+#memberAdmin .member-wapper .el-form-item__content{margin-left: 43px;}
+#memberAdmin .member-wapper .group{cursor: pointer;border: 1px solid #e0e6ed}
+#memberAdmin .member-wapper .group:hover{border: 1px solid #c0ccda}
+#memberAdmin .member-wapper .group:focus{border: 1px solid #6699EE;}
+#memberAdmin .member-wapper .el-form-item__label{
+	padding: 11px 0px 11px 0;
+	float: left;
+	color: #5e6d82;
+    font-size: 12px;
+}
+#memberAdmin .member-wapper .seach-btn{
+	width: 68px;
+	height: 36px;
+	border-radius: 2px;
+	background-color: #6699ee;
+	color: #ffffff;
+	float: left;
+	margin-left: 3px;
+}
+#memberAdmin .member-wapper .mystation .el-form-item{
+	width: 210px;
+}
+#memberAdmin .member-wapper .mystation .el-form-item__label{
+	width: 68px!important;
+}
+#memberAdmin .member-wapper .mystation2 .el-form-item{
+	width: 220px;
+}
+#memberAdmin .member-wapper .mystation2 .el-form-item__label{
+	width: 75px!important;
+}
+
+#memberAdmin .member-wapper .seach-btn span{font-size: 14px;}
+#memberAdmin .member-wapper .seach-btn:hover, .default:hover{background-color: #8bb1f2;}
+#memberAdmin .member-wapper .seach-btn:active, .default:active{background-color: #517ed6;}
+#memberAdmin .member-wapper .seach-cout .disabled{background-color: #eff2f7!important;border: solid 1px #e0e6ed!important;}
+#memberAdmin .member-wapper .default{background-color: #6699ee;	color: #ffffff;}
+#memberAdmin .member-wapper .move-btn, .sign-btn{border-radius: 2px;height: 32px;line-height: 10px;}
+#memberAdmin .member-wapper .move-btn{margin-left: 0;width: 80px;}
+#memberAdmin .member-wapper .sign-btn{width: 112px!important;}
+#memberAdmin .member-wapper .station{width: 100px!important;}
+#memberAdmin .member-wapper .sign-btn{margin-left: 10px!important;}
+#memberAdmin .member-wapper .seach-cout .disabled span{color: #c0ccda;font-size: 14px;}
+#memberAdmin .member-wapper .default span{color: #ffffff;font-size: 14px;}
+#memberAdmin .member-wapper .default:hover{background-color: #8bb1f2;}
+#memberAdmin .member-wapper .default:active{background-color: #517ed6;}
+/*#memberAdmin .member-wapper th.border{border-right: 1px solid #dfe6ec;background-color: #edeef2;}*/
+#memberAdmin .member-wapper th.border{background-color: #edeef2;}
+#memberAdmin .member-wapper td.border-left{border-left: 1px solid #e0e6ed;/*border-right: 1px solid #e0e6ed;*/}
+#memberAdmin .member-wapper th.more .cell{
+	margin-left: -3px;
+	width: 16px;
+  	height: 16px;
+	color: #6699ee;
+	background:url(../../assets/imgs/more.svg) no-repeat center center;
+	cursor: pointer;
+}
+#memberAdmin .member-wapper th.more .cell:hover{
+	background:url(../../assets/imgs/more_hover.svg) no-repeat center center;
+}
+#memberAdmin .member-wapper .el-table__column-filter-trigger{margin-top: 2px;}
+#memberAdmin .member-wapper .el-table-filter{right: 20px!important}
+#memberAdmin .member-wapper .el-table-filter__content{min-width: 180px;}
+
+#memberAdmin .member-wapper .el-tag--success{
+	/*width: 40px;*/
+	height: 24px;
+	text-align: center;
+	color: #70cb6a;
+	font-size: 12px;
+	border-radius: 2px;
+	background-color: gba(99, 180, 93, 0.07);
+	border: solid 1px rgba(99, 180, 93, 0.35);
+}
+#memberAdmin .member-wapper .el-tag--danger{
+	/*width: 40px;*/
+	height: 24px;
+	text-align: center;
+	color: #f68369;
+	font-size: 12px;
+	border-radius: 2px;
+	background-color: rgba(242, 106, 75, 0.05);
+    border: solid 1px rgba(242, 106, 75, 0.27);
+}
+#memberAdmin .member-wapper .el-tag--gray{
+	/*width: 52px;*/
+  	height: 24px;
+  	text-align: center;
+	color: #8899b5;
+	font-size: 12px;
+  	border-radius: 2px;
+  	background-color: rgba(148, 171, 208, 0.1);
+  	border: solid 1px rgba(136, 153, 181, 0.26);
+}
+#memberAdmin .member-wapper .el-checkbox__inner{
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	/*border: solid 1px #c0ccda;*/
+}
+#memberAdmin .member-wapper .el-checkbox__input.is-checked .el-checkbox__inner{
+	background-color: #6699ee;
+    border-color: #6699ee;
+}
+#memberAdmin .member-wapper .el-checkbox__inner:hover{
+	border-color: #6699ee;
+}
+/*#memberAdmin .member-wapper .el-table__header-wrapper .el-table__header tr{
+	height: 36px!important;
+	line-height: 36px!important;
+}*/
+/* 弹窗————批量导入 */
+#memberAdmin .dialog-import .el-dialog{
+	position: relative;
+}
+#memberAdmin .el-dialog--tiny{
+	width: 420px;
+}
+#memberAdmin .dialog-import .el-dialog--tiny{
+  top: 25%!important;
+  -webkit-transition: top 25%!important;
+}
+#memberAdmin .el-dialog__header{
+	padding: 24px 20px 0 20px;
+}
+#memberAdmin .dialog-addmember .el-dialog__body, .dialog-info .el-dialog__body, .dialog-group-select .el-dialog__body{
+	padding: 45px 20px 38px 20px;
+}
+#memberAdmin .dialog-import .title{
+	position: absolute;
+	left: 100px;
+	top: 26px;
+}
+#memberAdmin .dialog-import .title span{
+	font-size: 12px;
+  	line-height: 1.33;
+  	color: #8492a6;
+}
+#memberAdmin .dialog-import .title a{
+    font-size: 14px;
+    line-height: 1.14;
+    color: #6699ee;
+    cursor: pointer;
+    margin-left: 10px;
+}
+#memberAdmin .dialog-import .title a:active{color: #517ed6}
+#memberAdmin .myform{
+	width: 340px;
+	margin: 0 auto;
+}
+#memberAdmin .myform .el-form-item{margin-bottom: 0}
+#memberAdmin .myform .el-form-item__label{
+	font-size: 14px;
+  	text-align: left;
+  	color: #475568;
+  	padding: 11px 12px 16px 0;
+}
+#memberAdmin .myform h4{
+	font-size: 14px;
+  	text-align: left;
+  	color: #8492a6;
+  	margin-bottom: 16px;
+  	margin-top: 24px;
+}
+#memberAdmin .myform .el-select{
+	width: 100%;
+	/*margin-bottom: 24px;*/
+}
+#memberAdmin .dialog-import .myform .uploadbtn{
+	padding: 6px 9px
+}
+#memberAdmin .dialog-import .el-dialog__footer{
+	border-top: 1px solid #e0e6ed;
+	padding: 0px 20px 15px;
+}
+#memberAdmin .dialog-import .dialog-footer{
+	overflow: hidden;
+}
+#memberAdmin .dialog-import .dialog-footer .el-button{
+	margin-top: 16px;
+	border-radius: 2px;
+	padding: 10px 18px;
+}
+/* 弹窗————添加人员 */
+#memberAdmin .dialog-addmember .myform{
+	width: 381px;
+	height: 310px;
+	padding: 5px 40px 5px 0;
+	overflow-y: auto;
+    box-sizing: border-box;
+}
+#memberAdmin .dialog-addmember .el-dialog__body{
+	padding: 27px 40px 0px 38px;
+}
+#memberAdmin .dialog-addmember .el-form-item__label{
+	text-align: left;
+}
+#memberAdmin .dialog-addmember .el-form-item{margin-bottom: 16px;width: 342px}
+#memberAdmin .dialog-addmember .myform .el-select{
+	margin-bottom: 0px;
+}
+#memberAdmin .dialog-addmember .station_style .el-form-item__label{
+	/*padding-left: 7px;*/
+}
+#memberAdmin .dialog-addmember .gender .el-form-item__label{
+	padding-left: 15px;
+}
+#memberAdmin .dialog-addmember .IDNumber .el-form-item__label{
+	padding-left: 13px;
+}
+#memberAdmin .dialog-addmember .bankUserName .el-form-item__label{
+	padding-left: 13px;
+    line-height: 17px;
+    margin-top: -10px;
+}
+#memberAdmin .dialog-addmember .desc {
+	margin-bottom: 0
+}
+#memberAdmin .dialog-addmember .size-num{
+	float: right;
+    font-size: 12px;
+    color: #99a9bf;
+    margin: -5px 0 14px 0;
+}
+#memberAdmin .dialog-addmember .el-textarea__inner{
+	border-radius: 2px;
+	height: 116px;
+	border: 1px solid #e0e6ed;
+}
+#memberAdmin .dialog-addmember .desc .el-form-item__label{
+	padding-left: 13px;
+	margin-top: 0px!important;
+}
+#memberAdmin .dialog-addmember .el-dialog__footer{
+	border-top: 1px solid #e0e6ed;
+	padding: 16px 20px 16px 0;
+}
+#memberAdmin .dialog-addmember .error_idnumber .el-input__inner{
+	border-color: #ff6600;
+}
+#memberAdmin .dialog-addmember .error_idnumber_text{
+	color: #ff6600;
+	display: block;
+    height: 18px;
+    margin-top: -8px;
+	font-size: 12px;
+}
+.el-year-table td.current:not(.disabled) .cell{background-color:#6699ee!important;}
+#memberAdmin .dialog-addmember .my-address .el-input__icon{font-size: 12px;}
+#memberAdmin .dialog-addmember .my-address .el-cascader__label{border:  1px solid #e0e6ed;border-radius: 2px;}
+#memberAdmin .dialog-addmember .my-address .el-cascader__label:hover{border:  1px solid #c0ccda;border-radius: 2px;}
+#memberAdmin .dialog-addmember .my-address .el-cascader__label:focus{border:1px solid #6699ee;}
+#memberAdmin .dialog-addmember .my-address .el-cascader__label:active{border:  1px solid #6699EE;border-radius: 2px;}
+.el-cascader-menu__item.is-active{
+	background-color: #6699ee;
+}
+.el-cascader-menu__item:hover{background-color: #f5f5f5;}
+#memberAdmin .el-button+.el-button {
+	margin-left: 0px!important;
+}
+
+/* 弹窗————个人信息 */
+#memberAdmin .dialog-info .el-dialog__body{
+	padding: 25px 40px 0px 38px;
+}
+#memberAdmin .dialog-info .el-form-item{
+	margin-bottom: -4px;
+    clear: both;
+}
+#memberAdmin .dialog-info .el-form-item__label{
+	font-size: 12px;
+}
+#memberAdmin .dialog-info .el-form-item__content p{
+	font-size: 14px;
+	color: #1f2d3d;
+}
+#memberAdmin .dialog-info .bankUserName .el-form-item__label{
+	margin-top: 0px;
+}
+#memberAdmin .dialog-info .desc .el-form-item__label{
+	 margin-top: -9px;
+}
+#memberAdmin .dialog-addmember .desc .el-form-item__content p{
+	line-height: 1.43;
+	margin-top: 8px;
+}
+#memberAdmin .dialog-addmember .el-button{border-radius: 2px;}
+
+/* 弹窗————小组移动选择 */
+#memberAdmin .dialog-group-select .el-dialog__body{
+	padding: 30px 40px 0px 40px;
+}
+#memberAdmin .dialog-group-select .all_main{
+  height: 240px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border: solid 1px #e0e6ed;
+  border-top: none;
+}
+#memberAdmin .dialog-group-select .el-tree{
+  border: none;
+  height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+#memberAdmin .dialog-group-select .el-dialog--tiny{
+	width: 470px;
+}
+#memberAdmin .dialog-group-select h3{
+	font-size: 14px;
+  	color: #8492a6;
+  	margin-bottom: 16px;
+}
+#memberAdmin .dialog-group-select .all_search{
+    height: 36px;
+    position: relative;
+  }
+#memberAdmin .dialog-group-select .el-input__inner{
+  	border: 1px solid #e0e6ed;
+    border-radius: 2px;
+    padding: 3px 10px 3px 32px;
+}
+#memberAdmin .dialog-group-select .all_search i.el-icon-search{
+  position: absolute;
+  z-index: 999;
+  top:11px;
+  left: 12px;
+  font-size:16px;
+  color:#e0e6ed;
+}
+#memberAdmin .dialog-group-select .el-dialog__footer{
+	padding: 16px 20px 16px 0;
+	border-top: 1px solid #e0e6ed;
+}
+#memberAdmin .dialog-group-select .el-button{border-radius: 2px;}
+#memberAdmin .dialog-group-select .el-tree-node__label{
+	width: 300px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+#memberAdmin .dialog-group-select .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+	background: #f5f5f5 url(../imgs/icon2.svg) no-repeat 356px center;
+}
+
+
+
+/* 导入错误页 */
+#memberAdmin .goback{
+	width: 80px!important;
+	margin-left: 0px!important;
+	padding: 8px 23px;
+	border-radius: 2px;
+	font-size: 14px;
+	margin-top: 20px;
+}
+#memberAdmin .error-reason{
+	color: #f26a4b;font-size: 12px;
+}
+#memberAdmin .error-text{
+	font-size: 14px;
+	color: #8492a6;
+	margin: 20px 0 12px 0;
+}
+#memberAdmin .error-text b{
+	font-weight: 600;
+  	color: #5e6d82;
+  	font-size: 14px;
+}
+#memberAdmin .error-text span{
+    font-weight: 600;
+    color: #f26a4b;
+    font-size: 14px;
+}
+.my-autocomplete2 .seach-empty{
+	color: #c0ccda;
+    font-size: 14px;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+}
+#memberAdmin .el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner{
+	background-color: #eff2f7;
+    border-color: #e0e6ed;
+    color: #bfcbd9;
+    cursor: not-allowed;
+}
+#memberAdmin .el-icon-loading{display: none;}
+
+.upload-box .file {
+    position: relative;
+    display: inline-block;
+    background: #6699ee;
+    border: 1px solid #6699ee;
+    border-radius: 4px;
+    padding:3px 9px;
+    overflow: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+    border-radius: 2px;
+}
+.upload-box .file:hover {
+    background: #8bb1f2;
+    border-color: #8bb1f2;
+    color: #ffffff;
+    text-decoration: none;
+}
+.upload-box .file:active{
+	background-color: #517ed6;
+	border-color: #517ed6;
+	color: #ffffff;
+}
+.upload-box .disabled_file{
+	background: #eff2f7;
+    border: 1px solid #e0e6ed;
+    color: #c0ccda;
+}
+.upload-box .disabled_file:hover{
+	background: #eff2f7;
+    border: 1px solid #e0e6ed;
+    color: #c0ccda;
+}
+.upload-box .file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.upload-box p{
+	color: #475669;
+	font-size: 14px;
+	padding: 5px 25px 5px 29px;
+	position: relative;
+	margin-top: 15px;
+	margin-bottom: 3px;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.upload-box p:hover{
+	background:#f5f5f5;
+	color: #6699ee;
+}
+.upload-box p:hover i.file_close{
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: url(../imgs/x.png) no-repeat right center;
+	position: absolute;
+	right: 3px;
+	bottom: 3px;
+}
+.upload-box p i.file_icon{
+	display: block;
+	width: 15px;
+	height: 18px;
+	position: absolute;
+	left: 5px;
+	top: 3px;
+	background: url(../imgs/excel.svg) no-repeat left center;
+}
+#memberAdmin .speed-div{
+	background-color: #eaf1f9;
+	width: 340px;
+	height: 2px;
+	border-radius: 100px;
+	position: relative;
+}
+#memberAdmin .speed-div span{
+	height: 2px;
+	display: block;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	border-radius: 100px;
+	background-color: #6699ee;
+}
+#memberAdmin .dialog-import .el-dialog__body{
+	padding: 40px 20px 30px 20px;
+}
+
+#memberAdmin .mystatus input{border-radius: 2px!important;cursor: pointer;}
+#memberAdmin .mystatus .el-input__inner:hover{border: 1px solid #c0ccda}
+#memberAdmin .mystatus .el-input__inner:focus{
+	border: 1px solid #6699EE;
+}
+/* 分页 */
+#memberAdmin .page{
+	/*margin-top: 9px;*/
+	float: right;
+}
+#memberAdmin .el-form-item.is-required .el-form-item__label{position: relative;padding-left: 15px;}
+#memberAdmin .el-form-item.is-required .el-form-item__label:before{
+	/*content: "*";*/
+	display: block;
+	width: 7px;
+	height: 7px;
+	background: url(../imgs/x_icon.svg) no-repeat center left;
+	color: #ffaa00;
+	position: absolute;
+	left: 0px;
+	top: 14px;
+}
+.el-month-table td.current:not(.disabled) .cell{
+	background-color:#6699ee!important;
+}
+.el-picker-panel__icon-btn:hover, .el-date-picker__header-label:hover{color: #6699ee;}
+#memberAdmin .dialog-addmember .el-textarea__inner:hover{border: 1px solid #c0ccda;}
+#memberAdmin .dialog-addmember .el-textarea__inner:focus{
+	border: 1px solid #6699EE;
+}
+
+
+/* 移动小组二次弹窗 */
+#memberAdmin .el-popover{top: 427px!important;width: 160px!important;left:710px!important;}
+#memberAdmin .el-popover[x-placement^=top] .popper__arrow{left: 140.5px!important;}
+@media screen and (max-width: 1100px) {
+ 	.el-popover{top: 427px!important;width: 160px!important;left:570px!important;}
+ 	.el-popover[x-placement^=top] .popper__arrow{left: 140.5px!important;}
+}
+@media screen and (max-width: 1000px) {
+ 	.el-popover{top: 427px!important;width: 160px!important;left:534px!important;}
+}
+
+/*.el-popover{top: 427px!important;width: 160px!important;}*/
+.el-popover p{
+	padding: 5px 0px 14px 0;
+}
+.el-popover .el-button--text{
+	color: #475669;
+	font-size: 12px;
+}
+
+.el-popover .el-button--text:hover{color: #8bb1f2;}
+.el-popover .el-button--primary{background-color: #ffffff!important;border: none!important;}
+.el-popover .el-button--primary span{color: #6699ee;}
+.el-popover .el-button--primary span:hover{color: #8bb1f2}
+/* .el-date-editor.el-input .el-input__inner{cursor: pointer;} */
+
+/* 表单验证错误提示样式 */
+#memberAdmin .el-form-item__error{
+  position: static;
+  margin-bottom: -7px;
+}
+
+
+/* 添加成员——生成二维码 */
+#memberAdmin .dialog-invit .el-dialog--tiny{width: 470px;}
+#memberAdmin .dialog-invit .el-dialog__body{
+	padding: 30px 40px 50px 40px;
+}
+#memberAdmin .dialog-invit .el-form-item{margin-left: 2px;}
+#memberAdmin .dialog-invit h3{
+  	font-size: 14px;
+  	line-height: 1.14;
+  	color: #1f2d3d;
+  	text-align: center;
+  	margin-bottom: 8px;
+}
+#memberAdmin .dialog-invit .ewm{
+	width: 225px;
+	height: 200px;
+	margin: 0 auto;
+	/*margin-bottom: 32px;*/
+}
+#memberAdmin .dialog-invit .ewm dl dt{
+	width: 160px;
+	height: 160px;
+	background: #eeeeee;
+	margin: 0 auto;
+	margin-bottom: 8px;
+}
+#memberAdmin .dialog-invit .ewm dl dt #canvas{width:160px!important;height:160px!important;}
+#memberAdmin .dialog-invit .ewm dl dd{
+	font-size: 13px;
+  	line-height: 1.23;
+  	color: #8492a6;
+  	text-align: center;
+}
+#memberAdmin .dialog-group-select .station .el-input__inner{
+	padding:3px 10px 3px 10px;
+}
+#memberAdmin .dialog-group-select .station .error-tip .el-input__inner{border-color: #ff6600}
+#memberAdmin .dialog-group-select span.error-text{
+	position: absolute;
+	left: 0px;
+	top: 20px;
+	color: #ff6600;
+	font-size: 12px;
+}
+/* 导出列表 */
+#memberAdmin .dialogSubAccount  .el-dialog {
+  height: 80%;
+}
+#memberAdmin .dialogSubAccount  .el-dialog .el-dialog__body{
+  position: absolute;
+  left: 10px;
+  top: 60px;
+  bottom: 60px;
+  right: 10px;
+  overflow-y: auto;
+}
+#memberAdmin .dialogSubAccount  .el-dialog .el-dialog__footer{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* 导出进度条 */
+.progressWrap .circleWrap{
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 30px 0;
+}
+.progressWrap .progressMes{
+	margin: 20px 0 0 0;
+  text-align: center;
+  font-size: 14px;
+}
+.progressWrap .progressMes.green{
+  color: #13ce66;
+}

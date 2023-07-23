@@ -1,0 +1,27 @@
+<template>
+
+</template>
+
+<script>
+  import { createPage } from '@mpxjs/core'
+  import rmjobdetailPath from '~/subpackage/subB/pages/reward/rmjobdetail/rmjobdetail?resolve'
+  createPage({
+    data: {
+
+    },
+    async onLoad (options) {
+      const uid = options.uid
+      const jobid = options.jobid
+      const auth_str = options.auth_str
+      wx.redirectTo({ url: `${rmjobdetailPath}?uid=${uid}&jobid=${jobid}&auth_str=${auth_str}` })
+    }
+  })
+</script>
+
+<style>
+
+</style>
+
+<script type="application/json">
+  {}
+</script>

@@ -1,0 +1,106 @@
+<template>
+  <!-- 面试调研框 -->
+  <dm-modal
+    wx:ref="dmInterviewPop"
+    title="{{title}}"
+    position="center"
+    confirm-text="点击查看"
+    cancel-text="暂不查看"
+    bind:confirm="bindLook"
+    bind:cancel="bindNoLook">
+    <view class="dm-modal-prepend" slot="prepend">
+      <view class="dm-modal-prepend-day">{{today}}</view>
+      <image class="dm-modal-prepend-img" src="https://cdn.doumistatic.com/198,01a27ed43fd19d59.png" />
+    </view>
+    <view class="dm-modal-content">
+      <view class="dm-modal-title">{{postTitle}}</view>
+      <view class="dm-modal-company">{{companyName}}</view>
+    </view>
+  </dm-modal>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import api from '../utils/api'
+import interviewApi from '../interface/interview'
+
+createComponent({
+  data: {
+    title: '您今天有个面试哦！',
+    companyName: '',
+    postTitle: '',
+    applyId: '',
+    today: new Date().getDate()
+  },
+
+  methods: {
+    // 点击查看
+    bindLook () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=yes_see')
+      wx.navigateTo({ url: `/pages/myInterviewDetail/myInterviewDetail?apply_id=${this.applyId}` })
+    },
+
+    // 暂不查看
+    bindNoLook () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=no_see')
+    },
+
+    // 检查面试提醒消息
+    async check () {
+      // 已登录才进行检查
+      const isLogin = wx.getStorageSync('userId') > 0
+      if (!isLogin) return
+
+      try {
+        const { data } = await interviewApi.checkInterviewRemind()
+        this.$refs.dmInterviewPop.show()
+        this.companyName = data.company_name
+        this.postTitle = data.post_title
+        this.applyId = data.apply_id
+        api.setLog(2, '@atype=show@ca_name=doumi@ca_source=h5@ca_from=mstx')
+        return Promise.resolve(true)
+      } catch (err) {
+        return Promise.resolve(false)
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-modal
+  &-prepend
+    position relative
+    margin-bottom -16rpx
+    &-day
+      position absolute
+      left 50%
+      top calc(50% + 12rpx)
+      transform translate(-50%, -50%)
+      font-size 24px
+      font-weight 700
+    &-img
+      width 100%
+      height 188rpx
+  &-content
+    text-align center
+    padding 32rpx 0
+  &-title
+    margin-top 20rpx
+    line-height 22px
+    font-weight 700
+  &-company
+    margin-top 10rpx
+    font-size 12px
+    line-height 20px
+    color #808080
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-modal": "./dmx/dm-modal"
+    }
+  }
+</script>

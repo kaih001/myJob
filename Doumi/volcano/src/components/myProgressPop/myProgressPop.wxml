@@ -1,0 +1,28 @@
+<!--求职进度列表详情页弹窗-->
+<!-- pop start -->
+<view class="dm-pop-container" hidden="{{!isShow}}">
+  <view class="dm-mask"></view>
+  <view class="popup-wrapper" style="bottom:{{bottom}}px">
+    <view class="popup-main-box">
+      <view class="popup-title">请选择取消原因</view>
+      <view class="popup-list">
+        <view
+          data-id="{{item.id}}"
+          wx:for="{{selectItem}}"
+          wx:key="index"
+          class="popup-item {{item.isActive? 'active':''}}"
+          bindtap="optionItem">{{item.val}}
+        </view>
+      </view>
+    </view>
+    <view class="popup-main-box">
+      <view class="popup-title selected">其他原因</view>
+      <textarea class="popup-input" bindinput="inputedit" value="{{inputValue}}" placeholder-class="placeholder" placeholder="请填写取消面试原因，最多输入30字" adjust-position="{{false}}" bindfocus="foucus" bindblur="blur" fixed="{{true}}"/>
+    </view>
+    <view class="popup-btn">
+      <view class="btn-cancel" bindtap="cancelBtn">取消</view>
+      <view class="btn-sure" bindtap="sureBtn">确定</view>
+    </view>
+  </view>
+</view>
+<!-- pop end -->

@@ -1,0 +1,95 @@
+<template name="mine">
+  <block wx:if="{{item=='videoResume'}}">
+    <button
+      class="videoResume"
+      data-url="videoResume"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumber">
+      <image class="myVideoResume" src="https://cdn.doumistatic.com/223,01c3fbc5494306dc.png"></image>
+      <view class="arrow"></view>
+    </button>
+  </block>
+  <block wx:if="{{item=='jobSearchProgress'}}">
+    <view class="jobSearchProgress">
+      <button
+        class="topLink"
+        hover-class="dm-touch"
+        data-url="../pages/myTabList/myTabList.mpx?tabType=0"
+        open-type="getPhoneNumber"
+        data-ca-from="myapply"
+        bindtap="setLog"
+        bindgetphonenumber="bindGetPhoneNumber"
+      >
+        求职进度<view class="arrow"></view>
+      </button>
+      <view class="tab">
+        <button
+          class="tab-item"
+          data-url="../pages/myTabList/myTabList.mpx?tabType=0"
+          open-type="getPhoneNumber"
+          data-ca-from="apply"
+          bindtap="setLog"
+          bindgetphonenumber="bindGetPhoneNumber"
+        >
+          <image class="icon1" src="../assets/icon/icon_baoming.svg"></image>
+          <text class="tips">已报名</text>
+        </button>
+        <button
+          class="tab-item"
+          data-url="../pages/myTabList/myTabList.mpx?tabType=1"
+          open-type="getPhoneNumber"
+          data-ca-from="interview"
+          bindtap="setLog"
+          bindgetphonenumber="bindGetPhoneNumber"
+        >
+          <image class="icon1" src="../assets/icon/icon_mianshi.svg"></image>
+          <text class="tips">待面试</text>
+        </button>
+        <button
+          class="tab-item"
+          data-url="../pages/myTabList/myTabList.mpx?tabType=2"
+          open-type="getPhoneNumber"
+          data-ca-from="entry"
+          bindtap="setLog"
+          bindgetphonenumber="bindGetPhoneNumber"
+        >
+          <image class="icon1" src="../assets/icon/icon_luqu.svg"></image>
+          <text class="tips">已录取</text>
+        </button>
+        <button
+          class="tab-item"
+          data-url="../pages/myTabList/myTabList.mpx?tabType=3"
+          open-type="getPhoneNumber"
+          data-ca-from="refuse"
+          bindtap="setLog"
+          bindgetphonenumber="bindGetPhoneNumber"
+        >
+          <image class="icon1" src="../assets/icon/icon_jujue.svg"></image>
+          <text class="tips">已拒绝</text>
+        </button>
+      </view>
+    </view>
+  </block>
+  <block wx:if="{{item=='myResume'}}">
+    <button
+      class="cell cell1"
+      data-url="/subA/pages/basicInfo/basicInfo"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumber">
+      <image class="icon2" src="../assets/icon/icon_jianli.svg"></image>
+      <text class="title title1">我的简历</text>
+      <view class="arrow"></view>
+    </button>
+  </block>
+  <block wx:if="{{item=='postionQRcode'}}">
+    <button
+      class="cell cell1"
+      data-url="postionQRcode"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumber">
+      <image class="icon2" src="../assets/icon/icon_jianli.svg"></image>
+      <text class="title title1">我的职位分享码</text>
+      <view class="arrow"></view>
+    </button>
+  </block>
+</template>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="19px" viewBox="0 0 13 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>箭头</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.0_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-3" transform="translate(-156.000000, -154.000000)" fill="#ECF0F4">
+            <path d="M162.62447,163.5 L156.100017,154.799984 L156.100017,154.799984 C155.934341,154.579063 155.979125,154.265664 156.200046,154.099988 C156.286591,154.035084 156.391851,154 156.500029,154 L161.524494,154 L168.500081,163.5 L161.500081,173 L156.500029,173 L156.500029,173 C156.223887,173 156.000029,172.776142 156.000029,172.5 C156.000029,172.391822 156.035114,172.286562 156.100017,172.200016 L162.62447,163.5 Z" id="Rectangle-1"></path>
+        </g>
+    </g>
+</svg>

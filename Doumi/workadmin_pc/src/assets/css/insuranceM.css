@@ -1,0 +1,122 @@
+.insuranceM{
+	padding: 0 20px;
+  padding-bottom: 16px;
+}
+.insuranceM .kqtask_top{
+	height:50px;
+	border-bottom: 1px solid #e0e6ed;
+}
+.insurance_tab li {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.0;
+    text-align: center;
+    color: #99a9bf;
+    display: inline-block;
+    height: 42px;
+    line-height: 42px;
+    cursor: pointer;
+}
+.insurance_lifirst{
+	margin-right: 16px;
+}
+.insurance_tab{
+	position: relative;
+	display: inline-block;
+	margin-top: 16px;
+}
+.insurance_tab .tab_btnline{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	display: inline-block;
+	height: 3px;
+	background-color: #6699ee;
+	transition: left .2s;
+}
+.insurance_tab .active{
+	color: #6699ee;
+}
+.insuranceM .el-form{
+	margin-top: 28px;
+}
+.insuranceoparation：after{
+	display: block;
+	content: '';
+	clear: both;
+}
+.insuranceoparation .from-item-list1{
+	float: left;
+}
+.insuranceoparation .from-item-list2{
+	float: right;
+}
+
+.insuranceM .page{
+	float: right;
+}
+
+.insuranceMsearch .seach-empty{color: #c0ccda;font-size: 14px;text-align: center;height: 36px;line-height: 36px;}
+.insuranceMsearch {z-index: 99999!important}
+.insuranceMsearch li{
+    height: 36px;
+    line-height: 36px;
+    position: relative;
+}
+.insuranceMsearch li .name{
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.insuranceM .el-dialog--tiny{
+	width: 400px;
+}
+.insuranceM .maskconfirm .el-dialog__body{
+  padding: 30px 40px;
+}
+.insuranceM .maskconfirm .el-dialog--tiny{
+  width: 400px;
+}
+.insuranceM .maskconfirm .el-dialog__header{
+    padding: 24px 20px 0;
+}
+.insuranceM .maskconfirm .el-dialog__body{
+  padding: 30px 40px;
+}
+.insuranceM .maskconfirm .el-dialog__body{
+  border-bottom:1px solid #e0e6ed
+  
+}
+.insuranceM .maskconfirm .el-form-item__content{
+  width: 246px;
+}
+.insuranceM .maskconfirm .el-form-item{
+  margin-bottom: 0;
+}
+.insuranceM  .el-dialog__footer{
+  padding: 16px 20px;
+}
+.insuranceM .maskconfirm .el-dialog__body span{
+  font-size: 14px;
+  color: #5e6d82;
+  line-height: 20px;
+}
+.insuranceM .el-dialog__body {
+    border-bottom: 1px solid #e0e6ed;
+}
+.insuranceM .user-name{
+    position: relative;
+    padding-left: 37px;
+}
+.insuranceM .user-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin-right: 8px;
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: -7px;
+}
+.insuranceM .el-table .cell{
+  line-height: 40px;
+}

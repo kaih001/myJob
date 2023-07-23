@@ -1,0 +1,211 @@
+<template>
+  <view
+    class="subscribe-container"
+    wx:style="{{{bottom:BottomHeight}}}"
+    wx:if="{{ifShow}}"
+  >
+    <view class="content">
+      <view class="left">
+        <image
+          class="logo"
+          src="https://cdn.doumistatic.com/215,01c9d1a2192297a4.png"
+        ></image>
+        <view class="txt">
+          <view class="title">订阅“{{ subscribeTxt }}”职位</view>
+          <view class="sub-title">第一时间获取最新职位信息</view>
+        </view>
+      </view>
+      <image
+        class="btn"
+        src="https://cdn.doumistatic.com/217,01c9d24d9a432da9.png"
+        bindtap="bindSubscribe"
+      ></image>
+    </view>
+  </view>
+</template>
+
+<script>
+import mpx, { createComponent } from '@mpxjs/core'
+import util from '~/utils/util'
+import cityStore from '~/store/city'
+import globalDataStore from '~/store/globalData'
+import api from '~/utils/api'
+createComponent({
+  properties: {
+    subscribeTxt: {
+      type: String,
+      value: '公司'
+    },
+    hasBottom: {
+      type: Boolean,
+      value: false
+    },
+    caFrom: {
+      type: String,
+      value: ''
+    },
+    hasFrom: {
+      type: Boolean,
+      value: false
+    }
+  },
+  data: {
+    ifShow: false,
+    tmpIds: [
+      'hlgdHOVt-6je729GVIBeXOePhmr7h698W98R-kFN4xc',
+      'nYLek2z_A3BnUaIZh8ScHRRFyCmcoUlWj5Mc8Gp_cA4'
+    ]
+  },
+  computed: {
+    ...cityStore.mapGetters(['currentCity']),
+    ...globalDataStore.mapState(['isIpx']),
+    BottomHeight () {
+      if (this.hasBottom) {
+        return this.isIpx ? '104px' : '70px'
+      } else {
+        return this.isIpx ? '54px' : '20px'
+      }
+    },
+    // 点击订阅的日期
+    subscribeDate () {
+      return wx.getStorageSync('isindexSendMsg')
+    },
+    // 当前日期
+    currentDate () {
+      return new Date().getDate()
+    }
+  },
+  created () {
+    this.controlShow()
+  },
+  methods: {
+    controlShow () {
+      if (this.subscribeDate === this.currentDate) {
+        const theTmpIds = wx.getStorageSync('theTmpIds')
+        this.tmpIds = theTmpIds || this.tmpIds
+      } else {
+        this.ifShow = true
+        this.triggerEvent('showSubscribe')
+      }
+    },
+    async bindSubscribe () {
+      try {
+        const res = await mpx.requestSubscribeMessage({ tmplIds: this.tmpIds })
+        let paramsTmpIds = []
+        if (
+          res[this.tmpIds[0]] === 'accept' ||
+          res[this.tmpIds[1]] === 'accept'
+        ) {
+          if (
+            res[this.tmpIds[0]] === 'accept' &&
+            res[this.tmpIds[1]] === 'accept'
+          ) {
+            wx.setStorageSync('isindexSendMsg', this.currentDate)
+            paramsTmpIds = this.tmpIds
+            this.tmpIds = []
+          } else if (res[this.tmpIds[0]] === 'accept') {
+            paramsTmpIds = this.tmpIds.splice(0, 1)
+            wx.setStorageSync('theTmpIds', this.tmpIds)
+            this.tmpIds = this.tmpIds
+          } else {
+            paramsTmpIds = this.tmpIds.splice(1, 1)
+            wx.setStorageSync('theTmpIds', this.tmpIds)
+            this.tmpIds = this.tmpIds
+          }
+          if (this.tmpIds.length === 0) {
+            wx.setStorageSync('isindexSendMsg', this.currentDate)
+            this.closeSubscribe()
+          }
+          const params = {
+            open_id: globalDataStore.state.openId,
+            city_id: this.currentCity.id,
+            template_ids: paramsTmpIds
+          }
+          try {
+            await util.getData('collect/subscribemsg', params, 'POST')
+            wx.showToast({
+              title: '订阅成功',
+              icon: 'none'
+            })
+            api.setLog(
+              2,
+              `@atype=click@ca_name=doumi@ca_source=h5@ca_from=${this.caFrom}`
+            )
+          } catch (err) {
+            console.log(err)
+          }
+        } else {
+          wx.showToast({
+            title: '订阅失败，再试一次',
+            icon: 'none'
+          })
+          api.setLog(
+            2,
+            `@atype=click@ca_name=doumi@ca_source=h5@ca_from=${this.caFrom + 'Failed'}`
+          )
+        }
+      } catch (err) {
+        wx.showToast({
+          title: '网络链接错误，请检查网络状态',
+          icon: 'none'
+        })
+      }
+    },
+    closeSubscribe () {
+      this.ifShow = false
+      this.triggerEvent('closeSubscribe')
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.subscribe-container
+  position:fixed
+  bottom:20px
+  left:0
+  right:0
+  display:flex
+  justify-content:center
+  z-index:98
+  width:100%
+  height:72px
+  .content
+    padding:30rpx 24rpx 26rpx 24rpx
+    width:638rpx
+    background: #FFFFFF;
+    box-shadow: 0 2px 14px 0 rgba(0,0,0,0.20);
+    border-radius: 8px;
+    border-radius: 8px;
+    display:flex
+    align-items:center
+    justify-content:space-between
+    .left
+      display:flex
+      .logo
+        margin-right:22rpx
+        width:88rpx
+        height:88rpx
+      .txt
+        margin-right:34rpx
+        display:flex
+        flex-direction:column
+        .title
+          font-family: PingFangSC-Medium
+          font-size: 32rpx
+          color: #1A1A1A
+        .sub-title
+          font-family: PingFangSC-Regular
+          font-size: 28rpx
+          color: #B3B3B3
+          letter-spacing: 0
+    .btn
+      width:116rpx
+      height:52rpx
+</style>
+
+<script type="application/json">
+{
+  "component": true
+}
+</script>

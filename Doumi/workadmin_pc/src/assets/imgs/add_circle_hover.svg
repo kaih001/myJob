@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>添加_点击</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-89.000000, -167.000000)" fill="#6699EE">
+            <path d="M98,185 C93.0294373,185 89,180.970563 89,176 C89,171.029437 93.0294373,167 98,167 C102.970563,167 107,171.029437 107,176 C107,180.970563 102.970563,185 98,185 Z M99,175 L99,171 L97.001,171 L97.001,175 L93,175 L93,177 L97.001,177 L97.001,181 L99,181 L99,177 L103,177 L103,175 L99,175 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

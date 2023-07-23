@@ -1,0 +1,583 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+  <!-- 自定义返回头 -->
+  <nav-bar title="公司详情" backShow="{{true}}"></nav-bar>
+  <scroll-view
+    class="dm-page"
+    scroll-y
+    bindscrolltolower="bindLoadMore"
+    wx:style="height:200px;"
+    bindscroll="bindScroll"
+  >
+    <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+    <view
+      wx:style="{{ { paddingBottom: showSubscribe === true ? paddingBottomHeight : '' } }}"
+      wx:if="{{overLoad}}"
+    >
+      <view class="dm-company-head dm-page-white">
+        <image
+          wx:if="{{companyData.company_logo}}"
+          class="dm-company-img"
+          src="{{companyData.company_logo}}"
+          alt="公司图片"
+        />
+        <view class="dm-company-tittle">
+          <view class="dm-tittle-name">
+            <text>{{ companyData.corp_name }}</text>
+          </view>
+          <view class="dm-tittle-label">
+            <view
+              wx:if="{{companyData.is_audit_pass}}"
+              class="dm-tittle-label-item dm-company-audit"
+            >
+              已认证
+            </view>
+            <view
+              class="dm-tittle-label-item"
+              wx:if="{{companyData.city_name}}"
+            >
+              {{ companyData.city_name }}
+            </view>
+            <view class="dm-tittle-label-item"> {{ total }}个在招聘职位 </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 公司介绍 -->
+      <!-- <view class="dm-pannel dm-product-summary" hidden="{{notShowSummary}}"> -->
+      <view class="dm-pannel dm-product-summary" wx:if="{{companyData.brief}}">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title h1">公司介绍</view>
+        </view>
+        <view class="dm-pannel-bd dm-product-summary__text">
+          <rich-text
+            class="letter-wrap dm-product-summary__flexible-body"
+            wx:style="{{ { maxHeight: expend.isExpend === false ? triggerHeight : '' } }}"
+            nodes="{{companyData.brief}}"
+          >
+          </rich-text>
+          <view
+            wx:if="{{expend.isShow}}"
+            class="dm-product-summary__flexible-btn letter-wrap {{expend.isExpend ? 'dm-toggle' : ''}}"
+            bindtap="bindToggle"
+          >
+            {{ expend.isExpend ? "收起" : "展开" }}
+          </view>
+        </view>
+      </view>
+
+      <!-- 在招职位 -->
+      <view class="dm-recruit">
+        <view class="dm-recruit-head">
+          <view class="dm-recruit-tittle">
+            公司在招职位
+          </view>
+        </view>
+
+        <view
+          class="dm-company-post-list"
+          wx:for="{{listData}}"
+          wx:key="addr_id"
+          data-id="{{item.id}}"
+          data-ad_type="{{item.ad_types}}"
+          data-ca_kw="{{index}}"
+          data-reqid="{{reqid}}"
+          bindtap="bindItemClick"
+        >
+          <dm-job-item
+            wx:ref="jobItem"
+            job-adviser="{{jobAdviser}}"
+            reqid="{{reqid}}"
+            list-item="{{item}}"
+            not-showinfo="{{notShowinfo}}"
+            from-companydetail="{{fromCompanydetail}}"
+          >
+          </dm-job-item>
+        </view>
+      </view>
+      <dm-loadmore
+        wx:ref="dmLoadMore"
+        options="{{ { loadingTxt: '正在加载', noMoreTxt: '该公司没有更多职位啦！' } }}"
+      ></dm-loadmore>
+    </view>
+  </scroll-view>
+  <dm-follow-float></dm-follow-float>
+  <dm-subscribe
+    caFrom="ToastDingyuexiaoxi"
+    bind:closeSubscribe="bindCloseSubscribe"
+    bind:showSubscribe="bindShowSubscribe"
+    subscribeTxt="{{subscribeTxt}}"
+  ></dm-subscribe>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+// import throttle from 'lodash/throttle'
+import util from '../../utils/util'
+import stretchMixin from '~/mixins/stretch'
+import api from '../../utils/api'
+import globalDataStore from '~/store/globalData'
+// import jobDetailPath from '~/pages/jobDetail/jobDetail.mpx?resolve'
+const pageSize = 20 // 分页大小
+const DMCH = '/jianzhi/company'
+
+createPage({
+  mixins: [stretchMixin],
+  data: {
+    showSubscribe: false,
+    subscribeTxt: '',
+    showErrorTemp: false,
+    companyData: { // 公司信息
+      corp_name: '', // 公司简称
+      company_logo: '', // 公司logo
+      is_audit_pass: null, // 是否已经认证 1是 0否
+      city_name: '', // 公司地址所在城市
+      brief: '', // 公司介绍
+      postNum: '' // 公司在招人数
+    },
+    overLoad: false,
+    overoad: false,
+    company_id: null, // 公司id
+    total: '', // 在招职位数
+    errorType: '',
+    curent_page: 1,
+    last_page: 1,
+    listData: [],
+    notShowinfo: true,
+    fromCompanydetail: true,
+    notShowSummary: true,
+    cityId: null, // 城市 ID
+    word: '' // 搜索词
+  },
+  computed: {
+    ...globalDataStore.mapState(['isIpx']),
+    paddingBottomHeight () {
+      return this.isIpx ? '134px' : '100px'
+    }
+  },
+  bindCloseSubscribe (val) {
+    this.showSubscribe = false
+  },
+  bindShowSubscribe () {
+    this.showSubscribe = true
+  },
+  onLoad (options) {
+    const { company_id } = options
+    this.company_id = ~~company_id
+    util.showLoading()
+  },
+
+  async onShow () {
+    // 从搜一搜带入 word 和 city_id
+    const { ca_campaign, word, city_id } = this.options
+    if (word) {
+      this.word = word
+    }
+    if (ca_campaign) {
+      const caCampaign = `&ca_campaign=${ca_campaign}`
+      api.setLog(1, `${DMCH}${caCampaign}`)
+    } else {
+      api.setLog(1, DMCH)
+    }
+    if (city_id) {
+      this.cityId = ~~city_id
+    }
+    await this.__getCompanyData()
+    await this.__getListData(1)
+  },
+
+  methods: {
+    // - 职位列表的点击
+    bindItemClick ({
+      currentTarget: {
+        dataset: { ca_kw, id }
+      }
+    }) {
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@from=company_info@ca_from=postlist@post_id=${id}@ca_kw=${ca_kw}`,
+        null,
+        true
+      )
+    },
+    // 触底加载
+    async bindLoadMore () {
+      if (!this.isShowNoMore) {
+        await this.__getListData(2)
+      }
+    },
+    init () {
+      util.showLoading()
+      this.__getCompanyData()
+      this.__getListData(1)
+    },
+    // 获取公司数据
+    async __getCompanyData () {
+      try {
+        const res = await util.getData(
+          `company/detail`,
+          { company_id: this.company_id }
+        )
+        let { code } = res.data
+        if (+code === 1000) {
+          let { data } = res.data
+          if (
+            !!data.brief &&
+            data.brief.length !== 0
+          ) {
+            data.brief = data.brief.replace(
+              /<a.*?>(.*?)<\/a>/gi,
+              ''
+            )
+            data.brief = data.brief.replace(
+              /\r\n|\n/g,
+              '<br />'
+            )
+          }
+          this.overLoad = true
+          this.companyData = data
+          const companyName = this.word || this.companyData.corp_name
+          if (companyName) {
+            this.word = companyName
+            const userScene = wx.getLaunchOptionsSync()['scene']
+            if (userScene === 1005 || userScene === 1053) {
+              this.subscribeTxt = util.decodeURI(companyName).trim()
+            } else {
+              this.subscribeTxt = '公司'
+            }
+          }
+          this.$nextTick(() => {
+            this.initStretch({ selector: '.dm-product-summary__text', rowCount: 4 })
+            this.errorType = ''
+            this.showErrorTemp = false
+          })
+        } else {
+          util.hideLoading()
+          util.showToast(res)
+        }
+      } catch (err) {
+        util.hideLoading()
+        if (err === 'offline') {
+          this.errorType = err
+          this.showErrorTemp = true
+        }
+      }
+    },
+    // 获取公司职位列表
+    async __getListData (loadType) {
+      try {
+        if (loadType === 2) {
+          this.$refs.dmLoadMore.showLoading()
+        }
+        const { company_id, word, cityId } = this
+        const isSearchPamars = word !== '' && cityId !== null
+        const pamars = isSearchPamars
+          ? {
+            company_id,
+            page: this.curent_page,
+            page_size: pageSize,
+            city_id: cityId,
+            word: util.decodeURI(word).trim()
+          }
+          : {
+            company_id,
+            page: this.curent_page,
+            page_size: pageSize
+          }
+        const res = await util.getData(
+          `company/postlist`,
+          pamars
+        )
+        if (res.data.code === 1000) {
+          let { curent_page, last_page, data } = res.data.data
+          data = data.map(x => {
+            const tags = [x.payment_type_str, ...x.welfare_tag]
+            x.tags = [
+              ...tags.map(x => ({ color: '', text: x, show: true })) // - 月结和福利标签
+            ]
+            return x
+          })
+          let listData = this.listData
+          if (res.data.code === 1000) {
+            if (data.length > 0) {
+              if (this.curent_page === 1) {
+                listData = data
+              } else {
+                listData = [...this.listData, ...data]
+              }
+              this.curent_page = curent_page + 1
+            }
+          }
+
+          this.listData = listData
+          this.total = res.data.data.total
+          this.overLoad = true
+          this.$nextTick(() => {
+            util.hideLoading()
+            this.__initTracker()
+            if (last_page === 1 || curent_page === last_page) {
+              this.$refs.dmLoadMore.showNoMore()
+              this.isShowNoMore = true
+            }
+            if (this.companyData.brief) {
+              // this.notShowSummary = false
+            }
+          })
+        } else {
+          util.showToast(res.data.msg)
+        }
+      } catch (err) {
+        util.hideLoading()
+        if (err !== 'offline') {
+          util.showToast(err)
+        }
+      }
+    },
+    // 页面滚动时曝光埋点采集
+    bindScroll (evt) {
+      wx.$tracker.emit('scroll', evt)
+    },
+
+    // 曝光埋点初始化
+    __initTracker () {
+      const from = api.getTracker().from
+
+      wx.$tracker.trackExposure(
+        DMCH,
+        {
+          el: { list: '.dm-company-post-list' },
+          dmalog: list => {
+            list = JSON.stringify(list)
+            return `@atype=scroll@ca_name=doumi@ca_source=h5@from=${from}@ca_from=post_show@show_post_id=${list}`
+          }
+        }
+      )
+        .success(arg => console.log('曝光埋点发起成功: ', arg))
+        .fail(err => console.warn('曝光埋点发起失败: ', err))
+    }
+  },
+
+})
+</script>
+
+<style lang="stylus">
+@import '../../styles/util.styl'
+
+page
+  background-color #E5E5E5
+
+.dm-page
+  width 100%
+  height 100vh
+
+.dm-page-white
+  background-color white
+
+.dm-company-head
+  display flex
+  align-items center
+  padding 32rpx
+
+.dm-company-tittle
+  flex 1
+  line-height 0
+  overflow hidden
+  .dm-tittle-name
+    max-width 100%
+    max-height 48px
+    font-family PingFangSC-Medium
+    color #404040
+    font-size 16px
+    display flex
+    align-items center
+    line-height 24px
+    text
+      text-overflow ellipsis
+      overflow hidden
+      display -webkit-box
+      -webkit-line-clamp 2
+      -webkit-box-orient vertical
+  .dm-tittle-label
+    margin-top 4px
+    font-family PingFangSC-Regular
+    font-size 12px
+    color #999
+    display flex
+    align-items center
+    line-height 20px
+    &-item
+      position relative
+      float left
+      font-size 12px
+      line-height 20px
+      margin-right 16px
+      &::after
+        content ""
+        position absolute
+        right -8px
+        top 1.5px
+        width 1px
+        height 30rpx
+        background-color #999
+      &:last-child
+        &::after
+          content ""
+          width 0
+          height 0
+
+.dm-company-audit
+  margin-left 16px
+  color #72ABFF
+  &::before
+    content ""
+    position absolute
+    left -16px
+    top 2px
+    background-image url("https://cdn.doumistatic.com/210,01b74f5724b16894.png")
+    background-size 100%
+    background-repeat no-repeat
+    width 14px
+    height 14px
+
+.dm-company-img
+  width 120rpx
+  height 120rpx
+  margin-right 36rpx
+  border-radius 50%
+
+.dm-pannel-bd
+  flex 1
+
+// 职位详情
+.dm-product-summary
+  margin-top 24rpx
+  padding 32rpx
+  padding-bottom 32rpx
+  background-color #fff
+  &__text
+    margin-top 24rpx
+    color #808080
+    text-align justify
+    font-size 14px
+    line-height 22px
+    .letter-wrap
+      word-wrap break-word
+      word-break break-all
+  &__flexible-body
+    display block
+    overflow hidden
+  &__flexible-btn
+    height 54px
+    margin-top -32px
+    position relative
+    color #f80
+    font-size 14px
+    line-height 80px
+    text-align center
+    background-image linear-gradient(180deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.90) 40%, #FFFFFF 100%)
+    &::after
+      content ''
+      display inline-block
+      margin-left 4px
+      position relative
+      top -4px
+      width 8px
+      height 8px
+      border-bottom solid 1px #f80
+      border-left solid 1px #f80
+      transform rotate(-45deg)
+      vertical-align middle
+    &.dm-toggle
+      margin-top -10px
+      &::after
+        top 1px
+        transform rotate(135deg)
+
+.dm-pannel
+  padding-left 32rpx
+  padding-right 32rpx
+  position relative
+  background-color white
+  // 布局头部
+  .dm-pannel-hd
+    display flex
+    align-items center
+    justify-content space-between
+  .dm-pannel-title
+    padding-top 32rpx
+    color #808080
+    font-size 12px
+    line-height 20px
+    font-weight 400
+    &.h1
+      padding-bottom 32rpx
+      color #404040
+      font-size 18px
+      font-weight 700
+      line-height 24px
+      position relative
+      &::after
+        content ''
+        display block
+        widht 27px
+        height 3px
+        background-color #f7f7f7
+        position absolute
+        left 0
+        bottom 0
+
+// 在招职位
+.dm-recruit
+  margin-top 24rpx
+  background-color #fff
+  &-head
+    display flex
+    align-items center
+    justify-content center
+    width 100%
+    height 92rpx
+    border-bottom 1px soild #E5E5E5
+  &-tittle
+    position relative
+    font-family PingFangSC-Semibold
+    font-size 16px
+    color #404040
+    letter-spacing 0
+    text-align center
+    line-height 16px
+    &:before
+      content ""
+      position absolute
+      left -42rpx
+      top 0
+      width 28rpx
+      height 28rpx
+      background-image url('https://cdn.doumistatic.com/208,01b7b04075496b92.png')
+      background-size 100%
+      background-repeat no-repeat
+    &:after
+      content ""
+      position absolute
+      right -42rpx
+      top 0
+      width 28rpx
+      height 28rpx
+      background-image url('https://cdn.doumistatic.com/210,01b7b03f732f0502.png')
+      background-size 100%
+      background-repeat no-repeat
+</style>
+
+<script type="application/json">
+{
+  "navigationStyle": "custom",
+  "disableScroll": true,
+  "navigationBarTitleText": "公司详情",
+  "usingComponents": {
+    "nav-bar": "~/components/navBar/navBar",
+    "dm-loadmore": "~/components/dmx/dm-loadmore",
+    "dm-job-item": "~/components/dm-job-item",
+    "dm-subscribe": "~/components/dmx/dm-subscribe",
+    "dm-follow-float": "~/components/dmx/dm-follow-float"
+  }
+}
+</script>

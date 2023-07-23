@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>已拒绝@1x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="分组-12" transform="translate(7.000000, 7.000000)">
+            <g id="分组-10-copy-3">
+                <path d="M-1,-1 L18,-1 L18,18 L-1,18 L-1,-1 Z" id="Rectangle-190" stroke="#404040" stroke-width="2" fill="#FFFFFF"></path>
+                <polygon id="Rectangle-7" fill="#404040" points="11 8 15 8 15 10 11 10"></polygon>
+                <polygon id="Rectangle-7" fill="#404040" points="11 12 15 12 15 14 11 14"></polygon>
+                <polygon id="Rectangle-7-Copy-2" fill="#404040" points="0 2.5 18 2.5 18 4.5 0 4.5"></polygon>
+                <g id="分组-4" transform="translate(2.000000, 7.500000)" stroke="#FFAA00" stroke-width="1.8">
+                    <path d="M3.5,8.17124146e-14 L3.5,7.5" id="Path-21" transform="translate(3.500000, 3.750000) rotate(45.000000) translate(-3.500000, -3.750000) "></path>
+                    <path d="M3.5,1.77635684e-15 L3.5,7.5" id="Path-21" transform="translate(3.500000, 3.750000) rotate(-45.000000) translate(-3.500000, -3.750000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

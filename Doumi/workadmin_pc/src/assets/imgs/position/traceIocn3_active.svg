@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="38px" viewBox="0 0 34 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>离线点_点击态</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M10.5879634,29.3406255 C4.45692296,27.4565908 0,21.7487805 0,15 C0,6.71572875 6.71572875,0 15,0 C23.2842712,0 30,6.71572875 30,15 C30,22.0403833 25.1496047,27.9478961 18.6081504,29.563202 C18.7522107,29.6678543 18.6634146,29.7940173 18.25,29.9435185 C16.495,30.5781712 15.3609868,32.0953885 14.8479605,34.4951704 L14.4717559,34.4147453 C14.478777,34.3819024 14.4780173,34.3478725 14.4695372,34.3153757 C13.752411,31.5672344 12.5208986,30.0047018 10.775,29.6277778 C10.2471994,29.5138303 10.2485032,29.4168451 10.5879634,29.3406255 Z" id="path-1"></path>
+        <filter x="-10.0%" y="-8.7%" width="120.0%" height="117.4%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.521568627   0 0 0 0 0.576470588   0 0 0 0 0.505882353  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="图例_hover" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-178.000000, -206.000000)">
+        <g id="Pin" transform="translate(180.000000, 208.000000)">
+            <ellipse id="Oval-6" fill-opacity="0.2" fill="#000000" cx="14.5" cy="34" rx="5.5" ry="2"></ellipse>
+            <g id="Oval">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <circle id="Oval-2" fill="#A0A4A9" cx="15" cy="15" r="11"></circle>
+            <path d="M15,13.5857864 L16.8284271,11.7573593 C17.2189514,11.366835 17.8521164,11.366835 18.2426407,11.7573593 C18.633165,12.1478836 18.633165,12.7810486 18.2426407,13.1715729 L16.4142136,15 L18.2426407,16.8284271 C18.633165,17.2189514 18.633165,17.8521164 18.2426407,18.2426407 C17.8521164,18.633165 17.2189514,18.633165 16.8284271,18.2426407 L15,16.4142136 L13.1715729,18.2426407 C12.7810486,18.633165 12.1478836,18.633165 11.7573593,18.2426407 C11.366835,17.8521164 11.366835,17.2189514 11.7573593,16.8284271 L13.5857864,15 L11.7573593,13.1715729 C11.366835,12.7810486 11.366835,12.1478836 11.7573593,11.7573593 C12.1478836,11.366835 12.7810486,11.366835 13.1715729,11.7573593 L15,13.5857864 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

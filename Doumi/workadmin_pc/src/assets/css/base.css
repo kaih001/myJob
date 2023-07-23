@@ -1,0 +1,276 @@
+.createico_svg{
+	display: block;
+	width: 13px;
+	height: 14px;
+    margin-right: 6px;
+    margin-top: -1px;
+	float: left;
+	background-image:url(../../assets/imgs/create.svg);
+}
+.editico_svg{
+	display: block;
+	width: 14px;
+	height: 14px;
+    margin-top: 1px;
+	margin-left: 10px;
+	float: right;
+	background-image:url(../../assets/imgs/edit.svg);
+}
+.cexportico_svg{
+	display: block;
+	width: 12px;
+	height: 12px;
+	margin-right: 6px;
+	float: left;
+	background-image:url(../../assets/imgs/export.svg);
+}
+.deleteico_svg{
+	display: block;
+	width: 15px;
+	height: 14px;
+	margin-right: 6px;
+    margin-top: -1px;
+	float: left;
+	background-image:url(../../assets/imgs/delete.svg);
+}
+.setico_svg{
+	display: block;
+	width: 15px;
+	height: 14px;
+	margin-right: 3px;
+    margin-top: -1px;
+	float: left;
+	background-image:url(../../assets/imgs/set.svg);
+
+}
+.el-checkbox__inner{
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+}
+.el-checkbox__inner::after{
+	left: 4px;
+
+}
+.el-textarea__inner{
+	border-radius: 2px;
+}
+.el-button{
+  border-radius: 2px;
+}
+.el-button>span{
+	font-size: 14px;
+}
+.el-button.cancel span{
+	border-color: #e0e6ed;
+	color: #616c72;
+}
+.el-checkbox__inner{
+	border-radius: 2px;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner{
+	background-color: #6d9ee1;
+    border-color: #6d9ee1;
+}
+.el-checkbox__input.is-focus .el-checkbox__inner{
+    border-color: #6d9ee1;
+}
+.el-table th>.cell{
+    font-weight: 600;
+    color: #475669;
+    line-height: 40px;
+}
+.el-table__fixed-header-wrapper thead div{
+	background-color: #edeef2;
+}
+.el-table td, .el-table th.is-leaf{
+    border-bottom: 1px solid #dfe6ec;
+}
+.el-table--border th {
+    border-right: 1px solid #d3dce6;
+}
+.el-table .cell, .el-table th{
+	text-align: left;
+}
+.el-form-item.is-required .el-form-item__label:before{
+	content: '';
+	display: inline-block;
+	width: 5px;
+	height: 10px;
+	// background: url(../imgs/starimp.svg)  no-repeat;
+	background-size: 100% 100%;
+    background-position-y: 0px;
+}
+.el-table{
+	/*border:0;*/
+	border-left:1px solid #e0e6ed;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+	background-color: #f7f7f9;cursor: pointer;
+}
+.icon-arrow-right{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background: url(../imgs/payListDetail/arrow_right.svg)  no-repeat;
+	background-size: 100% 100%;
+    background-position-y: 0px;
+}
+.personnel-icon-plus{
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background: url(../imgs/add_personnel.svg)  no-repeat;
+	background-size: 100% 100%;
+    background-position-y: -1px;
+    vertical-align: middle;
+
+}
+
+
+.overviews .topup .el-dialog__body{
+  padding: 40px 40px 18px;
+  border-bottom: 1px solid #e0e6ed;
+}
+.overviews  .el-dialog__footer{
+	padding: 16px 20px 16px
+}
+.overviews .el-dialog__headerbtn .el-dialog__close{
+	font-size: 14px;
+}
+.overviews .showrefund .el-dialog__body{
+	padding: 27px  40px 10px;
+}
+.overviews .showrefund .el-dialog__body span{
+	font-size: 14px;
+	color: #5e6d82;
+	line-height: 18px;
+}
+.overviews .el-dialog__header{
+  padding-top: 24px;
+}
+.overviews .el-dialog--tiny{
+  width: 400px;
+}
+.overviews  .el-input__inner{
+	width: 218px;
+}
+
+
+
+.el-button.confirm:hover{
+	background-color: #8bb1f2 !important;
+	border-color:#8bb1f2 !important;
+}
+.el-button.cancel:hover{
+	border-color: #6699ee !important;
+}
+.el-button.cancel:hover>span{
+	color:#6699ee !important;
+}
+.el-button.cancel:active{
+    border: 1px solid #517ed6 !important;
+}
+.el-button.cancel:active>span{
+	color: #517ed6 !important;
+}
+.el-button.confirm:active{
+	background-color: #6699ee !important;
+	border-color: #6699ee !important;
+}
+ .el-button.cancel{
+ 	border-color: #e0e6ed;
+ }
+.saas-icon-group{
+	display: inline-block;
+	width: 16px;
+	height: 17px;
+	background: url(../imgs/group_ico.svg)  no-repeat;
+	background-size: 100% 100%;
+    background-position-y: -1px;
+    vertical-align: middle;
+}
+.saas-icon-peple{
+	display: inline-block;
+	width: 16px;
+	height: 18px;
+	background: url(../imgs/peple_ico.svg)  no-repeat;
+	background-size: 100% 100%;
+	background-position-y: -1px;
+	vertical-align: middle;
+}
+.el-select .el-input__inner:focus,.el-input .el-input__inner:focus{
+    border-color: #6699EE
+}
+.el-checkbox__inner:hover{
+    border-color: #6699EE
+}
+.el-textarea .el-textarea__inner:focus{
+	border-color: #6699ee
+}
+.el-textarea__inner{
+	border-color: #e0e6ed
+}
+.el-textarea__inner:hover{
+    border-color: #c0ccda
+}
+.el-button--primary:focus,.el-button--primary:hover{
+  border-color:#6699ee
+}
+.el-input__inner:hover{
+    border: 1px solid #c0ccda;
+}
+.el-select:hover .el-input__inner{
+    border: 1px solid #c0ccda;
+}
+.dm-icon-question{
+	margin-left: 7px;
+	display: inline-block;
+	width: 16px;
+	height: 18px;
+	background: url(../imgs/dm-icon-question.svg)  no-repeat;
+	background-size: 100% 100%;
+	background-position-y: -1px;
+	vertical-align: middle;
+}
+.el-popover__title{
+	font-size: 14px;
+}
+.el-popover {
+  position: absolute;
+  background: #fff;
+  min-width: 150px;
+  border-radius: 4px;
+  border: 1px solid #ebeef5;
+  padding: 12px;
+  z-index: 2000;
+  color: #606266;
+  line-height: 1.4;
+  text-align: justify;
+  font-size: 12px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  word-break: break-all;
+  line-height: 18px;
+}
+.hidden-row{
+	display: none;
+}
+
+::-webkit-scrollbar{
+	width:10px;
+	height:10px;
+}
+::-webkit-scrollbar-track{
+	background: rgb(239, 239, 239);
+	border-radius:2px;
+}
+::-webkit-scrollbar-thumb{
+	background: #bfbfbf;
+	border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover{
+	background: #333;
+}
+::-webkit-scrollbar-corner{
+	background: #179a16;
+}

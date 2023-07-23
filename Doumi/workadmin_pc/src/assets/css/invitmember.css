@@ -1,0 +1,184 @@
+.invit-wapper{
+	padding: 0 20px 0 20px;
+	height: 100%;
+	overflow: hidden;
+}
+.invit-wapper h2{
+	font-size: 13px;
+	text-align: left;
+	color: #475568;
+	height: 54px;
+	line-height: 54px;
+	border-bottom: 1px solid #e0e6ed;
+	margin-bottom: 25px;
+}
+.invit-wapper h2 b{cursor: pointer;color: #6699ee;font-size: 13px;position: relative;font-weight: 600;}
+.invit-wapper h2 b:active{
+	color: #517ed6;
+}
+.invit-wapper h2 b .arrow-right-icon{
+	display: block;
+	width: 10px;
+	height: 10px;
+	background: url(../imgs/arrow_right.png) no-repeat center;
+	position: absolute;
+	right: -17px;
+    top: 5px;
+}
+.invit-wapper h2 span{
+	color: #8492a6;
+	font-weight: 600;
+}
+.invit-wapper h3{
+	font-size: 16px;
+  	font-weight: 600;
+  	color: #475568;
+  	margin-bottom: 24px;
+}
+#memberInvitation .invit-wapper .el-form-item__label{
+	color:#5e6d82;
+}
+#memberInvitation .invit-wapper .el-select{
+	width: 300px;
+	position: relative;
+}
+#memberInvitation .invit-wapper .error-tip .el-input__inner{border-color: #ff6600}
+#memberInvitation .el-form-item__content span.error-text{
+	position: absolute;
+	left: 0px;
+	top: 30px;
+	color: #ff6600;
+	font-size: 12px;
+}
+#memberInvitation .invit-wapper .el-form-item__content p{
+	font-size: 14px;
+    color: #99a9bf;
+}
+#memberInvitation .invit-wapper .el-form-item__content .sels{
+	/*width: 615px;*/
+	padding: 5px 0;
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+#memberInvitation .invit-wapper .el-checkbox-button__inner{
+	border: none;
+    border-radius: 2px;
+    padding: 0 10px;
+    height: 36px;
+    line-height: 36px;
+    border: solid 1px #e0e6ed;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+  	color: #475568;
+  	margin: 0 10px 12px 0;
+  	cursor: pointer;
+}
+
+#memberInvitation .invit-wapper .el-checkbox-button__inner:hover{
+	border-color: #6699ee;
+	color: #6699ee;
+}
+#memberInvitation .invit-wapper .width_2 .el-checkbox-button__inner, .width_4 .el-checkbox-button__inner{
+	width: 86px;
+}
+#memberInvitation .invit-wapper .width_5 .el-checkbox-button__inner, .width_6 .el-checkbox-button__inner{
+	width: 120px;
+}
+#memberInvitation .invit-wapper .el-checkbox-button.is-checked .el-checkbox-button__inner{
+	border-color: #6699ee;
+	color: #6699ee;
+	box-shadow: none;
+}
+#memberInvitation .invit-wapper .el-checkbox-button.is-checked i.select_icon{
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: -1px;
+	width: 20px;
+	height: 20px;
+	background: url(../../assets/imgs/icon.svg) no-repeat top right;
+}
+#memberInvitation .invit-wapper .btn2 span{font-size: 14px;}
+#memberInvitation .dialog-invit .el-dialog--tiny{width: 470px;}
+#memberInvitation .dialog-invit .el-dialog__body{
+	padding: 30px 40px 50px 40px;
+}
+#memberInvitation .dialog-invit .el-form-item{margin-left: 2px;}
+#memberInvitation .dialog-invit h3{
+  	font-size: 14px;
+  	line-height: 1.14;
+  	color: #1f2d3d;
+  	text-align: center;
+  	margin-bottom: 8px;
+}
+#memberInvitation .dialog-invit .ewm{
+	width: 225px;
+	height: 200px;
+	margin: 0 auto;
+	/*margin-bottom: 32px;*/
+}
+#memberInvitation .dialog-invit .ewm dl dt{
+	width: 160px;
+	height: 160px;
+	background: #eeeeee;
+	margin: 0 auto;
+	margin-bottom: 8px;
+}
+#memberInvitation .dialog-invit .ewm dl dt #canvas{width:160px!important;height:160px!important;}
+#memberInvitation .dialog-invit .ewm dl dd{
+	font-size: 13px;
+  	line-height: 1.23;
+  	color: #8492a6;
+  	text-align: center;
+}
+#memberInvitation .dialog-invit .el-form-item__label{
+	font-size: 14px;
+  	color: #8492a6;
+}
+#memberInvitation .dialog-invit .el-form-item__content{
+	width: 290px;
+	position: relative;
+}
+#memberInvitation .dialog-invit .myinput .btn2{
+	position: absolute;
+	right: 0px;
+	top: 27px;
+}
+#memberInvitation .dialog-invit .myinput{position: relative;}
+#memberInvitation .dialog-invit .myinput label{
+	font-size: 14px;
+  	color: #8492a6;
+}
+#memberInvitation .dialog-invit .myinput input{
+	margin-top: 12px;
+	height: 36px;
+	line-height: 36px;
+	border: 1px solid #e0e6ed;
+	width: 260px;
+	padding: 0 15px;
+	color: #1f2d3d;
+	font-size: 14px;
+	border-radius: 2px;
+}
+#memberInvitation .dialog-invit .myinput input:hover{
+	border-color: #c0ccda
+}
+#memberInvitation .dialog-invit .myinput input:focus{
+	border-color: #6699EE;
+}
+#memberInvitation .invitmember-btn, .copybtn{
+	margin-left: 0px!important;
+    width: 88px!important;
+}
+.lis-div{
+	margin-bottom: 0px;
+}
+.icon-arrow-right{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background: url(../imgs/payListDetail/arrow_right.svg)  no-repeat;
+	background-size: 100% 100%;
+    background-position-y: 0px;
+}

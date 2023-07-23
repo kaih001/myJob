@@ -1,0 +1,204 @@
+<template>
+	<import src="../../../../../template/error/error.wxml" />
+	<template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+	<view class="section" wx:if="{{!showErrorTemp}}">
+		<view class="dm-filter-search">
+			<dm-search-box
+			placeholder="搜索职位/公司"
+			disabled
+			bind:tap="bindJumpSearchPage"
+			></dm-search-box>
+		</view>
+		<picker
+		class="cell"
+		mode="multiSelector"
+		bindchange="bindregionPickerChange"
+		bindcolumnchange="bindColumnchangeCity"
+		range-key="short_name"
+		range="{{region}}"
+		value="{{cityValue}}">
+			<view class="cell-left">城市</view>
+			<view class="cell-right">
+				<view class="cell-select-btn"></view>
+				<view class="cell-select-text" wx:if="{{!townLabel}}">请选择</view>
+				<view class="cell-select-text-active" wx:else>
+					{{provinceLabel === cityLabel ? (cityLabel + ' ' + townLabel) : (provinceLabel + ' ' + cityLabel + ' ' + townLabel)}}
+				</view>
+			</view>
+		</picker>
+		<picker
+		class="cell"
+		mode="multiSelector"
+		bindchange="bindSelectJobType"
+		bindcolumnchange="bindColumnchangeJobType"
+		range-key="name"
+		value="{{jobValue}}"
+		range="{{jobType}}">
+			<view class="cell-left">职位类型</view>
+			<view class="cell-right">
+				<view class="cell-select-btn"></view>
+				<view class="cell-select-text" wx:if="{{!jobTypeText}}">不限</view>
+				<view class="cell-select-text-active" wx:else>
+					{{jobTypeText}}
+				</view>
+			</view>
+		</picker>
+		<view class="btnSelect {{isIpx ? 'btnSelect-ipx' : ''}}">
+			<dm-checkbox-group
+				title="性别"
+				mode="single"
+				options="{{sexList}}"
+				wx:model="{{btnSelectValue[0]}}"
+				bind:input="bindChangeSex"
+			></dm-checkbox-group>
+			<dm-checkbox-group
+				wx:if="{{treatmentList.length}}"
+				title="福利"
+				min='-1'
+				options="{{treatmentList}}"
+				wx:model="{{btnSelectValue[1]}}"
+				bind:input="bindChangetreatment"
+			></dm-checkbox-group>
+			<dm-checkbox-group
+				title="身份要求"
+				mode="single"
+				options="{{identityList}}"
+				wx:model="{{btnSelectValue[2]}}"
+				bind:input="bindChangeIdentity"
+			></dm-checkbox-group>
+			<dm-checkbox-group
+				title="职位要求"
+				mode="single"
+				options="{{workTypeList}}"
+				wx:model="{{btnSelectValue[3]}}"
+				bind:input="bindChangeWorkType"
+			></dm-checkbox-group>
+			<dm-checkbox-group
+				wx:if="{{orderList.length}}"
+				title="排序方式"
+				mode="single"
+				options="{{orderList}}"
+				wx:model="{{btnSelectValue[4]}}"
+				bind:input="bindChangeOrder"
+			></dm-checkbox-group>
+			<dm-checkbox-group
+				title="其他"
+				min='-1'
+				options="{{otherList}}"
+				bind:input="bindChangeOther"
+				wx:model="{{btnSelectValue[5]}}"
+			></dm-checkbox-group>
+		</view>
+	</view>
+	<view class="dm-footbar {{isIpx ? 'iphonex-fixed' : ''}}" wx:if="{{!showErrorTemp}}">
+		<view bind:tap="bindReset" class="reset">重置</view>
+		<view bind:tap="bindSubmit" class="submit">搜索</view>
+	</view>
+</template>
+<script src="./handle.js"></script>
+<style>
+	page {
+		background-color: white;
+	}
+	.section{
+		background-color: #F5F5F5;
+	}
+	.dm-filter-search{
+		height: 104rpx;
+		background-color: white;
+		overflow: hidden;
+		border-top: #E5E5E5 solid 1rpx;
+	}
+
+	.dm-search{
+		background-color: #F2F2F2 !important;
+	}
+
+	.cell {
+		box-sizing: border-box;
+		width: 100%;
+		height: 96rpx;
+		background-color: #fff;
+		padding: 0 32rpx;
+		border-top: #E5E5E5 solid 1rpx;
+	}
+
+	.cell-left,.cell-right{
+		width: 50%;
+		float: left;
+		line-height: 96rpx;
+	}
+
+	.cell-left {
+		color: #404040;
+		font-size: 28rpx;
+	}
+
+	.cell-right view{
+		float: right;
+	}
+
+	.cell-select-btn{
+		margin-top: 34rpx;
+		display: block;
+		width: 28rpx;
+		height: 28rpx;
+		background: url("https://cdn.doumistatic.com/164,01542a8c4967aa23.png") no-repeat;
+		background-size: 28rpx;
+	}
+
+	.cell-select-text{
+		font-size: 28prx;
+		color: #999999;
+	}
+
+	.cell-select-text-active{
+		color: #000;
+	}
+
+	.cell input{
+		text-align: right;
+		height: 96rpx;
+		font-size: 28prx;
+	}
+
+	.btnSelect{
+		margin-top: 20rpx;
+		background-color: white;
+		padding-bottom: 50px;
+	}
+	.btnSelect-ipx{
+		padding-bottom: 84px;
+	}
+
+	.dm-footbar view{
+		float: left;
+		height: 50px;
+		width: 50%;
+		line-height: 50px;
+		text-align: center;
+		color: #404040;
+		font-size: 16px;
+	}
+
+	.reset{
+		background-color: #fff;
+	}
+
+	.reset{
+		background-color: #fff;
+	}
+
+	.submit{
+		background: #FFCC00;
+	}
+</style>
+<script type="application/json">
+	{
+		"navigationBarTitleText": "斗米找工作",
+		"usingComponents": {
+			"dm-search-box": "../../../../../components/dmx/dm-search-box",
+			"dm-checkbox-group": "../../../../../components/dmx/dm-checkbox-group"
+		}
+	}
+</script>

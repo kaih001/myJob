@@ -1,0 +1,229 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+
+  <!-- 方便面签到调研框 -->
+  <dm-survey-pop wx:ref="dmSurveyPop"></dm-survey-pop>
+
+  <view class="dm-page list" style="overflow: {{isScrollY ? '' : 'hidden'}}">
+    <view class="dm-section">
+      <view class="dm-pannel product">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">面试</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view class="tab">
+            <button class="tab-item {{tabType==0?'active':''}}" bindtap="changeTab" data-tabType="0">
+              <text class="tips">已报名</text>
+            </button>
+            <button class="tab-item {{has_spot?'spot': ''}} {{tabType==1?'active':''}}" bindtap="changeTab" data-tabType="1">
+              <text class="tips">待面试</text>
+            </button>
+            <button class="tab-item {{tabType==2?'active':''}}" bindtap="changeTab" data-tabType="2">
+              <text class="tips">已录取</text>
+            </button>
+            <button class="tab-item {{tabType==3?'active':''}}" bindtap="changeTab" data-tabType="3">
+              <text class="tips">已拒绝</text>
+            </button>
+          </view>
+
+          <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType, noListTxt: '暂无职位' }}" />
+
+          <block wx:else>
+            <view class="scrollView">
+              <view class="dm-list-wrapper" wx:for="{{listData}}" wx:key="index">
+                <!-- 面试信息展开的职位(待面试帖子,类似面试详情页) -->
+                <myProgressDetail
+                  wx:if="{{item.detail}}"
+                  id="myProgressDetail"
+                  item="{{item.detail}}"
+                  data-id="{{item.detail.id}}"
+                  data-type="{{item.show_status_code}}">
+                  <view class="dm-product-opt dm-nav" slot="buttons">
+                    <block wx:if="{{item.detail.btn.code === 3}}">
+                      <view
+                        class="dm-nav-item"
+                        hover-class="dm-touch"
+                        data-id="{{item.post_id}}"
+                        data-index="{{index}}"
+                        data-type="complain"
+                        bindtap="cancelOption">{{item.detail.btn.txt}}
+                      </view>
+                    </block>
+                  </view>
+                </myProgressDetail>
+                <!-- 列表形式的职位 -->
+                <myProgressList
+                  wx:else
+                  id="myProgressList"
+                  item="{{item}}"
+                  data-id="{{item.post_id}}"
+                  data-type="{{item.show_status_code}}"
+                  catchtap="setLog">
+                  <view class="dm-product-opt dm-nav" slot="buttons">
+                    <!-- 已报名 -->
+                    <view wx:if="{{item.btn.code === 1}}" class="dm-nav-item dm-applyed">{{item.btn.txt}}</view>
+                    <!-- 取消报名 -->
+                    <view
+                      wx:elif="{{item.btn.code === 2}}"
+                      class="dm-nav-item"
+                      hover-class="dm-touch"
+                      data-id="{{item.post_id}}"
+                      data-index="{{index}}"
+                      data-type="cancel_apply"
+                      catchtap="openCancleConfirm">{{item.btn.txt}}
+                    </view>
+                    <!-- 取消面试 -->
+                    <view
+                      wx:elif="{{item.btn.code === 3}}"
+                      class="dm-nav-item"
+                      hover-class="dm-touch"
+                      data-id="{{item.post_id}}"
+                      data-index="{{index}}"
+                      data-type="complain"
+                      catchtap="cancelOption">{{item.btn.txt}}
+                    </view>
+                    <view
+                      wx:if="{{tabType === 0}}"
+                      class="dm-nav-item"
+                      hover-class="dm-touch"
+                      bindtap="openComplaintConfirm"
+                      data-id='{{item.post_id}}'
+                      data-index="{{index}}"
+                      data-type="complain">投诉职位
+                    </view>
+                  </view>
+                </myProgressList>
+              </view>
+              <myProgressPop
+                id="myProgressPop"
+                bind:confirm="submitInfo"
+                bind:cancel="bindCancelPop">
+              </myProgressPop>
+
+              <view class="dm-loadmore" wx:if="{{showButtomLoading}}">
+                <icon class="dm-loadmore-icon"></icon>
+                <text class="dm-loadmore-text">正在加载</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+.dm-section
+  padding-bottom 66rpx
+  box-sizing border-box
+
+.product
+  .dm-pannel-hd
+    display none
+  .dm-pannel-bd
+    padding-top 96rpx
+
+.tab
+  position fixed
+  top 0
+  left 0
+  z-index 99
+  display flex
+  justify-content space-between
+  box-sizing border-box
+  width 100%
+  background-color #fff
+  font-size 0
+  letter-spacing 0
+  text-align center
+  padding 24rpx 0
+  .tab-item
+    display block
+    position relative
+    height 48rpx
+    background-color #fff
+    color #404040
+    font-size 32rpx
+    line-height 48rpx
+    text-align center
+    padding 0 32rpx
+    margin 0
+    overflow visible
+    &.active
+      font-weight 700
+      &::before
+        content ""
+        position absolute
+        left 50%
+        bottom -24rpx
+        z-index 10
+        width 40rpx
+        height 8rpx
+        margin-left -20rpx
+        background-color #fa0
+        border-radius 8rpx
+  .tips
+    display block
+
+.tab-item
+  &.spot
+    &::after
+      content ""
+      position absolute
+      top 0
+      left 100%
+      margin-left -32rpx
+      width 28rpx
+      height 28rpx
+      background-color #f60
+      border-radius 28rpx
+
+.dm-product-opt
+  display flex
+  position relative
+  &::after
+    content ""
+    position absolute
+    top 0
+    right 40rpx
+    left 40rpx
+    height 1px
+    border-top 1px dotted #e5e5e5
+    transform-origin 0 0
+    transform scale3d(1, 0.5, 1)
+  .dm-nav-item
+    position relative
+    flex 1
+    background-color #fff
+    font-size 28rpx
+    line-height 44rpx
+    text-align center
+    padding 28rpx 24rpx
+    &::after
+      content ""
+      position absolute
+      top 50%
+      left -1px
+      width 1px
+      height 22px
+      background-color #e5e5e5
+      margin-top -11px
+      transform-origin 100% 0
+      transform scale3d(0.5, 1, 1)
+    &.dm-touch
+      background-color #f5f5f5
+</style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "求职进度",
+  "usingComponents": {
+    "myProgressList": "../../components/myProgressList/myProgressList",
+    "myProgressDetail": "../../components/myProgressDetail/myProgressDetail",
+    "myProgressPop": "../../components/myProgressPop/myProgressPop",
+    "dm-survey-pop": "../../components/dm-survey-pop"
+  }
+}
+</script>

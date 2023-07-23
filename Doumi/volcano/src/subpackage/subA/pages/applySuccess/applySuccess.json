@@ -1,0 +1,8 @@
+{
+    "navigationBarTitleText": "报名成功",
+    "usingComponents": {
+        "recommend-job-list": "../../../../components/recommendJobList/recommendJobList",
+        "dm-share-pop":"../../../../components/bus/dm-job-detail/dm-share-pop",
+        "jump-outside-tips":"../../../../components/jumpOutsideTips/jumpOutsideTips"
+    }
+}

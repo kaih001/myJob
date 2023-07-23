@@ -1,0 +1,75 @@
+{
+  "name": "doumi-seek-work",
+  "version": "1.0.0",
+  "description": "斗米找工作小程序，采用Mpx框架渐进式开发",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./build/build.js",
+    "watch": "node ./build/build.js -w",
+    "prod": "node ./build/build.js -p",
+    "watch:cross": "npm run watch --wx --swan",
+    "build:cross": "npm run build --wx --swan",
+    "prod:cross": "npm run prod --wx --ali --swan",
+    "lint": "eslint --fix --ext .js,.mpx src/",
+    "stylelint": "stylelint \"./**/*.{css,less,sass,scss,wxss}\" --fix",
+    "help": "node ./build/build.js --help"
+  },
+  "author": "songyazhao <syazhao@foxmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@doumi/mpx-plugin-tracker": "^0.0.2",
+    "@mpxjs/api-proxy": "^2.2.26",
+    "@mpxjs/core": "^2.2.25"
+  },
+  "devDependencies": {
+    "@mpxjs/webpack-plugin": "^2.2.26",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-runtime": "^6.26.0",
+    "chalk": "^2.4.2",
+    "commitizen": "^4.0.3",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^0.28.11",
+    "cz-conventional-changelog": "^3.0.2",
+    "eslint": "^5.10.0",
+    "eslint-config-babel": "^8.0.2",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-plugin-html": "^5.0.5",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-local-rules": "^0.1.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "ora": "^2.1.0",
+    "path": "^0.12.7",
+    "rimraf": "^2.6.2",
+    "stylelint": "^10.1.0",
+    "stylelint-config-standard": "^18.3.0",
+    "stylelint-config-wxss": "^2.4.2",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.39.2",
+    "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.7",
+    "webpack-merge": "^4.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.corp.doumi.com/doumi_web_page/doumi-seek-work.git"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

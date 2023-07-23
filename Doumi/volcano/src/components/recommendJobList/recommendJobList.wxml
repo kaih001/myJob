@@ -1,0 +1,51 @@
+<view class="dm-recommend-list-wrapper {{subscribe?'hasSubscribe':''}}" wx:if="{{listData.length > 0}}">
+  <view hover-class="none" class="dm-recommend-list-header">
+    <text wx:if="{{!isChaoJianZhi}}" class="dm-recommend-list-header-text">看过该职位的人还看过</text>
+    <text wx:else class="dm-recommend-list-header-text">更多好玩兼职</text>
+    <navigator wx:if="{{isChaoJianZhi}}" url="../prefecture/prefecture?category=funny" class="show-all" bindtap="showMore">
+      <text>全部</text>
+      <icon class="dm-icon dm-icon-rightarrow" />
+    </navigator>
+  </view>
+  <view class="short-line"></view>
+  <view class="dm-recommend-list-body">
+      <view
+        class="dm-recommend-list-item"
+        wx:for="{{listData}}"
+        wx:key="addr_id"
+        data-id="{{item.id}}"
+        data-ad_type="{{item.ad_types}}"
+        data-ca_kw="{{index}}"
+        data-reqid="{{reqid}}"
+        hover-class="dm-touch">
+        <view
+          data-label="{{item.operate_label}}"
+          data-query="id={{item.id}}&jobType={{item.job_type}}&source={{source}}&reqid={{reqid}}"
+          data-id="{{item.id}}"
+          data-index="{{index}}"
+          bindtap="lookUpRecommendJob">
+          <view class="dm-product-header">
+            <view class="dm-product-title">{{item.title}}</view>
+            <view class="dm-product-price">
+              <text class="dm-product-price-value">{{item.salary}}</text><text class="dm-product-price-unit">
+                <block wx:if="{{item.is_salary_nego != 1}}">{{item.salary_unit_str}}/{{item.salary_type_str}}</block>
+              </text>
+            </view>
+          </view>
+          <!-- <view class="dm-product-company">北京三快在线科技有限公司</view> -->
+          <view class="dm-product-label">
+            <view class="dm-wrapper-guarantee" wx:if="{{item.is_wages_guarantee === '1'}}">
+              <icon class="dm-icon dm-icon-guarantee" />
+            </view>
+            <view class="dm-tag"><text class="dm-tag-text">{{item.payment_type_str}}</text></view>
+            <block wx:for="{{item.treatment}}" wx:key="index">
+              <view class="dm-tag" wx:if="{{item === '7'}}"><text class="dm-tag-text">五险</text></view>
+            </block>
+            <block wx:for="{{item.operate_label}}" wx:key="index">
+              <view class="dm-icon-zhipin" wx:if="{{item === 'zhipin'}}">自营</view>
+            </block>
+          </view>
+        </view>
+      </view>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>编辑</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-112.000000, -47.000000)" fill="#6699EE">
+            <g id="Group-2" transform="translate(112.000000, 47.000000)">
+                <path d="M5,5 L17,5 L17,7 L5,7 L5,5 Z M4,6 L5,5 L5,7 L4,6 Z" id="Combined-Shape" transform="translate(10.500000, 6.000000) scale(1, -1) rotate(45.000000) translate(-10.500000, -6.000000) "></path>
+                <g id="Group-Copy-2-+-Rectangle-817-+-Triangle-2" transform="translate(7.500000, 8.500000) scale(-1, 1) rotate(-180.000000) translate(-7.500000, -8.500000) translate(0.000000, 1.000000)" fill-rule="nonzero">
+                    <g id="Group-Copy-2" transform="translate(0.000000, 0.000000)">
+                        <path d="M2,2 L2,13 L8,13 L8,15 L1,15 C0.44771525,15 -2.80079856e-15,14.5522847 -1.88737914e-15,14 L0,14 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 L1,0 L1.5,0 L14,-5.32907052e-14 C14.5522847,-1.77635684e-14 15,0.44771525 15,1 L15,1 L15,8 L13,8 L13,2 L2,2 Z" id="Combined-Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

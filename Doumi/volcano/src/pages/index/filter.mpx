@@ -1,0 +1,637 @@
+<template>
+  <dm-mask wx:ref="dmMask" bind:hide="bindMaskHide"></dm-mask>
+
+  <view class="dm-filter">
+    <block wx:for="{{options}}" wx:key="index">
+      <view wx:if="{{index === 0}}" class="dm-filter-box">
+        <dm-checkbox
+          solid
+          checked-style="{{ {
+            backgroundColor: 'white',
+            color: '#FFAA00',
+            width: showJobName.length > 4 ? '85px' : ''
+          } }}"
+          value="{{checked3}}"
+          bind:tap="handleToggleJobList"
+        >
+          {{showJobName}}
+          <view slot="after" class="dmx-icon-arrow" wx:class="{{ iconClassName2 }}"></view>
+        </dm-checkbox>
+        <view
+          wx:show="{{isShowJobList}}"
+          class="dm-filter-joblist"
+          wx:style="{{ { marginTop: space } }}">
+          <scroll-view class="dm-filter-joblist-wrap nav" scroll-y>
+            <view class="mod-list">
+              <view
+                class="dm-filter-list-item"
+                wx:class="{{ { active: selectedWorkIndex === cindex } }}"
+                wx:for="{{jobList}}"
+                wx:key="cindex"
+                wx:for-item="citem"
+                wx:for-index="cindex"
+                data-index="{{cindex}}"
+                bindtap="bindSelectWork"
+              >{{ citem.name }}
+              </view>
+            </view>
+          </scroll-view>
+          <scroll-view class="dm-filter-joblist-wrap main" scroll-y>
+            <view wx:if="{{jobList.length > 0}}" class="mod-list">
+              <view
+                class="dm-filter-list-item"
+                wx:class="{{ { active: citem.isActive } }}"
+                wx:for="{{jobList[selectedWorkIndex].items}}"
+                wx:for-item="citem"
+                wx:key="index"
+                data-job="{{citem}}"
+                bindtap="bindToggleJob"
+              >{{ citem.name }}
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+
+      <dm-select
+        wx:if="{{index === 1}}"
+        wx:ref="dmSelect"
+        class="dm-filter-box"
+        space="{{space}}"
+        wx:model="{{sValue2}}"
+        options="{{item.data}}"
+        bind:on-show="handleShowSelect"
+        bind:on-hide="handleHideSelect"
+        bind:input="handleChange"
+      ></dm-select>
+
+      <dm-checkbox
+        wx:if="{{item.type === 'radio'}}"
+        class="dm-filter-box"
+        solid
+        checked-style="{{ { backgroundColor: 'white', color: '#FFAA00' } }}"
+        val="{{item.data.value}}"
+        wx:model="{{checked}}"
+        bind:tap="handleRadioTap"
+      >{{item.data.label}}</dm-checkbox>
+
+      <view wx:if="{{item.type === 'checkbox-group'}}" class="dm-filter-box">
+        <dm-checkbox
+          solid
+          checked-style="{{ { backgroundColor: 'white', color: '#FFAA00' } }}"
+          value="{{checked2}}"
+          bind:tap="handleToggleGroup"
+        >
+          筛选
+          <view slot="after" class="dmx-icon-arrow" wx:class="{{ iconClassName }}"></view>
+        </dm-checkbox>
+        <view
+          wx:show="{{isShowGroup}}"
+          class="dm-filter-group"
+          wx:style="{{ { marginTop: space } }}"
+        >
+          <dm-checkbox-group
+            wx:if="{{cindex === 0}}"
+            wx:for="{{item.data}}"
+            wx:key="cindex"
+            wx:for-item="citem"
+            wx:for-index="cindex"
+            title="{{citem.title}}"
+            mode="single"
+            options="{{citem.data}}"
+            wx:model="{{cValue1}}"
+            bind:change="handleChooseOption"
+          ></dm-checkbox-group>
+          <dm-checkbox-group
+            wx:if="{{cindex === 1}}"
+            wx:for="{{item.data}}"
+            wx:key="cindex"
+            wx:for-item="citem"
+            wx:for-index="cindex"
+            title="{{citem.title}}"
+            mode="single"
+            options="{{citem.data}}"
+            wx:model="{{cValue2}}"
+            bind:change="handleChooseOption"
+          ></dm-checkbox-group>
+          <view class="dm-filter-button-box">
+            <view class="dm-filter-line" style="top: 0"></view>
+            <button bindtap="handleReset" class="dm-filter-button dm-filter-button-reset">重置</button>
+            <button bindtap="handleConfirm" class="dm-filter-button dm-filter-button-confirm">完成</button>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class="dm-filter-line"></view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import util from '../../utils/util'
+
+const noopValue = [['0'], ['0']]
+
+createComponent({
+  properties: {
+    options: {
+      type: Array,
+      value: []
+    }
+  },
+
+  data: {
+    isShow: false,
+    space: '8px',
+    sValue2: '',
+    cValue1: [...noopValue[0]],
+    cValue2: [...noopValue[1]],
+    checked: false,
+    isShowJobList: false,
+    isShowGroup: false,
+    jobList: [],
+    selectedWorkIndex: 0, // - 默认勾选兼职类目下
+    selectedJobs: [],
+    selectedJobName: ''
+  },
+
+  computed: {
+    showJobName () {
+      return this.selectedJobName === '全部' || this.selectedJobName === ''
+        ? '职位类型'
+        : this.selectedJobName
+    },
+    checked2 () {
+      return (
+        this.isShowGroup || (~~this.cValue1 !== 0 || ~~this.cValue2 !== 0)
+      )
+    },
+    checked3 () {
+      return (
+        this.isShowJobList || this.selectedJobs.length > 0
+      )
+    },
+    iconClassName () {
+      return {
+        'dmx-icon-arrow-down': !this.isShowGroup && !this.checked2,
+        'dmx-icon-arrow-up': this.isShowGroup && !this.checked2,
+        'dmx-icon-arrow-down-active': !this.isShowGroup && this.checked2,
+        'dmx-icon-arrow-up-active': this.isShowGroup && this.checked2
+      }
+    },
+    iconClassName2 () {
+      return {
+        'dmx-icon-arrow-down': !this.isShowJobList && !this.checked3,
+        'dmx-icon-arrow-up': this.isShowJobList && !this.checked3,
+        'dmx-icon-arrow-down-active': !this.isShowJobList && this.checked3,
+        'dmx-icon-arrow-up-active': this.isShowJobList && this.checked3
+      }
+    }
+  },
+
+  watch: {
+    isShowGroup (val) {
+      if (!val) this.__confirm()
+    },
+    isShowJobList (val) {
+      if (!val) this.__confirm()
+    },
+  },
+
+  async created () {
+    await this.updateJobList()
+  },
+
+  methods: {
+    bindMaskHide () {
+      this.isShow = false
+      this.isShowGroup = false
+      this.isShowJobList = false
+      this.$refs.dmSelect[0].shrink()
+      this.triggerEvent('on-hide')
+    },
+
+    handleShowSelect () {
+      this.isShowGroup = false
+      this.isShowJobList = false
+      this.__show()
+      this.triggerEvent('tracker', { append: '@ca_from=open_location' })
+    },
+
+    handleHideSelect () {
+      this.isShowGroup = false
+      this.isShowJobList = false
+      this.__hide()
+    },
+
+    handleChange ({ detail: { value } }) {
+      this.__confirm()
+      const district = this.options[1].data.find(x => +x.value === +value)
+      this.triggerEvent('tracker', { append: `@ca_from=choose_location@item=${district.label}` })
+    },
+
+    handleToggleJobList () {
+      this.isShowGroup = false
+      this.$refs.dmSelect[0].shrink()
+      this.isShowJobList = !this.isShowJobList
+      this.isShowJobList ? this.__show() : this.__hide()
+      if (this.isShowJobList) this.triggerEvent('tracker', { append: '@ca_from=open_type' })
+    },
+
+    handleToggleGroup () {
+      this.isShowJobList = false
+      this.$refs.dmSelect[0].shrink()
+      this.isShowGroup = !this.isShowGroup
+      this.isShowGroup ? this.__show() : this.__hide()
+      if (this.isShowGroup) this.triggerEvent('tracker', { append: '@ca_from=open_option' })
+    },
+
+    handleChooseOption ({ detail: { originValue: [item] } }) {
+      console.log(item)
+      this.triggerEvent('tracker', { append: `@ca_from=choose_input@item=${item.label}` })
+    },
+
+    handleReset () {
+      this.cValue1 = [...noopValue[0]]
+      this.cValue2 = [...noopValue[1]]
+      // this.handleToggleGroup()
+      this.triggerEvent('reset')
+    },
+
+    handleConfirm () {
+      const trackerItems = [...this.cValue1, ...this.cValue2]
+        .map((x, index) => {
+          const item = this.options[3]
+            .data[index]
+            .data.find(xx => xx.value === x)
+          return item ? item.label : ''
+        })
+      this.handleToggleGroup()
+      this.triggerEvent('tracker', { append: `@ca_from=choose_option@item=${trackerItems.toString()}` })
+    },
+
+    handleRadioTap () {
+      this.__hide()
+      this.__confirm()
+
+      const caFrom = this.checked ? 'open_sort' : 'choose_sort'
+      this.triggerEvent('tracker', { append: `@ca_from=${caFrom}` })
+    },
+
+    /**
+     * 选择切换工作类型
+     */
+    bindSelectWork (e) {
+      this.selectedWorkIndex = e.target.dataset.index
+    },
+
+    /**
+     * 选择切换职位类型
+     */
+    bindToggleJob (e) {
+      let { selectedJobs, jobList } = this
+      let temp1 = []
+
+      const { job } = e.target.dataset
+      const isExist = x => x.value === job.value
+      if (selectedJobs.some(isExist)) {
+        this.selectedJobName = ''
+        return this.bindRemoveJob(e) // - 如果已经选中, 就移除勾选
+      } else {
+        // - 未选中, 处理勾选的逻辑
+        for (const currentWork of jobList) {
+          for (const x of currentWork.items) {
+            if (x.name === job.name && x.name !== '全部') {
+              delete x.isActive // - 向接口发送的参数中不应有 isActive 属性
+              temp1 = [...temp1, JSON.parse(JSON.stringify(x))] // - 表示添加勾选
+              x.isActive = true // - 设置勾选态
+            } else {
+              x.isActive = false // - 其余设置为未勾选
+            }
+          }
+        }
+
+        this.selectedJobs = temp1
+        this.jobList = jobList
+        this.selectedJobName = job.name
+        this.__hide()
+        this.triggerEvent('tracker', { append: `@ca_from=choose_type@item=${job.name}` })
+      }
+    },
+
+    /**
+     * 移除某个选中的职位
+     */
+    bindRemoveJob (e) {
+      let { selectedJobs, jobList } = this
+      const { job } = e.target.dataset
+      const jobName = typeof job === 'string' ? job : job.name
+      const isExist = x => x.name === jobName
+
+      if (selectedJobs.some(isExist)) {
+        selectedJobs = selectedJobs.filter(x => x.name !== jobName)
+
+        for (const currentWork of jobList) {
+          for (const x of currentWork.items) {
+            if (x.name === jobName) {
+              x.isActive = false
+            }
+          }
+        }
+      }
+      this.selectedJobs = selectedJobs
+      this.jobList = jobList
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    // - 更新职位选项数据(根据 0推荐、1兼职、2全职 联动)
+    /**
+     * 更新职位选项数据(根据职位种类数据联动)
+     * @param {Number} careerType - 职位种类(0推荐、1兼职、2全职 联动)
+     * @param {Boolean} 是否派发confirm事件(可能会触发父级页面的数据更新)
+     */
+    async updateJobList (careerType = 0, isDone = false) {
+      this.selectedWorkIndex = 0
+      this.selectedJobs = []
+      this.selectedJobName = ''
+
+      const query = util.obj2uri({
+        hidden_operation: 1, // 是否展示运营推荐分类 1不展示
+        hidden_hot: 0, // 是否展示兼职热门类目 1不展示
+        citydomain: '', // 当前城市
+        hidden_other: 1, // 是否展示其他类目 1不展示
+        hidden_guide: 0, // 将热门标签中的子类别从全职和兼职中移除 1合并 0不合并
+        job_type: careerType, // 是否将标签进行拆分成 0:'不限';1:'兼职';2:'全职'
+      })
+
+      try {
+        util.showLoading()
+        const res = await util.getData(`common/jobtype/list?${query}`)
+        if (res.data.code === 1000) {
+          this.__transformJobData(res.data.data)
+          if (isDone) this.__confirm()
+          util.hideLoading()
+        } else {
+          console.log(res.data)
+        }
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    },
+
+    /**
+     * 转换接口返回的职位列表数据为界面展示所需的格式
+     * @param {Object[]} jobList
+     */
+    __transformJobData (jobList) {
+      for (const work of jobList) {
+        let items = work.name === '热门'
+          ? [{ name: '全部', value: 0, key: 'job_type' }]
+          : []
+        for (const job of work.items) {
+          job.parent = work.name
+          job.parentValue = work.value
+          job.isActive = false
+          items = [...items, job]
+        }
+        work.items = items
+      }
+
+      this.jobList = jobList
+    },
+
+    // - 隐藏所有展开的选项, 用于外部调用
+    shrink () {
+      this.__hide()
+    },
+
+    __show () {
+      this.isShow = true
+      this.$refs.dmMask.show()
+      this.triggerEvent('on-show')
+    },
+
+    __hide () {
+      this.$refs.dmMask.hide()
+      this.triggerEvent('on-hide')
+    },
+
+    __confirm () {
+      let value = {}
+      this.options.forEach((x, i) => {
+        if (i === 0) {
+          value[x.key] = this.selectedJobs
+        } else if (i === 1) {
+          value[x.key] = this.sValue2
+        } else if (i === 2) {
+          value[x.key] = this.checked ? x.data.value : ''
+        } else if (i === 3) {
+          x.data.forEach((xx, ii) => {
+            value[xx.key] = ii === 0 ? [...this.cValue1] : [...this.cValue2]
+          })
+        }
+      })
+      this.triggerEvent('confirm', { value })
+    }
+  }
+})
+</script>
+
+<style lang="stylus" src="../../styles/icon.styl"></style>
+<style lang="stylus">
+@import '../../styles/util.styl'
+.select-list-item {
+  position: relative;
+  display: inline-block;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #404040;
+  text-align: center;
+  line-height: 32px;
+  background: #fffcf5;
+  border-radius: 3px;
+  margin-right: 20px;
+  margin-top: 6px;
+  &:first-child {
+    margin-left: 12px;
+  }
+
+  &:last-child {
+    margin-right: 12px;
+  }
+}
+
+.dm-filter-joblist {
+  display: flex;
+  .dm-filter-joblist-wrap {
+    height: 52.62vh;
+    &.main {
+      width: 61.2%;
+
+      .mod-list {
+        padding-left: 3px;
+        padding-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .dm-filter-list-item {
+        position: relative;
+        width: 39.8%;
+        box-sizing: border-box;
+        line-height: 20px;
+        padding: 6.5px 0;
+        margin-left: 24rpx;
+        margin-bottom: 24rpx;
+        color: #404040;
+        text-align: center;
+        border-radius: 4px;
+        border1px(#E5E5E5);
+        &.active {
+          background-color: #FFFCF5;
+          border1px(#FA0);
+        }
+      }
+    }
+    &.nav {
+      flex: 1;
+      position: relative;
+      .dm-filter-list-item {
+        position: relative;
+        font-size: 14px;
+        color: #404040;
+        padding: 12px 15px;
+        line-height: 20px;
+        &.active {
+          color: #FA0;
+          &::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background-color: #FA0;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+      }
+      &::after {
+        content: '';
+        display: block
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        background-color: #E5E5E5;
+        transform: scaleX(.5);
+      }
+    }
+  }
+}
+</style>
+<style lang="stylus">
+.dm-filter-button-box {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+
+  .dm-filter-button {
+    width: 72px;
+    height: 32px;
+    margin: 16px 12px 16px 0;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 32px;
+
+    &-reset {
+      background-color: white;
+    }
+
+    &-confirm {
+      background-color: #ffcc00;
+    }
+
+    &-reset::after {
+      border-color: #e5e5e5;
+    }
+
+    &-confirm::after {
+      border-color: #ffcc00;
+    }
+
+    &::after {
+      content: '';
+      width: 200%;
+      height: 200%;
+      border-radius: 6px;
+      border-width: 1px;
+      border-style: solid;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 0 0;
+      transform: scale(0.5);
+    }
+  }
+}
+
+.dm-filter {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  background-color: white;
+  position: relative;
+  z-index: 1001;
+
+  &::before, &::after {
+    content: '';
+    display: block;
+  }
+
+  .dm-checkbox {
+    background-color: #F7F7F7;
+    &::after {
+      display: none;
+    }
+  }
+
+  &-joblist
+  &-group {
+    background-color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+  &-line {
+    width: 100vw;
+    height: 1px;
+    background-color: #E5E5E5;
+    transform-origin: 0 100%;
+    transform: scale3d(1, 0.5, 1);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+}
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-mask": "../../components/dmx/dm-mask",
+      "dm-select": "../../components/dmx/dm-select",
+      "dm-checkbox": "../../components/dmx/dm-checkbox",
+      "dm-checkbox-group": "../../components/dmx/dm-checkbox-group"
+    }
+  }
+</script>

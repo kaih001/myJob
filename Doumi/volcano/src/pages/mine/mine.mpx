@@ -1,0 +1,641 @@
+<template>
+  <view class="mine-contianer">
+    <view class="userinfo">
+      <view class="avatar">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <open-data class="nickname" type="userNickName"></open-data>
+    </view>
+    <view class="main">
+      <!------------------------- v3 TODO：----------------------------------->
+      <!-- 1.为方便后期维护，登录将改成弹窗形式，减少工作量 -->
+      <!-- 2.如果不同意则切换feature/sy-2476分株，改回v2或v1版本 -->
+      <view class="videoResume" bindtap="goVideoResume">
+        <image class="myVideoResume" src="{{videoImg}}"></image>
+        <view class="arrow"></view>
+      </view>
+      <view class="jobSearchProgress">
+        <view
+          class="topLink"
+          hover-class="dm-touch"
+          data-ca-from="myapply"
+          bindtap="goJobSearchProgress"
+          >求职进度<view class="arrow"></view>
+        </view>
+        <view class="tab">
+          <block wx:for="{{jobSearchProgressList}}" wx:key="dataTabType">
+            <view
+              class="tab-item {{ has_spot&&item.dataTabType==1 ? 'active' : '' }}"
+              data-tab-type="{{item.dataTabType}}"
+              data-ca-from="{{item.dataCaFrom}}"
+              bindtap="goTabList">
+              <image class="icon1" src="{{item.imageUrl}}"></image>
+              <text class="tips">{{item.name}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      <view class="myintegral-container">
+        <view class="myintegral">
+          <view class="title">我的积分</view>
+          <view class="num-text">
+            <text class="nums">{{my_score}}</text>
+            <text class="text">当前积分</text>
+          </view>
+        </view>
+        <view class="getintegral-container">
+          <view class="getintegral getintegral-first" bindtap="goGame">
+            <view class="img img1"></view>
+            <view>玩游戏赚积分</view>
+          </view>
+          <view class="getintegral" bindtap="goGame">
+            <view class="img img2"></view>
+            <view>积分充值</view>
+          </view>
+        </view>
+      </view>
+      <!-- <view class="cell_under_line"></view>
+      <view class="cell" bindtap="goTest">
+        <image class="icon2" src="../../assets/icon/icon_jianli.svg"></image>
+        <text class="title">跳转测试</text>
+        <view class="arrow"></view>
+      </view> -->
+      <view class="cell_under_line"></view>
+      <view class="cell" bindtap="bindClickMyResume">
+        <image class="icon2" src="../../assets/icon/icon_jianli.svg"></image>
+        <text class="title">我的简历</text>
+        <view class="arrow"></view>
+      </view>
+      <block wx:if="{{has_invite_code}}">
+        <view class="cell_under_line"></view>
+        <view class="cell" bindtap="openQRcode">
+          <image class="icon2" src="../../assets/icon/icon_jianli.svg"></image>
+          <text class="title">我的职位分享码</text>
+          <view class="arrow"></view>
+        </view>
+      </block>
+      <!------------------------- v3 TODO：----------------------------------->
+      <view class="cell_under_line"></view>
+      <view class="cell" bindtap="bindlickWallet">
+        <image class="icon2" src="../../assets/icon/icon_qianbao.svg"></image>
+        <text class="title title2">我的钱包</text>
+        <view class="arrow"></view>
+      </view>
+      <view class="cell_under_line"></view>
+      <view class="cell" bindtap="bindToReport">
+        <image class="icon2" src="../../assets/icon/icon_phone.png"></image>
+        <text class="title title2">举报</text>
+        <view class="arrow"></view>
+      </view>
+      <view class="cell_under_line"></view>
+      <view class="cell">
+        <image class="icon2" src="../../assets/icon/icon_mail.png"></image>
+        <text class="title title2">举报邮箱：jubao@doumi.com</text>
+      </view>
+      <view class="cell_under_line"></view>
+      <navigator class="cell" url="/subB/pages/adviser/screen/screen" wx-if="{{adviserScreenShow}}">
+        <image class="icon2" src="../../assets/icon/icon_adviser.svg"></image>
+        <text class="title title2">顾问工具-查找职位</text>
+        <view class="arrow"></view>
+      </navigator>
+      <!-- // 上线关掉入口
+      <view class="cell_under_line"></view>
+      <view class="cell" bindtap="bindlinkReward">
+        <image class="icon2" src="../../assets/icon/icon_qianbao.svg"></image>
+        <text class="title title2">微猎头</text>
+        <view class="arrow"></view>
+      </view>
+      -->
+      <button open-type="contact" class="cell cell1" bindtap="bindClickFeedback">
+        <image class="icon2" src="../../assets/icon/icon_fankui.svg"></image>
+        <text class="title title2">意见反馈</text>
+        <view class="arrow"></view>
+      </button>
+    </view>
+    <!-- 方便面签到调研框 -->
+    <dm-survey-pop wx:ref="dmSurveyPop"></dm-survey-pop>
+    <!-- 授权弹窗组件调用 -->
+    <dialog
+      wx:ref="dialog"
+      closable
+      enable-animation
+      open-type="getPhoneNumber"
+      title="先登录开启快速求职"
+      cancel-text="账户登录"
+      auto-hide="{{false}}"
+      bind:close="bindGoBasic"
+      bind:cancel="bindAccountLogin"
+      bind:getPhoneNumber="bindGetPhoneNumberCallBack">
+    </dialog>
+    <!-- 职位分享码弹窗组件调用 -->
+    <job-share-code
+      wx:ref="jobShareCode"
+      closable
+      enable-animation
+      inviteCodeQrcode="{{invite_code_qrcode}}"
+      title="斗米找工作-急聘专区">
+    </job-share-code>
+  </view>
+</template>
+
+<script>
+import mpx, { createPage } from '@mpxjs/core'
+import api from '../../utils/api'
+import util from '../../utils/util'
+import pageBasicInfo from '~/subpackage/subA/pages/basicInfo/basicInfo?resolve'
+import pageVideoResume from '~/subpackage/subA/pages/videoResume/videoResume?resolve'
+import pageReport from '~/subpackage/subB/pages/report/report?resolve'
+import loginPath from '~/pages/login/login?resolve'
+
+const app = getApp()
+
+createPage({
+  // -------------------------------------------------------------------------
+  // 页面初始数据
+  // -------------------------------------------------------------------------
+
+  data: {
+    clickFeedbackBtn: false,
+    clickHistoryBtn: false,
+    showErrorTemp: false,
+    errorType: '',
+    loginFlag: false,
+    tabType: '',
+    jobSearchProgressList:[
+      {
+        dataTabType:'0',
+        dataCaFrom:"apply",
+        imageUrl:require('../../assets/icon/icon_baoming.svg'),
+        name:'已报名'
+      },
+      {
+        dataTabType:'1',
+        dataCaFrom:"interview",
+        imageUrl:require('../../assets/icon/icon_mianshi.svg'),
+        name:'待面试'
+      },
+      {
+        dataTabType:'2',
+        dataCaFrom:"entry",
+        imageUrl:require('../../assets/icon/icon_luqu.svg'),
+        name:'已录取'
+      },
+      {
+        dataTabType:'3',
+        dataCaFrom:"refuse",
+        imageUrl:require('../../assets/icon/icon_jujue.svg'),
+        name:'已拒绝'
+      }
+    ],
+    has_spot: false,
+    adviserScreenShow: false,
+    hasVideo: false, // 用户是否有视频简历
+    my_score:0,//剩余积分
+    has_invite_code:false,
+    invite_code_qrcode:'',
+    showHas_invite_code:false,
+
+  },
+  computed:{
+    videoImg(){
+      return this.hasVideo?'https://cdn.doumistatic.com/227,01e078235829af5d.png':'https://cdn.doumistatic.com/200,01e07821d34ea23a.png'
+    },
+    videoResumeLog(){
+      return this.hasVideo?'@atype=click@ca_name=doumi@ca_source=h5@ca_from=my_vresume':'@atype=click@ca_name=doumi@ca_source=h5@ca_from=upload_vresume'
+    }
+  },
+
+  // -------------------------------------------------------------------------
+  // 小程序生命周期
+  // -------------------------------------------------------------------------
+
+  onShow () {
+    api.setLog(1, '/jianzhi/mywechat')
+    api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=mywechat`)
+    const userId = wx.getStorageSync('userId')
+    const loginFlag = userId > 0 // userId === 0 表示未授权手机号但是已经授权了微信信息, userId === '' 表示未登录
+    this.loginFlag = loginFlag
+
+    // 判断是否有红点点
+    if (loginFlag) {
+      util.getData('ucenter/common').then(res => {
+        this.has_spot = res.data.data.interview_red_dot
+        this.hasVideo = res.data.data.has_video
+        this.has_invite_code=res.data.data.has_invite_code
+        this.invite_code_qrcode=res.data.data.invite_code_qrcode
+      })
+      this.$nextTick(() => this.$refs.dmSurveyPop.check()) // 检查签到提醒
+      //剩余积分
+      this.getIntegral();
+    }
+    // 验证顾问身份
+    this.__verificationId()
+
+  },
+
+  onHide () {
+    if (!this.clickFeedback || !this.clickHistoryBtn) {
+      app.globalData.fromMinePage = true
+      this.clickHistoryBtn = false
+      this.clickFeedbackBtn = false
+    }
+  },
+
+  methods: {
+    // 跳转到视频简历页
+    async goVideoResume () {
+      try {
+        await this.handleLogin()
+        api.setLog(2, this.videoResumeLog)
+        wx.navigateTo({
+          url: `${pageVideoResume}?hasVideo=${this.hasVideo}`
+        })
+      } catch (error) {
+        console.log('goVideoResume error',error)
+      }
+    },
+    //跳转求职进度
+    async goJobSearchProgress(e){
+      try {
+        await this.handleLogin()
+        const caFrom=e.currentTarget.dataset.caFrom
+        api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=${caFrom}`)
+        wx.navigateTo({url: '../myTabList/myTabList'})
+      } catch (error) {
+        console.log('goJobSearchProgress error',error)
+      }
+    },
+    async goTabList (e) {
+      try {
+        await this.handleLogin()
+        const { caFrom, tabType }=e.currentTarget.dataset
+        api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=${caFrom}`)
+        wx.navigateTo({
+          url: `/pages/myTabList/myTabList?tabType=${tabType}`
+        })
+      } catch (error) {
+        console.log('goTabList error',error)
+      }
+    },
+    goTest(){
+      wx.navigateTo({url: '/pages/adTest/adTest'})
+    },
+    //我的简历
+    async bindClickMyResume () {
+      try {
+        await this.handleLogin()
+        api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=myresume`)
+        wx.navigateTo({url: pageBasicInfo})
+      } catch (error) {
+        console.log('bindClickMyResume error',error)
+      }
+    },
+    //我的职位分享码
+    async openQRcode(){
+      try {
+        await this.handleLogin()
+        this.$nextTick(()=>{
+          this.$refs.jobShareCode.showDialog()
+        })
+      } catch (error) {
+        console.log('openQRcode error',error)
+      }
+    },
+    // 获取剩余积分
+    async getIntegral(){
+      try {
+          const res = await util.getData('client/score/myscore', {}, 'GET')
+          let { data } = res.data;
+          this.my_score=data.my_score;
+          console.log('fffffffffffffff',data);
+        } catch (err) {
+          app.showErrorToastHandler(err === 'offline' ? '网络异常' : '服务器异常')
+        }
+    },
+    goGame(){
+      wx.showToast({ title: '下载斗米app赚取积分', icon: 'none' });
+    },
+    bindlickWallet () {
+      wx.showToast({
+        title: '提现请到⽃⽶APP',
+        icon: 'none',
+        duration: 1500
+      })
+      api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=wallet`)
+    },
+    bindToReport () {
+      wx.navigateTo({
+        url: `${pageReport}`
+      })
+    },
+    bindClickFeedback () {
+      api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=feedback`)
+      this.clickFeedbackBtn = true
+    },
+
+    // 验证顾问身份
+    async __verificationId () {
+      //user_id === 0 表示未授权手机号但是已经登录, user_id === '' 表示未登录
+      const userId = wx.getStorageSync('userId')
+      const loginFlag = userId !== '' && userId > 0
+      if (loginFlag) {
+        // 验证身份是否是顾问
+        util.showLoading()
+        try {
+          const res = await util.getData('client/aggregation/consultant/iscounselor', {}, 'POST')
+          let { data } = res.data
+          util.hideLoading()
+          if (data && data.is_consultant) {
+            this.adviserScreenShow = true
+            // 储存求职顾问
+            wx.setStorageSync('jobAdviser', `gw_${data.name}`)
+          }
+        } catch (err) {
+          util.hideLoading()
+          app.showErrorToastHandler(err === 'offline' ? '网络异常' : '服务器异常')
+        }
+      }
+    },
+    /**
+     * 处理登录逻辑
+     */
+    handleLogin(){
+      return new Promise((reslove,reject)=>{
+        const isLogin=this.loginFlag
+        if(!isLogin){
+          this.$refs.dialog.showDialog()
+          reject()
+        }else{
+          reslove()
+        }
+      })
+    },
+    // x号关闭授权弹框
+    bindGoBasic () {
+      console.log('colse dialog components');
+    },
+    // 账号登录
+    bindAccountLogin () {
+      wx.navigateTo({ url: `${loginPath}?callbackName=init` })
+    },
+    // 登录组件手机号授权反馈
+    async bindGetPhoneNumberCallBack (e) {
+      await app.getPhoneNumber(e)
+      this.getIntegral()
+      this.clickHistoryBtn = true
+      this.loginFlag = true
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+page
+  height 100%
+.mine-contianer
+  min-height 100%
+  overflow auto
+  padding-bottom 80rpx
+.userinfo
+  display flex
+  align-items center
+  box-sizing border-box
+  height 232rpx
+  background-image url('https://cdn.doumistatic.com/134,011ea540a70a8ac2.png')
+  background-size cover
+  padding 0 32rpx
+  .avatar
+    width 128rpx
+    height 128rpx
+    border-radius 50%
+    border 5rpx solid #fff
+    margin-right 32rpx
+    overflow hidden
+  .nickname
+    height 44rpx
+    color #404040
+    font-size 44rpx
+    line-height 44rpx
+    text-align center
+.main
+  margin-bottom 90rpx
+.topLink
+  position relative
+  background-color #fff
+  color #404040
+  font-size 32rpx
+  font-weight 700
+  line-height 32rpx
+  text-align left
+  padding 32rpx 32rpx 24rpx
+  .arrow
+    position absolute
+    top 50%
+    right 32rpx
+    margin-top -14rpx
+    width 28rpx
+    height 28rpx
+    background url('https://cdn.doumistatic.com/164,01542a8c4967aa23.png') no-repeat
+    background-size 28rpx
+
+.tab
+  display flex
+  justify-content space-evenly
+  background-color #fff
+  padding-bottom 24rpx
+  margin-bottom 24rpx
+  .tab-item
+    display block
+    background-color transparent
+    color #808080
+    font-size 24rpx
+    line-height 40rpx
+    text-align center
+    overflow visible
+  .icon1
+    position relative
+    display block
+    width 64rpx
+    height 64rpx
+    margin 0 auto 8rpx
+    overflow visible
+  .tips
+    display block
+
+.tab-item
+  &.active
+    .icon1
+      &::after
+        content ''
+        position absolute
+        right -1px
+        top -1px
+        width 14rpx
+        height 14rpx
+        background-color #f60
+        border-radius 14rpx
+
+.cell
+  display flex
+  align-items center
+  box-sizing border-box
+  width 100%
+  height 96rpx
+  background-color #fff
+  text-align left
+  padding 0 32rpx
+  .icon2
+    width 36rpx
+    height 36rpx
+    margin-right 24rpx
+  .title
+    display block
+    flex 1
+    color #404040
+    font-size 32rpx
+    line-height 48rpx
+  .arrow
+    display block
+    width 28rpx
+    height 28rpx
+    background url('https://cdn.doumistatic.com/164,01542a8c4967aa23.png') no-repeat
+    background-size 28rpx
+.cell1
+  margin-top 24rpx
+.cell_under_line
+  width 100%
+  height 2rpx
+  background-color #e5e5e5
+  font-size 0
+  overflow hidden
+.videoResume
+  position relative
+  background-color #fff
+  height 120rpx
+  margin-bottom 24rpx
+  text-align center
+  .myVideoResume
+    width 342rpx
+    height 60rpx
+    margin 30rpx auto
+  .arrow
+    position absolute
+    top 50%
+    right 32rpx
+    margin-top -14rpx
+    width 28rpx
+    height 28rpx
+    background url('https://cdn.doumistatic.com/164,01542a8c4967aa23.png') no-repeat
+    background-size 28rpx
+
+.dm-report
+  position fixed
+  z-index 999
+  width 100%
+  height 100vh
+  display flex
+  align-items center
+  justify-content center
+  background-color rgba(0,0,0,.5)
+  &-content
+    border-radius 5px
+    background-color #fff
+    padding 10px 16px
+    color #404040
+    font-size 20px
+    &-title
+      text-align center
+      margin-top 10rpx
+  .report-line
+    margin 20rpx 0
+    height 2rpx
+    width 100%
+    background-color #f5f5f5
+.myintegral-container
+    background #ffffff
+    width 100%
+    height 230rpx
+    display flex
+    align-items center
+    justify-content space-between
+    padding 48rpx 48rpx 32rpx 24rpx
+    box-sizing border-box
+    .myintegral
+      .title
+        font-size 32rpx
+        color #404040
+        padding-bottom 48rpx
+      .num-text
+        .nums,.text
+          display inline-block
+        .nums
+          font-size 44rpx
+          color #404040
+          padding-right 10rpx
+        .text
+          font-size 24rpx
+          color #404040
+    .getintegral-container
+      display flex
+      align-items center
+      .getintegral
+        display flex
+        flex-direction column
+        align-items center
+        padding-left 98rpx
+        .img
+          display block
+          width 100rpx
+          height 100rpx
+          background-size cover
+          margin-bottom 16rpx
+        .img1
+          background-image url('../../assets/image/play-game.png')
+        .img2
+          background-image url('../../assets/image/pay-wall.png')
+      .getintegral-first
+          padding-left 0
+.preview-mask
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  line-height 1
+  background rgba(0, 0, 0, 0.4)
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  z-index 1300
+.img-container
+  width 80%
+  // height 650rpx
+  background #ffffff
+  border-radius 20rpx
+  .img
+    display block
+    width 100%
+    height 500rpx
+.save-btn
+  width: 100%;
+  background #ffffff
+  margin-top 20rpx
+  margin-bottom 40rpx
+  font-size 36rpx
+  text-align center
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarBackgroundColor": "#FBE44D",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "我的",
+    "usingComponents": {
+      "dialog": "~/components/dialog/dialog",
+      "dm-survey-pop": "../../components/dm-survey-pop",
+      "job-share-code":"~/components/jobShareCode/jobShareCode"
+    }
+  }
+</script>

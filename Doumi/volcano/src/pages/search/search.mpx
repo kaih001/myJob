@@ -1,0 +1,822 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+
+  <nav-bar title="搜索" backShow="{{true}}"></nav-bar>
+  <!-- 授权弹窗组件调用 -->
+  <dialog
+    wx:ref="dialog"
+    closable
+    enable-animation
+    open-type="getPhoneNumber"
+    title="先登录开启快速求职"
+    cancel-text="账户登录"
+    auto-hide="{{false}}"
+    bind:close="bindGoBasic"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack"
+  >
+  </dialog>
+  <!-- 报名弹层 -->
+  <apply-popup wx:ref="applyPopup" bind:tracker="bindTracker" catchtouchmove>
+  </apply-popup>
+  <!-- 方便面面试提醒框 -->
+  <dm-interview-pop wx:ref="dmInterviewPop"></dm-interview-pop>
+
+  <!-- 方便面签到调研框 -->
+  <dm-survey-pop wx:ref="dmSurveyPop"></dm-survey-pop>
+
+  <view class="dm-filter-search" wx:class="{{ { out: !isShowSearch } }}">
+    <dm-search-box
+      id="searchBox"
+      focus="{{isFocus}}"
+      wait="800"
+      placeholder="搜索职位/公司"
+      wx:model="{{word}}"
+      bind:focus="bindInputFocus"
+      bind:blur="bindInputBlur"
+      bind:input-complete="bindInputComplete"
+      bind:confirm="bindInputSearch"
+      bindtap="bindInputTap"
+    ></dm-search-box>
+  </view>
+
+  <dm-filter
+    wx:show="{{isShowFilter}}"
+    wx:ref="dmFilter"
+    options="{{filterConfig}}"
+    bind:on-show="bindFilterShow"
+    bind:on-hide="bindFilterHide"
+    bind:reset="bindFilterReset"
+    bind:confirm="bindFilterConfirm"
+  ></dm-filter>
+
+  <!-- 114px = 53px(搜索栏高) + 44px(筛选栏高) + 64px(顶部navBar高) -->
+  <scroll-view
+    scroll-y="{{isScrollY}}"
+    style="height:calc(100vh - 53px - 44px - 64px)"
+    scroll-top="{{scrollTop}}"
+    lower-threshold="10"
+    bindscrolltolower="bindLoadMore"
+    bindscroll="bindScroll"
+  >
+    <view
+      wx:style="{{ { paddingBottom: showSubscribe === true ? paddingBottomHeight : '0px' } }}"
+    >
+      <template
+        is="error"
+        wx:if="{{showErrorTemp}}"
+        data="{{type: errorType, noListTxt }}"
+      >
+      </template>
+      <block wx:else>
+        <!-- 订阅消息
+    <view class="dm-send-msg" wx:if="{{isShowSendMsg}}" bindtap="bindSendMsg">
+      <view class="dm-send-msg-close" catchtap="bindCloseSendMsg"></view>
+    </view>
+    -->
+        <view
+          class="dm-list"
+          wx:for="{{listData}}"
+          wx:key="addr_id"
+          data-id="{{item.id}}"
+          data-ad_type="{{item.ad_types}}"
+          data-ca_kw="{{index}}"
+          data-reqid="{{reqid}}"
+          bindtap="bindItemClick"
+        >
+          <dm-job-item
+            job-adviser="{{jobAdviser}}"
+            reqid="{{reqid}}"
+            list-item="{{item}}"
+            show-distance="{{showDistance}}"
+          >
+            <form
+              report-submit="true"
+              catchtap
+              bindsubmit="bindApplyData(item.id, $event)"
+            >
+              <button
+                wx:if="{{item.is_applied}}"
+                class="dm-apply-btn dm-apply-btn-disable"
+              >
+                已投递
+              </button>
+              <button
+                wx:elif="{{isBindPhone}}"
+                class="dm-apply-btn"
+                hover-stop-propagation
+                form-type="submit"
+              >
+                投简历
+              </button>
+              <button
+                wx:else
+                class="dm-apply-btn"
+                hover-stop-propagation
+                form-type="submit"
+                open-type="getPhoneNumber"
+                bindgetphonenumber="bindGetPhoneNumberAndApply"
+              >
+                投简历
+              </button>
+            </form>
+          </dm-job-item>
+        </view>
+      </block>
+      <dm-loadmore
+        wx:ref="dmLoadMore"
+        options="{{ { loadingTxt: '正在加载', noMoreTxt: '没有更多职位啦！' } }}"
+      ></dm-loadmore>
+    </view>
+  </scroll-view>
+  <dm-subscribe
+    wx:if="{{subscribeTxt}}"
+    caFrom="ToastDingyuexiaoxi"
+    hasFrom="{{true}}"
+    bind:closeSubscribe="bindCloseSubscribe"
+    bind:showSubscribe="bindShowSubscribe"
+    subscribeTxt="{{subscribeTxt}}"
+  ></dm-subscribe>
+</template>
+
+<script>
+import mpx, { createPage } from '@mpxjs/core'
+import util from '~/utils/util'
+import api from '~/utils/api'
+import filterConfig from './filterConfig'
+import cityStore from '~/store/city'
+import globalDataStore from '~/store/globalData'
+import basicInfoFirstPath from '~/pages/basicInfoFirst/basicInfoFirst?resolve'
+import loginPath from '~/pages/login/login?resolve'
+
+const app = getApp()
+
+let page = 1
+let canNextRequest = true
+
+createPage({
+  data: {
+    showSubscribe: false,
+    reqid: '-',
+    scrollTop: 0,
+    showDistance: true,
+    showErrorTemp: false,
+    errorType: '',
+    word: '',
+    subscribeTxt: '',
+    isShowFilter: false,
+    isScrollY: true,
+    listData: [],
+    filterQuery: {},
+    isShowSendMsg: false,
+    // 由分享进入url携带参数
+    shareParams: '',
+    // 顾问id
+    jobAdviser: '-',
+    tmpIds: [
+      'hlgdHOVt-6je729GVIBeXOePhmr7h698W98R-kFN4xc',
+      'nYLek2z_A3BnUaIZh8ScHRRFyCmcoUlWj5Mc8Gp_cA4'
+    ],
+    isFocus: false,
+    cacheJobData: {
+      // 待报名的帖子(投简历)
+      id: ''
+    }
+  },
+
+  computed: {
+    noListTxt () {
+      return this.isShowFilter
+        ? '抱歉~暂无符合条件的职位'
+        : '您搜索的职位未找到噢~~'
+    },
+    ...globalDataStore.mapState(['isIpx', 'isBindPhone', 'isJumpBasicInfo']),
+    ...cityStore.mapGetters(['currentCity']),
+    ...cityStore.mapState({
+      searchQuery (state) {
+        const { longitude, latitude, locationCity, selectedCity } = state
+
+        return {
+          page,
+          word: this.word.trim(),
+          lat: latitude,
+          lng: longitude,
+          city_id: selectedCity.id || locationCity.id,
+          sex: 0, // - 性别: 0全部 1男 2女
+          identity: 0, // - 身份: 0全部 1学生 3非学生
+          order: 0,
+          job_date_type: ~~this.options.jobDateType, // - 0全部 1兼职 2全职
+          open_id: globalDataStore.state.openId,
+          scene: wx.getLaunchOptionsSync()['scene'],
+          // scene: 1053,
+          ...this.filterQuery
+        }
+      },
+      filterConfig (state) {
+        filterConfig[1].data = state.districts
+        return filterConfig
+      }
+    }),
+    paddingBottomHeight () {
+      return this.isIpx ? '134px' : '100px'
+    }
+  },
+  watch: {
+    // 监听登录状态变化
+    isBindPhone (newVal) {
+      if (newVal) {
+        this.$refs.dialog.hideDialog()
+        // this.__renderPage()
+      }
+    }
+  },
+  bindCloseSubscribe (val) {
+    this.$nextTick(() => this.showSubscribe = false)
+  },
+  bindShowSubscribe () {
+    api.setLog(
+      2,
+      `@atype=click@ca_name=doumi@ca_source=h5@ca_from=ToastDingyuexiaoxi`,
+      null,
+      true
+    )
+    this.$nextTick(() => this.showSubscribe = true)
+  },
+  async onLoad (options) {
+    try {
+      const userScene = wx.getLaunchOptionsSync()['scene']
+      if (userScene !== 1005 && userScene !== 1042 && userScene !== 1053) {
+        await app.checkAuthAndGetLocation()
+        await app.getCityInfo()
+        cityStore.dispatch('updateCitiesAndDistricts')
+      } else {
+        const word = options.word || ''
+        this.subscribeTxt = util.decodeURI(word).trim()
+      }
+    } catch (err) {
+      console.warn(err)
+      // wx.reLaunch({ url: '../citySelector/citySelector' })
+    }
+    // const sendMsgTime = wx.getStorageSync('isindexSendMsg')
+    // const theDate = new Date().getDate()
+    // const theTmpIds = wx.getStorageSync('theTmpIds')
+    // if (theTmpIds) {
+    //   this.tmpIds = theTmpIds
+    // }
+    // if (sendMsgTime !== theDate) {
+    //   this.tmpIds = ['hlgdHOVt-6je729GVIBeXOePhmr7h698W98R-kFN4xc', 'nYLek2z_A3BnUaIZh8ScHRRFyCmcoUlWj5Mc8Gp_cA4']
+    //   this.isShowSendMsg = true
+    // }
+  },
+
+  onShow (options) {
+    if (this.listData.length > 0) this.__initTracker()
+    const { ca_campaign = '', type = '' } = this.options
+    if (ca_campaign || type) {
+      let params = ''
+      if (ca_campaign && type) {
+        params = ca_campaign + '_' + type + 'more'
+      } else {
+        params = ca_campaign || type + 'more'
+      }
+      const caCampaign = `&ca_campaign=${params}`
+      api.setLog(1, `/jianzhi/search/index${caCampaign}`)
+    } else {
+      api.setLog(1, `/jianzhi/search/index`)
+    }
+    this.__checkAppliedJob()
+  },
+
+  async onReady () {
+    // await this.__renderPage()
+    setTimeout(() => this.init(), 800) // 延迟一会执行
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage (res) {
+    let prams = this.searchQuery
+    prams.jobAdviser = wx.getStorageSync('jobAdviser')
+
+    const query = util.obj2uri(prams)
+    const result = {
+      path: `pages/search/search?${query}`
+    }
+    return result
+  },
+
+  methods: {
+    async __renderPage () {
+      try {
+        // 获取搜一搜过来时携带的参数
+        const { city_id, word, lat, lng, order } = this.options
+        console.log('onReady', this.options)
+        // 从搜一搜进入, 根据参数初始化数据
+        if (word) {
+          this.__getSearchData({ city_id, word, lat, lng, order, page: 1 })
+          this.word = util.decodeURI(word).trim()
+          this.$refs.dmFilter.checked = +order === 1 // 更新 `推荐排序 | 离我最近` 的选中状态
+          this.bindShowSubscribe()
+        } else {
+          this.isFocus = true
+        }
+
+        this.$refs.dmFilter.sValue1 = ~~this.options.jobDateType
+
+        // 面试提醒优先于签到提醒
+        const isShowInterviewBox = await this.$refs.dmInterviewPop.check() // 检查面试提醒
+        if (!isShowInterviewBox) this.$refs.dmSurveyPop.check() // 检查签到提醒
+
+        // 由分享卡片进入
+        if (this.options.jobAdviser) this.__setShareParams(this.options)
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+    // - 职位列表的点击
+    bindItemClick ({
+      currentTarget: {
+        dataset: { ca_kw, id }
+      }
+    }) {
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@from=postlist_ss@ca_from=postlist@post_id=${id}@ca_kw=${ca_kw}`,
+        null,
+        true
+      )
+    },
+    /*
+     * `投简历` 按钮相关操作
+     * 相关报名逻辑放到了 applyPopup 组件中
+     */
+    bindApplyData (id, { detail: { formId } }) {
+      if (this.isBindPhone) {
+        this.$refs.applyPopup.init(id)
+      } else {
+        this.cacheJobData = { id }
+      }
+    },
+    // 授权手机号登录 并且 `投简历`
+    async bindGetPhoneNumberAndApply (e) {
+      try {
+        // 允许手机号授权
+        await app.getPhoneNumber(e)
+      } catch (err) {
+        // 拒绝手机号授权
+      }
+      // 允许授权后进行多时间多地点选择或者进入极速报名或者报名成功
+      // 拒接授权后进行多时间多地点选择或者进入极速报名
+      this.$refs.applyPopup.init(this.cacheJobData.id)
+    },
+
+    // 登录组件手机号授权反馈
+    async bindGetPhoneNumberCallBack (e) {
+      await app.getPhoneNumber(e)
+      this.init()
+    },
+    // - 页面上拉触底事件的处理函数
+    async bindLoadMore () {
+      if (canNextRequest && this.errorType === '') {
+        canNextRequest = false
+        this.__getSearchData()
+      }
+      // try {
+      //   await app.checkAuthAndGetLocation()
+      //   await app.getCityInfo()
+      //   cityStore.dispatch('updateCitiesAndDistricts')
+      //   if (canNextRequest && this.errorType === '') {
+      //     canNextRequest = false
+      //     this.__getSearchData()
+      //   }
+      // } catch (err) {
+      //   console.warn(err)
+      //   wx.reLaunch({ url: '../citySelector/citySelector' })
+      // }
+    },
+    /**
+     * 检查报名成功的职位并添加 `已投递` 状态
+     * 通常用于在首页点击 `投简历` 或者 `在详情页报名成功后`,返回首页时执行检查
+     */
+    __checkAppliedJob () {
+      if (wx.appliedIds.length === 0 && wx.calcelApplyIds.length === 0) return
+
+      this.listData.forEach(x => {
+        if (wx.appliedIds.some(xx => +xx.id === +x.id)) {
+          x.is_applied = true
+        } else if (wx.calcelApplyIds.some(xx => +xx.id === +x.id)) {
+          x.is_applied = false
+        }
+      })
+    },
+    bindScroll (evt) {
+      wx.$tracker.emit('scroll', evt)
+    },
+
+    // - 搜索框聚焦
+    bindInputFocus (e) {},
+
+    // - 搜索框失焦
+    bindInputBlur (e) {},
+
+    // - 搜索框内容输入完时触发, 一定时间内不间断输入则不会触发
+    bindInputComplete (e) {},
+
+    // - 点击软键盘搜索按钮触发
+    bindInputSearch (e) {
+      if (this.word.trim() === '') {
+        wx.showToast({
+          title: '请输入搜索词',
+          icon: 'none'
+        })
+        return
+      }
+      page = 1
+      this.__getSearchData()
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@ca_from=search@wd=${this.word.trim()}`
+      )
+    },
+
+    bindInputTap () {
+      this.isShowFilter && this.$refs.dmFilter.shrink()
+      api.setLog(
+        2,
+        '@atype=click@ca_name=doumi@ca_source=h5@ca_from=searchbox'
+      )
+    },
+
+    bindFilterShow () {
+      this.isScrollY = false
+    },
+
+    bindFilterHide () {
+      this.isScrollY = true
+    },
+
+    async bindFilterReset () {
+      page = 1
+      await this.__getSearchData()
+    },
+
+    bindFilterConfirm ({ detail }) {
+      page = 1
+
+      for (const [key, value] of Object.entries(detail.value)) {
+        this.filterQuery[key] = value.toString()
+      }
+      // - 选择离我最近时隐藏距离
+      this.showDistance = ~~this.filterQuery.order !== 1
+      // if (!this.showDistance) return this.openAuthSetting()
+      this.__getSearchData()
+    },
+
+    bindCloseSendMsg () {
+      this.isShowSendMsg = false
+    },
+
+    bindSendMsg () {
+      const city_id = this.currentCity.id
+      let tmpIds = this.tmpIds
+      let paramsTmpIds = []
+      const that = this
+      const theTime = new Date().getDate()
+      wx.requestSubscribeMessage({
+        tmplIds: tmpIds,
+        async success (res) {
+          if (res[tmpIds[0]] === 'accept' || res[tmpIds[1]] === 'accept') {
+            if (res[tmpIds[0]] === 'accept' && res[tmpIds[1]] === 'accept') {
+              that.bindCloseSendMsg()
+              wx.setStorageSync('isindexSendMsg', theTime)
+              paramsTmpIds = tmpIds
+            } else if (res[tmpIds[0]] === 'accept') {
+              paramsTmpIds = tmpIds.splice(0, 1)
+              wx.setStorageSync('theTmpIds', tmpIds)
+              that.tmpIds = tmpIds
+            } else {
+              paramsTmpIds = tmpIds.splice(1, 1)
+              wx.setStorageSync('theTmpIds', tmpIds)
+              that.tmpIds = tmpIds
+            }
+            if (tmpIds.length === 0) {
+              wx.setStorageSync('isindexSendMsg', theTime)
+              that.bindCloseSendMsg()
+            }
+            // this.__sendTemplateIds()
+            const params = {
+              open_id: app.globalData.openId,
+              city_id: city_id,
+              template_ids: paramsTmpIds
+            }
+            try {
+              await util.getData('collect/subscribemsg', params, 'POST')
+            } catch (err) {
+              console.log(err)
+            }
+          } else {
+          }
+        },
+        fail (res) {
+          switch (res.errCode) {
+            case 10002:
+              util.showToast('网络链接错误，请检查网络状态')
+              break
+            case 10003:
+              util.showToast('网络链接错误，请检查网络状态')
+              break
+            case 20004:
+              that.bindCloseSendMsg()
+              wx.setStorageSync('isindexSendMsg', theTime)
+              break
+          }
+        }
+      })
+    },
+
+    // - 打开权限设置页
+    openAuthSetting () {
+      app.setAuthorize().then(res => this.__getSearchData())
+    },
+
+    /**
+     * 数据初始化
+     */
+    async init () {
+      // 无网络结束向下运行
+      const res = await mpx.getNetworkType()
+      if (res.networkType === 'none') {
+        return wx.showToast({ title: '您似乎没有连接到网络喔~', icon: 'none' })
+      }
+
+      if (this.isBindPhone) {
+        // 已登录
+        this.$refs.dialog.hideDialog()
+        try {
+          if (!this.isJumpBasicInfo) {
+            // 冷启动时后登录态下未去过简历引导页, 检查简历是否完善, 不完善的跳转简历引导
+            const resumeStatus = await this.__checkResumeInfo()
+            if (resumeStatus === 'complete') this.__renderPage()
+          }
+        } catch (err) {
+          app.showErrorPageHandler(err)
+        }
+      } else {
+        const userScene = wx.getLaunchOptionsSync()['scene']
+        if (userScene === 1005 || userScene === 1042 || userScene === 1053) {
+          this.$refs.dialog.showDialog()
+        }
+        if (this.listData.length === 0) this.__renderPage()
+      }
+    },
+    /**
+     * 检查简历信息是否全
+     */
+    async __checkResumeInfo () {
+      try {
+        const res = await util.getData('profile/uncompletedx')
+        const { data, code } = res.data
+        if (code === 1000) {
+          if (data.length > 0) {
+            // - 存在需要补充简历信息的字段, 跳转B流程补充信息引导页
+            this.bindGoBasic()
+          } else {
+            return Promise.resolve('complete')
+          }
+        } else {
+          return Promise.resolve('complete')
+        }
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    },
+    async __getSearchData (loadQuery = {}) {
+      if (this.word.trim() === '' && loadQuery.word === '') return false
+
+      // 由分享进入query值为分享卡片url携带参数
+      const query =
+        util.obj2uri(this.shareParams) ||
+        util.obj2uri({ ...this.searchQuery, ...this.options, ...loadQuery })
+      // util.showLoading()
+      try {
+        const res = await util.getData(`index/search?${query}`)
+        let { data, code } = res.data
+
+        if (code === 1000) {
+          const { current_page, last_page } = data
+          util.hideLoading()
+          data = data.data
+
+          if (data.length === 0) {
+            this.$refs.dmLoadMore.hide()
+            if (page === 1 || this.listData.length === 0) {
+              canNextRequest = false
+              this.showErrorTemp = true
+              this.errorType = 'noData'
+              return
+            }
+          }
+          canNextRequest = true
+          this.showErrorTemp = false
+          this.errorType = ''
+          this.isShowFilter = true
+
+          const showPostIds = JSON.stringify(
+            data.map((x, index) => {
+              return {
+                id: x.id,
+                ca_kw: this.listData.length + index,
+                ad_type: x.ad_types,
+                reqid: this.reqid
+              }
+            })
+          )
+
+          api.setLog(
+            2,
+            `@atype=show@ca_name=doumi@ca_source=h5@from=postlist_ss@ca_from=post_show@show_post_id=${showPostIds}`
+          )
+
+          data = data.map(x => {
+            const tags = [x.payment_type_str, ...x.welfare_tag]
+            x.tags = [
+              { color: '#6FA0FF', text: '新', show: x.is_new },
+              { color: '#FF8066', text: '急聘', show: x.is_jipin },
+              { color: '#FF7F0F', text: '自营', show: x.is_ziying },
+              { color: '#54B2F4', text: '名企', show: x.is_mingqi },
+              ...tags.map(x => ({
+                // - 月结和福利标签
+                color: '',
+                text: x,
+                show: true
+              }))
+            ]
+            return x
+          })
+
+          if (page === 1) {
+            this.$refs.dmLoadMore.showLoading()
+            this.listData = data
+            this.scrollTop = 0
+          } else {
+            this.listData = [...this.listData, ...data]
+          }
+
+          if (last_page === 1 || current_page === last_page) {
+            canNextRequest = false
+            this.$refs.dmLoadMore.showNoMore()
+          } else {
+            // 可以加载下一页
+            page++
+          }
+
+          setTimeout(() => (this.scrollTop = ''), 800)
+          this.subscribeTxt = this.word
+          this.__initTracker()
+        } else {
+          app.showErrorToastHandler(res.data)
+        }
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // - 曝光埋点初始化
+    __initTracker () {
+      wx.$tracker
+        .trackExposure('/jianzhi/search/index', {
+          el: { list: '.dm-list' },
+          dmalog: list => {
+            list = JSON.stringify(list)
+            return `@atype=scroll@ca_name=doumi@ca_source=h5@from=postlist_ss@ca_from=post_show@show_post_id=${list}`
+          }
+        })
+        .success(arg => console.log('曝光埋点发起成功: ', arg))
+        .fail(err => console.warn('曝光埋点发起失败: ', err))
+    },
+
+    // - 由分享卡片进入的参数设置
+    __setShareParams (options) {
+      this.word = options.word
+      // 设置搜索框的属性
+      this.selectComponent('#searchBox').value = options.word
+
+      // 获取顾问id
+      this.jobAdviser = options.jobAdviser
+
+      // 删除无情请求参数
+      delete options.ald_share_src
+      delete options.jobAdviser
+
+      // 把应为数字类型参数转化为数字类型
+      for (let x in options) {
+        if (
+          x !== 'word' &&
+          x !== 'open_id' &&
+          x !== 'city_id' &&
+          x !== 'jobAdviser'
+        ) {
+          options[x] = Number(options[x])
+        }
+      }
+      this.shareParams = options
+      page = 1
+      this.__getSearchData()
+    },
+    // x号关闭授权弹框
+    bindGoBasic () {
+      setTimeout(() => wx.navigateTo({ url: basicInfoFirstPath }), 300)
+    },
+    // 账号登录
+    bindAccountLogin () {
+      wx.navigateTo({ url: `${loginPath}?callbackName=init` })
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+page
+  background-color white
+.dm-filter-search
+  position relative
+  z-index 1001
+  background-color white
+  .dm-search
+    background-color #F2F2F2
+
+// 订阅消息
+.dm-send-msg
+  position: relative;
+  width: 100%;
+  height: 41px;
+  background-image: url('https://cdn.doumistatic.com/220,01bf2fe7efc37903.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+.dm-send-msg-close
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  background-image: url('https://cdn.doumistatic.com/218,01bb8f2b94638087.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+.dm-list
+  .dm-apply-btn
+    margin 0
+    padding 0
+    width 66px
+    height 26px
+    background-color white
+    overflow visible
+    position relative
+    left 1px
+    border-width 0
+    border-color #F80
+    border-radius 3px
+    text-align center
+    color #F80
+    line-height 26px
+    font-size 14px
+    &::after
+      content ''
+      display block
+      border-width 1px
+      border-style solid
+      border-color inherit
+      border-radius 6px
+      box-sizing border-box
+      transform-origin 0 0
+      transform scale(.5) translate(50%, 50%)
+      position absolute
+      top calc(-50% - 1rpx)
+      left -50%
+      right -50%
+      bottom -50%
+    &-disable
+      color #999
+      border-color #CCC
+</style>
+
+<script type="application/json">
+{
+  "disableScroll": true,
+  "navigationBarTitleText": "搜索",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nav-bar": "~/components/navBar/navBar",
+    "dialog": "~/components/dialog/dialog",
+    "apply-popup": "~/pages/index/apply-popup",
+    "dm-filter": "./filter",
+    "dm-search-box": "~/components/dmx/dm-search-box",
+    "dm-job-item": "~/components/dm-job-item",
+    "dm-loadmore": "~/components/dmx/dm-loadmore",
+    "dm-survey-pop": "~/components/dm-survey-pop",
+    "dm-interview-pop": "~/components/dm-interview-pop",
+    "dm-subscribe": "~/components/dmx/dm-subscribe",
+    "dm-follow-float": "~/components/dmx/dm-follow-float"
+  }
+}
+</script>

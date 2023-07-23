@@ -1,0 +1,285 @@
+<template>
+  <view class="share_box">
+    <view class="share__canvas share_wxml">
+      <view class="salary_box">
+        <view class="salary">{{share.salary}}123</view>
+        <view class="salary_company">{{share.salaryCompany}}</view>
+      </view>
+      <view class="treatment_box">
+        <view
+        class="treatment"
+        wx:for="{{share.treatment}}"
+        wx:key="index"
+        wx:for-item="item"
+        data-type="text" data-text="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+    <canvas canvas-id="share__canvas" class="share_canvas"></canvas>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import wxml2canvas from '~/utils/wxml2canvas'
+
+createComponent({
+  data: {
+    imageUrl: ''
+  },
+
+  properties: {
+    share: {
+      type: Object,
+      value: { salary: '', salaryCompany: '', treatment: [], content: '' }
+    }
+  },
+
+  watch: {
+    share (val) {
+      if (val.salary) this.__addCanvas()
+    }
+  },
+
+  methods: {
+    __drawImage (drawData) {
+      let self = this
+      let drawImage = new wxml2canvas({
+        obj: self,
+        element: 'share__canvas',
+        progress (percent) {},
+        finish (url) {
+          self.imageUrl = url
+        },
+        error (res) {
+        }
+      })
+      drawImage.draw(drawData)
+    },
+    __getPosition (element, all) {
+      let [self, top] = [this, 0]
+      wx.createSelectorQuery().in(self).select('.share_wxml').boundingClientRect(function (rect) {
+        top = rect.top
+      }).exec()
+      return new Promise((resolve, reject) => {
+        try {
+          if (all) {
+            wx.createSelectorQuery().in(self).selectAll(element).boundingClientRect(function (rects) {
+              let arr = []
+              rects.forEach(function (rect) {
+                rect.top -= top
+                arr.push(rect)
+              })
+              resolve(arr)
+            }).exec()
+          } else {
+            wx.createSelectorQuery().in(self).select(element).boundingClientRect(function (rect) {
+              rect.top -= top
+              resolve(rect)
+            }).exec()
+          }
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    __addCanvas () {
+      let self = this
+      let drawData = {
+        list: [
+          {
+            type: 'circle',
+            x: 54,
+            y: 134,
+            style: {
+              r: 21,
+              fill: '#FBE44D',
+            }
+          }, {
+            type: 'circle',
+            x: 132,
+            y: 134,
+            style: {
+              r: 21,
+              fill: '#FBE44D',
+            }
+          }, {
+            type: 'rect',
+            x: 75,
+            y: 134,
+            style: {
+              width: 78,
+              height: 42,
+              fill: '#FBE44D'
+            }
+          }, {
+            type: 'text',
+            x: 54,
+            y: 132,
+            text: '立即报名',
+            style: {
+              width: 120,
+              height: 42,
+              color: '#000',
+              fontSize: 16,
+              lineHeight: 42,
+              textAlign: 'center'
+            }
+          }
+        ]
+      }
+      const salaryPosition = self.__getPosition('.salary')
+      const salaryCompanyPosition = self.__getPosition('.salary_company')
+      const treatmentPosition = self.__getPosition('.treatment', true)
+      Promise.all([salaryPosition, salaryCompanyPosition, treatmentPosition]).then(data => {
+        drawData.list.push({
+          type: 'text',
+          x: data[0].left,
+          y: data[0].top,
+          text: self.share.salary,
+          style: {
+            width: data[0].width + 5,
+            height: data[0].height,
+            color: '#FF6600',
+            fontSize: 22,
+            lineHeight: 32
+          }
+        })
+        drawData.list.push({
+          type: 'text',
+          x: data[1].left + 5,
+          y: data[1].top,
+          text: self.share.salaryCompany,
+          style: {
+            width: data[1].width,
+            height: data[1].height,
+            color: '#FF6600',
+            fontSize: 12,
+            lineHeight: 32,
+            padding: '0 0 0 5',
+          }
+        })
+        try {
+          data[2].forEach(function (item, i) {
+            if (item.top > data[2][0].top) {
+              drawData.list.push({
+                type: 'text',
+                x: data[2][i - 1].left + data[2][i - 1].width,
+                y: data[2][i - 1].top,
+                text: '...',
+                style: {
+                  height: item.height,
+                  color: '#404040',
+                  fontSize: 12
+                }
+              })
+              foreach.break = new Error('StopIteration')
+            }
+            drawData.list.push({
+              type: 'text',
+              x: item.left,
+              y: item.top,
+              text: self.share.treatment[i],
+              style: {
+                width: item.width,
+                height: item.height,
+                color: '#404040',
+                fontSize: 12,
+                textAlign: i ? 'center' : 'left'
+              }
+            })
+            if (i) {
+              drawData.list.push({
+                type: 'line',
+                x: item.left,
+                y: item.top + 2,
+                x2: item.left,
+                y2: item.top + 14,
+                style: {
+                  stroke: '#808080',
+                  width: 1
+                }
+              })
+            }
+          })
+        } catch (e) {}
+
+        let ShareContent = self.share.content.split('<br />')
+        let maxLint = data[2].length > 0 ? 3 : 4
+
+        for (let i = 0; i < ShareContent.length; i++) {
+          if (i >= maxLint) break
+          drawData.list.push({
+            type: 'text',
+            x: 0,
+            y: data[2].length > 0 ? data[2][0].top + data[2][0].height + 10 + i * 22 : data[0].top + data[0].height + i * 22,
+            text: ShareContent[i],
+            style: {
+              width: 226,
+              color: '#808080',
+              fontSize: 12,
+              lineHeight: 22,
+              lineClamp: (ShareContent.length > 1) ? 1 : (data[2].length > 0 ? 3 : 4)
+            }
+          })
+        }
+        self.__drawImage(drawData)
+      })
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+  .share_box{
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+  }
+  .share_wxml,.share_canvas{
+    width:452rpx;
+    height:360rpx;
+  }
+  .share_canvas{
+    position: absolute;
+    left: -800px;
+  }
+  .salary_box{
+    overflow: hidden;
+  }
+  .salary{
+    font-size: 24px;
+    color: #FF6600;
+    line-height: 32px;
+    float left;
+  }
+  .salary_company{
+    font-size: 12px;
+    color: #FF6600;
+    float left;
+    padding-left: 5px;
+    line-height: 32px;
+  }
+  .treatment_box{
+    margin: 5px 0 10px 0;
+    width: 210px;
+    overflow hidden;
+    line-height: 12px;
+  }
+  .treatment{
+    float left;
+    padding: 0 8px 0 8px;
+    font-size: 12px;
+    color: #404040;
+  }
+  .treatment:nth-child(1){
+    padding-left: 0px;
+  }
+</style>
+
+<script type="application/json">
+  {
+    "component": true
+  }
+</script>

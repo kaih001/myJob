@@ -1,0 +1,89 @@
+#PaydayReport .section-warp{
+	padding: 16px 20px;
+	overflow: hidden;
+}
+.payday-report-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.payday-report-header h2{
+  font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	color: #475568;
+}
+.payday-report-header .create-payday-btn{
+  color: #6699ee;
+}
+
+.payday-report-pannel{
+  width: 100%;
+  margin-top: 20px;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  /* min-height: 180px; */
+  display: flex;
+}
+.person-payday-data,.supplier-payday-data{
+  flex: 1;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.person-payday-data::after{
+  position: absolute;
+  content: '';
+  width: 1px;
+  right: 0;
+  top: 10px;
+  bottom: 10px;
+  background: #dddddd;
+}
+.payday-data-title{
+  font-size: 16px;
+  font-weight: 700;
+}
+.payday-data-title-tips{
+  display: inline-block;
+  color: red;
+}
+.payday-data-list{
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.payday-data-list-item{
+  flex: 1;
+  text-align: center;
+}
+.nums{
+  font-size: 16px;
+  font-weight: bold;
+}
+.remaining-nums{
+  color:#f7a500;
+}
+.nums-text{
+  margin-top: 10px;
+  color: #475669;
+  font-size: 14px;
+}
+.search-pannel{
+  width: 100%;
+  margin-top: 40px;
+}
+.table-warp{
+  margin-top: 40px;
+}
+.pagination-warp{
+  text-align: right;
+}
+
+#PaydayReport .el-dialog__body{
+  padding: 30px 20px;
+}

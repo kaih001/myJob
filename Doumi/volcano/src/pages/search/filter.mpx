@@ -1,0 +1,315 @@
+<template>
+  <dm-mask wx:ref="dmMask" bind:hide="bindMaskHide"></dm-mask>
+
+  <view class="dm-filter">
+    <block wx:for="{{options}}" wx:key="index">
+      <dm-select
+        wx:if="{{index === 0}}"
+        wx:ref="dmSelect1"
+        class="dm-filter-box"
+        space="{{space}}"
+        wx:model="{{sValue1}}"
+        options="{{item.data}}"
+        bind:on-show="handleShowSelect1"
+        bind:on-hide="handleHideSelect"
+        bind:input="handleChange"
+      ></dm-select>
+
+      <dm-select
+        wx:if="{{index === 1}}"
+        wx:ref="dmSelect2"
+        class="dm-filter-box"
+        space="{{space}}"
+        wx:model="{{sValue2}}"
+        options="{{item.data}}"
+        bind:on-show="handleShowSelect2"
+        bind:on-hide="handleHideSelect"
+        bind:input="handleChange"
+      ></dm-select>
+
+      <dm-checkbox
+        wx:if="{{item.type === 'radio'}}"
+        class="dm-filter-box"
+        solid
+        checked-style="{{ { backgroundColor: 'white', color: '#FFAA00' } }}"
+        val="{{item.data.value}}"
+        wx:model="{{checked}}"
+        bind:tap="handleRadioTap"
+      >{{item.data.label}}</dm-checkbox>
+
+      <view wx:if="{{item.type === 'checkbox-group'}}" class="dm-filter-box">
+        <dm-checkbox
+          solid
+          checked-style="{{ { backgroundColor: 'white', color: '#FFAA00' } }}"
+          value="{{checked2}}"
+          bind:tap="handleToggleGroup"
+        >
+          筛选
+          <view slot="after" class="dmx-icon-arrow" wx:class="{{ iconClassName }}"></view>
+        </dm-checkbox>
+        <view
+          hidden="{{isHiddenGroup}}"
+          class="dm-filter-group"
+          wx:style="{{ { marginTop: space } }}"
+        >
+          <dm-checkbox-group
+            wx:if="{{cindex === 0}}"
+            wx:for="{{item.data}}"
+            wx:key="cindex"
+            wx:for-item="citem"
+            wx:for-index="cindex"
+            title="{{citem.title}}"
+            mode="single"
+            options="{{citem.data}}"
+            wx:model="{{cValue1}}"
+          ></dm-checkbox-group>
+          <dm-checkbox-group
+            wx:if="{{cindex === 1}}"
+            wx:for="{{item.data}}"
+            wx:key="cindex"
+            wx:for-item="citem"
+            wx:for-index="cindex"
+            title="{{citem.title}}"
+            mode="single"
+            options="{{citem.data}}"
+            wx:model="{{cValue2}}"
+          ></dm-checkbox-group>
+          <view class="dm-filter-button-box">
+            <view class="dm-filter-line" style="top: 0"></view>
+            <button bindtap="handleReset" class="dm-filter-button dm-filter-button-reset">重置</button>
+            <button bindtap="handleConfirm" class="dm-filter-button dm-filter-button-confirm">完成</button>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class="dm-filter-line"></view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+const noopValue = [['0'], ['0']]
+
+createComponent({
+  properties: {
+    options: {
+      type: Array,
+      value: []
+    }
+  },
+
+  data: {
+    space: '8px',
+    sValue1: '',
+    sValue2: '',
+    cValue1: [...noopValue[0]],
+    cValue2: [...noopValue[1]],
+    checked: false,
+    isHiddenGroup: true
+  },
+
+  computed: {
+    checked2 () {
+      return (
+        !this.isHiddenGroup || (~~this.cValue1 !== 0 || ~~this.cValue2 !== 0)
+      )
+    },
+    iconClassName () {
+      return {
+        'dmx-icon-arrow-down': this.isHiddenGroup && !this.checked2,
+        'dmx-icon-arrow-up': !this.isHiddenGroup && !this.checked2,
+        'dmx-icon-arrow-down-active': this.isHiddenGroup && this.checked2,
+        'dmx-icon-arrow-up-active': !this.isHiddenGroup && this.checked2
+      }
+    }
+  },
+
+  watch: {
+    isHiddenGroup (val) {
+      if (val) this.__confirm()
+    }
+  },
+
+  methods: {
+    bindMaskHide () {
+      this.isHiddenGroup = true
+      this.$refs.dmSelect1[0].shrink()
+      this.$refs.dmSelect2[0].shrink()
+      this.triggerEvent('on-hide')
+    },
+
+    handleShowSelect1 () {
+      this.isHiddenGroup = true
+      this.$refs.dmSelect2[0].shrink()
+      this.__show()
+    },
+
+    handleShowSelect2 () {
+      this.isHiddenGroup = true
+      this.$refs.dmSelect1[0].shrink()
+      this.__show()
+    },
+
+    handleHideSelect () {
+      this.isHiddenGroup = true
+      this.__hide()
+    },
+
+    handleChange () {
+      this.__confirm()
+    },
+
+    handleToggleGroup () {
+      this.$refs.dmSelect1[0].shrink()
+      this.$refs.dmSelect2[0].shrink()
+      this.isHiddenGroup = !this.isHiddenGroup
+      this.isHiddenGroup ? this.__hide() : this.__show()
+    },
+
+    handleReset () {
+      this.cValue1 = [...noopValue[0]]
+      this.cValue2 = [...noopValue[1]]
+      // this.handleToggleGroup()
+      this.triggerEvent('reset')
+    },
+
+    handleConfirm () {
+      this.handleToggleGroup()
+    },
+
+    handleRadioTap () {
+      this.__hide()
+      this.__confirm()
+    },
+
+    // - 隐藏所有展开的选项, 用于外部调用
+    shrink () {
+      this.__hide()
+    },
+
+    __show () {
+      this.$refs.dmMask.show()
+      this.triggerEvent('on-show')
+    },
+
+    __hide () {
+      this.$refs.dmMask.hide()
+      this.triggerEvent('on-hide')
+    },
+
+    __confirm () {
+      let value = {}
+      this.options.forEach((x, i) => {
+        if (i === 0) {
+          value[x.key] = this.sValue1
+        } else if (i === 1) {
+          value[x.key] = this.sValue2
+        } else if (i === 2) {
+          value[x.key] = this.checked ? x.data.value : ''
+        } else if (i === 3) {
+          x.data.forEach((xx, ii) => {
+            value[xx.key] = ii === 0 ? [...this.cValue1] : [...this.cValue2]
+          })
+        }
+      })
+      this.triggerEvent('confirm', { value })
+    }
+  }
+})
+</script>
+
+<style lang="stylus" src="../../styles/icon.styl"></style>
+<style lang="stylus">
+.dm-filter-button-box {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+
+  .dm-filter-button {
+    width: 72px;
+    height: 32px;
+    margin: 16px 12px 16px 0;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 32px;
+
+    &-reset {
+      background-color: white;
+    }
+
+    &-confirm {
+      background-color: #ffcc00;
+    }
+
+    &-reset::after {
+      border-color: #e5e5e5;
+    }
+
+    &-confirm::after {
+      border-color: #ffcc00;
+    }
+
+    &::after {
+      content: '';
+      width: 200%;
+      height: 200%;
+      border-radius: 6px;
+      border-width: 1px;
+      border-style: solid;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 0 0;
+      transform: scale(0.5);
+    }
+  }
+}
+
+.dm-filter {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  background-color: white;
+  position: relative;
+  z-index: 1001;
+
+  &::before, &::after {
+    content: '';
+    display: block;
+  }
+
+  &-group {
+    background-color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+  &-line {
+    width: 100vw;
+    height: 1px;
+    background-color: #E5E5E5;
+    transform-origin: 0 100%;
+    transform: scale3d(1, 0.5, 1);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+}
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-mask": "../../components/dmx/dm-mask",
+      "dm-select": "../../components/dmx/dm-select",
+      "dm-checkbox": "../../components/dmx/dm-checkbox",
+      "dm-checkbox-group": "../../components/dmx/dm-checkbox-group"
+    }
+  }
+</script>

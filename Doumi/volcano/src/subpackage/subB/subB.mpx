@@ -1,0 +1,19 @@
+<script type="application/json">
+  {
+    "pages": [
+      "./pages/webPage/webPage",
+      "./pages/operationalActivities/addCounselor/addCounselor",
+      "./pages/reward/IWantTRecommend/IWantTRecommend",
+      "./pages/reward/jobDetail/jobDetail",
+      "./pages/reward/myReward/myReward",
+      "./pages/reward/rmjobdetail/rmjobdetail",
+      "./pages/reward/rmlist/rmlist",
+      "./pages/reward/citySelector/citySelector",
+      "./pages/reward/certification/certification",
+      "./pages/reward/skipPage/skipPage",
+      "./pages/adviser/screen/screen",
+      "./pages/report/report",
+      "./pages/adviser/screenDetail/screenDetail"
+    ]
+  }
+</script>

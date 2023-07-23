@@ -1,0 +1,8 @@
+{
+  "extends": "stylelint-config-wxss",
+  "rules": {
+    "unit-no-unknown": null,
+    "no-descending-specificity": null,
+    "no-empty-source": null
+  }
+}

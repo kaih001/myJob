@@ -1,0 +1,439 @@
+<template>
+    <view class="dm-backimg-width dm-top-width"></view>
+    <view class="dm-content-wrap" style="width:calc(100% - 80rpx)">
+      <view class="dm-hello">
+      </view>
+
+
+      <!-- 关注微信公众号 -->
+      <view  wx:if="{{witchPageShow === 2}}" class="dm-text-wrap" style="margin-top:{{fontWrapMarginTop}}px">
+        <view class="dm-counselor-img"></view>
+        <view class="dm-tittle" style="margin-top:{{tittleMarginTop  - 10}}px">
+          <view class="dm-number"></view>
+          关注公众号福利
+        </view>
+
+        <view class="dm-font-wrap" style="margin-top:{{stepMarginTop - 18}}px">
+          <view class="dm-text-font dm-text-font2">
+            <view class="dm-font-icon2"></view>
+            领取粉丝福利
+          </view>
+          <view class="dm-text-font dm-text-font2">
+            <view class="dm-font-icon2"></view>
+            获取求职资讯
+          </view>
+          <view class="dm-text-font dm-text-font2">
+            <view class="dm-font-icon2"></view>
+            加入求职粉丝群
+          </view>
+        </view>
+
+        <view class="dm-tittle" style="margin-top:{{tittleMarginTop - 19}}px">
+          <view class="dm-number dm-number-2"></view>
+          加入流程
+        </view>
+        <view class="dm-step-gzh" style="margin-top:{{stepMarginTop - 11}}px">
+          <view class="dm-step-item-gzh">
+            <div class="dm-step-item-img" style="background-image:url('https://cdn.doumistatic.com/211,01b76de33365f53f.png')"></div>
+            点击下方按钮
+          </view>
+          <view class="dm-step-item-gzh">
+            <div class="dm-step-item-img" style="background-image:url('https://cdn.doumistatic.com/210,01b76de5247de15d.png')"></div>
+            聊天窗口中编辑“1”并发送
+          </view>
+          <view class="dm-step-item-gzh">
+            <div class="dm-step-item-img" style="background-image:url('https://cdn.doumistatic.com/207,01b76dea4fb023dd.png')"></div>
+            长按识别二维码
+          </view>
+          <view class="dm-step-item-gzh">
+            <div class="dm-step-item-img dm-step-item-img-last" style="background-image:url('https://cdn.doumistatic.com/209,01b76dec125b5634.png')"></div>
+            关注“斗米官方工作招聘”公众号
+          </view>
+        </view>
+        <view class="dm-bottom-wrap" style="margin-top:56rpx">
+          <button
+            open-type="contact"
+            class="dm-button"
+            bindtap="goToService">点我回复【 1 】，关注领取福利</button>
+          <view class="dm-hander"></view>
+        </view>
+      </view>
+
+      <!-- 添加顾问 -->
+      <view wx:else class="dm-text-wrap" style="margin-top:{{fontWrapMarginTop}}px">
+        <view class="dm-counselor-img"></view>
+        <view class="dm-tittle" style="margin-top:{{tittleMarginTop}}px">
+          <view class="dm-number"></view>
+          专属顾问是干什么的？
+          <view class="dm-line"></view>
+        </view>
+        <view class="dm-font-wrap">
+          <view class="dm-text-font" style="margin-top:{{textMarginTop}}px">
+            <view class="dm-font-icon"></view>
+            真人一对一服务
+          </view>
+          <view class="dm-text-font" style="margin-top:{{textMarginTop}}px">
+            <view class="dm-font-icon"></view>
+            优质职位福利活动跟新
+          </view>
+          <view class="dm-text-font" style="margin-top:{{textMarginTop}}px">
+            <view class="dm-font-icon"></view>
+            进行行业群求职活动
+          </view>
+        </view>
+        <view class="dm-tittle" style="margin-top:{{tittleMarginTop}}px">
+          <view class="dm-number dm-number-2"></view>
+          如何领取专属顾问？
+          <view class="dm-line"></view>
+        </view>
+        <view class="dm-step" style="margin-top:{{stepMarginTop}}px">
+          <view class="dm-step-item">
+            1
+            <view class="dm-step-item-explain">点击下方按钮</view>
+          </view>
+          <view class="dm-step-right"></view>
+          <view class="dm-step-item">
+            2
+          <view class="dm-step-item-explain">添加顾问微信</view>
+          </view>
+          <view class="dm-step-right"></view>
+          <view class="dm-step-item">
+            3
+            <view class="dm-step-item-explain">提出你的要求</view>
+          </view>
+        </view>
+        <view class="dm-bottom-wrap">
+          <button
+            open-type="contact"
+            class="dm-button"
+            style="margin-top:{{buttonMarginTop}}px"
+            bindtap="goToService">点我回复【 1 】，添加顾问微信</button>
+          <view class="dm-hander"></view>
+        </view>
+      </view>
+
+    </view>
+    <view class="dm-backimg-width dm-bottom-width"></view>
+</template>
+
+<script>
+  import { createPage } from '@mpxjs/core'
+  import pageMine from '../../../../../pages/mine/mine?resolve'
+  createPage({
+    data: {
+      screenHeight: 667,
+      tittleMarginTop: 44,
+      textMarginTop: 14,
+      stepMarginTop: 30,
+      buttonMarginTop: 52,
+      fontWrapMarginTop: 16,
+      witchPageShow: 2 // 1 顾问引导页  2 关注公众号页
+    },
+    onLoad (options) {
+      let screenHeight,
+        power,
+        tittleMarginTop,
+        textMarginTop,
+        stepMarginTop,
+        buttonMarginTop,
+        fontWrapMarginTop
+      let { comeFrom, witchPageShow } = options
+      this.witchPageShow = comeFrom ? +comeFrom : +witchPageShow
+      console.log(this.witchPageShow)
+      wx.getSystemInfo({
+        success: function (res) {
+          screenHeight = res.screenHeight
+        }
+      })
+      if (screenHeight > this.screenHeight) {
+        power = screenHeight / this.screenHeight + 0.2
+      } else if (screenHeight < this.screenHeight) {
+        power = screenHeight / this.screenHeight - 0.2
+      } else {
+        power = screenHeight / this.screenHeight
+      }
+      tittleMarginTop = this.tittleMarginTop * power
+      textMarginTop = this.textMarginTop * power
+      stepMarginTop = this.stepMarginTop * power
+      buttonMarginTop = this.buttonMarginTop * power
+      fontWrapMarginTop = this.fontWrapMarginTop * power
+      this.setData({
+        tittleMarginTop,
+        textMarginTop,
+        stepMarginTop,
+        buttonMarginTop,
+        fontWrapMarginTop
+      })
+    },
+    methods: {
+      goToService () {
+        wx.navigateTo({ url: pageMine })
+      }
+    }
+  })
+</script>
+
+<style>
+.dm-backimg-width {
+  width: 100%;
+  z-index: -1;
+}
+.dm-top-width {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 260px;
+  background-image: url("https://cdn.doumistatic.com/189,019eb04d82701a61.png");
+  background-size: 100% 100%;
+}
+.dm-bottom-width {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 59px;
+  background-image: url("https://cdn.doumistatic.com/190,019eb03d8c97c683.png");
+  background-size: 100% 100%;
+}
+.dm-content-wrap {
+  position: relative;
+  height: 100%;
+  margin: 10% auto 0;
+  z-index: 2;
+}
+.dm-content-wrap .dm-hello {
+  /* margin-top: 30px; */
+  width: 288rpx;
+  height: 182rpx;
+  background-image: url("https://cdn.doumistatic.com/192,019eafff134b3a90.png");
+  background-size: 100%;
+}
+.dm-content-wrap .dm-text-wrap{
+  position: relative;
+  width: 100%;
+  height: 75%;
+  margin-top: 32rpx;
+  background: #FFFFFF;
+  border: 1px solid #fff;
+  box-shadow: 0 0 15px 4px rgba(255,204,0,0.31);
+  border-radius: 20px;
+  border-radius: 20px;
+}
+.dm-text-wrap .dm-counselor-img {
+  position: absolute;
+  top: -114px;
+  right: 7px;
+  width: 254rpx;
+  height: 300rpx;
+  background-image: url("https://cdn.doumistatic.com/189,019eafd050de8fc4.png");
+  background-size: 100%;
+}
+.dm-text-wrap .dm-tittle {
+  position: relative;
+  margin-top: 88rpx;
+  margin-left: 32px;
+  font-family: PingFangSC-Semibold;
+  font-size: 18px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 18px;
+  z-index: 9;
+}
+.dm-tittle .dm-number {
+  position: absolute;
+  bottom: -5px;
+  left: -16px;
+  width: 51px;
+  height: 38px;
+  font-family: FZLTTHJW--GB1-0;
+  font-size: 38px;
+  line-height: 38px;
+  color: #404040;
+  letter-spacing: 0;
+  background-image: url("https://cdn.doumistatic.com/209,01b76cf40fd55dd9.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+.dm-number-2 {
+   background-image: url("https://cdn.doumistatic.com/206,01b76cf626c240f3.png") !important;
+ }
+.dm-tittle .dm-line{
+  margin-top: 4px;
+  width: 36px;
+  height: 3px;
+  background-image: linear-gradient(133deg, #FFC700 0%, #FFEC00 100%);
+  box-shadow: 0 2px 4px 0 rgba(255,181,36,0.30);
+  border-radius: 4px;
+}
+.dm-text-wrap .dm-font-wrap {
+  margin-left: 64rpx;
+  margin-top: 16px;
+}
+.dm-font-wrap .dm-text-font {
+  position: relative;
+  margin-top: 28rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 16px;
+}
+.dm-font-wrap .dm-text-font2 {
+  margin-left: 30px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px !important;
+  line-height: 20px;
+}
+/* .dm-font-wrap .dm-text-font2:first-child {
+  margin-top: 0;
+} */
+.dm-text-font .dm-font-icon {
+  position: absolute;
+  left: -18px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  background-image: url("https://cdn.doumistatic.com/190,019ec4d4c6bd165b.png");
+  background-size: 100% 100%;
+}
+.dm-text-font .dm-font-icon2 {
+  position: absolute;
+  left: -30px;
+  top: -2px;
+  width: 20px;
+  height: 20px;
+  background-image: url("https://cdn.doumistatic.com/208,01b75b42021f54b5.png");
+  background-size: 100% 100%;
+}
+ .dm-text-wrap .dm-step {
+  margin: 30px 16px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.dm-step-gzh {
+  margin-top: 32rpx;
+  margin-left: 64rpx;
+  padding: 0;
+}
+.dm-step .dm-step-item {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  font-family: PingFangSC-Semibold;
+  font-size: 16px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 34px;
+  text-align: center;
+  background-image: url("https://cdn.doumistatic.com/192,019eb058f2d306e5.png");
+  background-size: 100% 100%;
+}
+.dm-step-item-gzh {
+  position: relative;
+  margin-top: 40rpx;
+  margin-left: 30px;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 14px;
+}
+/* .dm-step-item-gzh:first-child {
+  margin-top: 0;
+} */
+.dm-step-item-gzh .dm-step-item-img {
+  position: absolute;
+  left: -30px;
+  top: -3px;
+  width: 20px;
+  height: 20px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.dm-step-item-gzh .dm-step-item-img::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  bottom: -11px;
+  width: 1px;
+  height: 10px;
+  background-color: #FFE977;
+}
+.dm-step-item-gzh .dm-step-item-img-last::after {
+  content: "";
+  width: 0;
+  height: 0;
+}
+
+ .dm-step .dm-step-right {
+  margin-top: -3px;
+  width: 21px;
+  height: 21px;
+  background-image: url("https://cdn.doumistatic.com/188,019eb012ef023846.png");
+  background-size: 100% 100%;
+}
+ .dm-step-item .dm-step-item-explain {
+  position: absolute;
+  bottom:-16px;
+  left: -18px;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 12px;
+  white-space: nowrap;
+}
+ .dm-text-wrap .dm-bottom-wrap {
+  position: relative;
+  margin-top: 104rpx;
+}
+ .dm-bottom-wrap .dm-button {
+  width: 590rpx;
+  height: 48px;
+  border-radius: 24px;
+  margin: 0 auto;
+  background-image: url("https://cdn.doumistatic.com/188,019eb0421c4e0cf8.png");
+  background-size: 100% 100%;
+  line-height: 40px;
+  text-align: center;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+}
+ .dm-bottom-wrap .dm-hander {
+  position: absolute;
+  right: 30px;
+  bottom: -44px;
+  width: 29px;
+  height: 44px;
+  background-image: url("https://cdn.doumistatic.com/192,019eafeb075b249e.png");
+  background-size: 100% 100%;
+  animation: handerMove 2s ease-in-out forwards infinite
+}
+@keyframes handerMove {
+  0% {
+    right: 30px;
+    bottom: -44px;
+  }
+
+  50% {
+    right: 100px;
+    bottom: -24px;
+  }
+
+  100% {
+    right: 30px;
+    bottom: -44px;
+  }
+}
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+    }
+  }
+</script>

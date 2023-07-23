@@ -1,0 +1,273 @@
+/* components/myProgressList/myProgressList.wxss */
+.dm-icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.dm-icon::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: url("https://cdn.doumistatic.com/170,015f30ef884724fe.png") no-repeat;
+  background-size: 100px auto;
+}
+
+.dm-icon-danbao {
+  width: 41px;
+  height: 16px;
+}
+
+.dm-icon-danbao::after {
+  width: 41px;
+  height: 16px;
+  background-position: 0 0;
+}
+
+.dm-icon-huobao {
+  width: 70px;
+  height: 18px;
+}
+
+.dm-icon-huobao::after {
+  width: 70px;
+  height: 18px;
+  background-position: 0 -20px;
+}
+
+.dm-icon-location-sm,
+.dm-icon-clock-sm,
+.dm-icon-arrow-sm {
+  width: 10px;
+  height: 10px;
+}
+
+.dm-icon-location-sm::after,
+.dm-icon-clock-sm::after,
+.dm-icon-arrow-sm::after {
+  width: 10px;
+  height: 10px;
+  background-position: -60px 0;
+}
+
+.dm-icon-clock-sm::after {
+  background-position: -70px 0;
+}
+
+.dm-icon-arrow-sm::after {
+  background-position: -80px 0;
+}
+
+.dm-tag {
+  display: inline-block;
+  position: relative;
+  width: 39px;
+  height: 16px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.dm-tag::after {
+  content: "";
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  box-sizing: border-box;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-size: 0;
+  line-height: 0;
+  text-align: center;
+  padding: 5px 7px;
+  transform-origin: 0 0;
+  transform: scale(0.5);
+}
+
+.dm-tag-text {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  color: #808080;
+  font-size: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding: 5px 7px;
+  transform-origin: 0 0;
+  transform: scale(0.5);
+  margin-right: -50%;
+  margin-bottom: -50%;
+}
+
+.dm-list-item {
+  position: relative;
+  padding-top: 24rpx;
+}
+
+.dm-list-item::after {
+  display: none;
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background-color: #e5e5e5;
+  transform-origin: 0 100%;
+  transform: scale3d(1, 0.5, 1);
+}
+
+.dm-product-box {
+  position: relative;
+  background-color: #fff;
+  padding: 24rpx 32rpx;
+}
+
+.dm-product-box.dm-touch {
+  background-color: #f5f5f5;
+}
+
+.dm-product-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 48rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 140rpx;
+  overflow: hidden;
+}
+
+.dm-product-price {
+  display: flex;
+  align-items: center;
+  flex: none;
+  color: #f60;
+  font-size: 24rpx;
+  line-height: 40rpx;
+  margin-right: 16rpx;
+}
+
+.dm-product-price-value {
+  color: #f60;
+  font-size: 36rpx;
+  font-weight: 400;
+  line-height: 52rpx;
+  margin-right: 4px;
+}
+
+.dm-product-info {
+  display: flex;
+  align-items: center;
+  margin-top: 8rpx;
+  overflow: hidden;
+}
+
+.dm-product-meta {
+  float: left;
+  color: #808080;
+  font-size: 12px;
+  line-height: 20px;
+  margin-right: 12px;
+}
+
+.dm-product-meta .dm-icon {
+  float: left;
+  margin: 5px 4px 5px -1px;
+}
+
+.dm-product-label {
+  display: block;
+  flex: none;
+  overflow: hidden;
+}
+
+.dm-product-label .dm-icon-danbao {
+  display: none;
+  float: left;
+  margin-right: 8px;
+}
+
+.dm-product-label .dm-tag {
+  float: left;
+}
+
+.dm-product-status {
+  position: absolute;
+  right: 32rpx;
+  top: 28rpx;
+  color: #404040;
+  font-size: 28rpx;
+  line-height: 44rpx;
+}
+
+.dm-product-status-cancle {
+  color: #999;
+}
+
+.dm-product-status-over {
+  color: #999;
+}
+
+.dm-product-status-reject {
+  color: #f60;
+}
+
+.dm-box {
+  position: relative;
+  color: #808080;
+  font-size: 24rpx;
+  line-height: 40rpx;
+  padding: 24rpx 0 0;
+  margin-top: 24rpx;
+}
+
+.dm-box:empty {
+  display: none;
+}
+
+.dm-box::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background-color: #e5e5e5;
+  transform-origin: 0 0;
+  transform: scale3d(1, 0.5, 1);
+}
+
+.dm-box .product-place,
+.dm-box .product-time {
+  display: flex;
+  align-items: flex-start;
+}
+
+.dm-box .product-place {
+  margin-top: 8rpx;
+}
+
+.dm-box .title {
+  white-space: nowrap;
+  margin-right: 12rpx;
+}
+
+.dm-box .text {
+  display: block;
+  flex: 1;
+  color: #404040;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

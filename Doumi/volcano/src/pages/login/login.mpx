@@ -1,0 +1,305 @@
+<template>
+  <view class="dm-page login">
+    <view class="dm-section">
+      <view class="dm-section-title">账户登录</view>
+
+      <view class="dm-cells" style="margin-top: 105rpx">
+        <view class="dm-cell dm-cell-input">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">手机号</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input
+              type="number"
+              class="dm-input"
+              maxlength="11"
+              placeholder="请输入11位手机号码"
+              wx:model="{{mobile}}"
+            />
+          </view>
+        </view>
+        <view class="dm-cell dm-cell-input dm-cell-code" wx:if="{{checkPicCodeFlg}}">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">验证码</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input
+              type="text"
+              class="dm-input"
+              placeholder="验证码"
+              maxlength="4"
+              wx:model="{{inputPicCode}}"
+            />
+          </view>
+          <view class="dm-cell-ft" bindtap='bindGetPicCode'>
+            <image class="dm-cell-code-image" src="{{picCode}}" />
+            <icon class="dm-cell-code-refresh"></icon>
+          </view>
+        </view>
+        <view class="dm-cell dm-cell-input dm-cell-code">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">验证码</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input
+              type="number"
+              class="dm-input"
+              maxlength="6"
+              placeholder="请输入6位验证码"
+              wx:model="{{code}}"
+            />
+          </view>
+          <view class="dm-cell-ft" bindtap='bindGetCode'>
+            <view class="{{codeBtnStyle}}">{{codeBtnText}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="dm-cells dm-cells-btn">
+        <dm-button
+          round
+          size="middle"
+          type="primary"
+          disabled="{{disabled}}"
+          bind:click="bindSubmit">登录
+        </dm-button>
+      </view>
+
+      <view class="dm-cells-text" bindtap='bindCantGetCode'>
+        <text>收不到验证码？</text>
+      </view>
+      <view wx:if="{{showTopTips}}" class="dm-toptips dm-toptips-warn">错误提示</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import api from '~/utils/api'
+import util from '~/utils/util'
+import mobileMixin from '~/mixins/mobile'
+import globalDataStore from '~/store/globalData'
+import applySuccess from '~/subpackage/subA/pages/applySuccess/applySuccess?resolve'
+
+const app = getApp()
+
+createPage({
+  mixins: [mobileMixin],
+
+  data: {
+    showTopTips: false,
+    fromPage: '',
+    inputPicCode: '',
+    addressId: 0,
+    job_id: '',
+    jobType: '' // job_id && jobTpe 是为解决用户未登录情况下，任意帖子，点击“报名参加”，到极速报名页面，在极速报名页面点击“去登陆”，在登陆页面，填写手机号、验证码，登陆成功后，又跳转到极速报名页面了问题添加的
+  },
+
+  computed: {
+    disabled () {
+      return this.mobile === '' || this.code === ''
+    }
+  },
+
+  onShow () {
+    api.setLog(1, '/jianzhi/login')
+  },
+
+  onLoad ({
+    from,
+    job_id,
+    jobType,
+    addressId,
+    register
+  }) {
+    if (from) this.fromPage = from
+
+    if (job_id) this.job_id = job_id
+
+    if (jobType) this.jobType = jobType
+
+    if (addressId) this.addressId = addressId
+
+    if (register) wx.setStorage({ key: 'register', data: register })
+
+    wx.hideShareMenu()
+    this.bindGetPicCode()
+  },
+
+  methods: {
+    ...globalDataStore.mapMutations(['updateLoginStatus']),
+
+    checkPicCode () {
+      if (this.inputPicCode) {
+        if (this.inputPicCode.length === 4) {
+          return true
+        } else {
+          util.showToast('请输入正确的图片验证码')
+          return false
+        }
+      } else {
+        util.showToast('图片验证码不能为空')
+        return false
+      }
+    },
+
+    /**
+     * 登录
+     */
+    async bindSubmit () {
+      if (this.__checkLogin()) {
+        util.showLoading('登录中')
+
+        const invite_code = wx.getStorageSync('register') // 获取分享来源
+        const { mobile, code, fromPage, job_id, jobType, addressId } = this
+        const { callbackName } = this.options
+        const params = { mobile, code, invite_code }
+
+        try {
+          let res = await util.getData('client/login', params, 'POST')
+          const { userId } = res.data
+          util.hideLoading()
+
+          if (userId) {
+            api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=login_success@from=phone')
+            wx.showToast({ title: '登录成功' })
+            wx.setStorageSync('userId', +userId)
+            util.setCookie(res.header['Set-Cookie'])
+            this.updateLoginStatus() // 更新登录状态
+
+            const prevPage = util.getPrevPage() // 拿到上一个页面的实例
+
+            if (fromPage === 'apply') {
+              try {
+                res = await util.getData(`client/applyinfo/${job_id}?rp=mobile`, '', 'GET')
+                const {
+                  is_degree_complete,
+                  is_resume_complete,
+                  post_address
+                } = res.data
+                const addr_id = post_address
+                  ? post_address.post_address_list[0].id
+                  : 0
+
+                if (is_resume_complete === 1 && is_degree_complete === 1) {
+                  // 简历完善且学历也完善了直接报名
+                  util.showLoading()
+                  let param = {}
+
+                  param.ca_platform = 4 // 数据来源微信
+                  param.userId = userId
+                  param.addr_id = addr_id
+                  param.open_id = app.globalData.openId
+                  param.domain = app.globalData.cityInfo.domain || ''
+
+                  try {
+                    res = await util.getData(
+                      `client/apply/${job_id}`,
+                      param,
+                      'POST'
+                    )
+                    util.hideLoading()
+
+                    if (res.data.code === 0) {
+                      const query = util.obj2uri({
+                        jobType,
+                        id: job_id
+                      })
+                      wx.redirectTo({ url: `${applySuccess}?${query}` })
+                    } else if (res.data.code === -106) {
+                      util
+                        .showToast('超过每天申请总次数(10次)')
+                        .then(res => wx.navigateBack({ delta: 2 }))
+                    } else if (res.data.code === -104) {
+                      util
+                        .showToast('已报名过该职位，无需重复报名')
+                        .then(res => wx.navigateBack({ delta: 2 }))
+                    } else {
+                      util
+                        .showToast(res.data.message)
+                        .then(res => wx.navigateBack({ delta: 2 }))
+                    }
+                  } catch (err) {
+                    app.showErrorToastHandler(err)
+                  }
+                } else {
+                  // 简历不完善 全新的用户，没有简历，没有学历
+                  prevPage.setData({
+                    // - 操作上一个页面 data 的数据
+                    is_resume_complete,
+                    is_degree_complete,
+                    loginFlag: true,
+                    id: job_id,
+                    addressId
+                  })
+                  wx.navigateBack()
+                }
+              } catch (err) {
+                app.showErrorToastHandler(err)
+              }
+              return
+            }
+
+            setTimeout(() => {
+              if (prevPage) {
+                wx.navigateBack({
+                  delta: 1,
+                  success: () => {
+                    callbackName && prevPage[callbackName]() // - 调用上个页面传过来的回调方法
+                  }
+                })
+              } else {
+                wx.switchTab({ url: '/pages/index/index' })
+              }
+            }, 2000)
+          } else {
+            util.showToast(res.data.message)
+          }
+        } catch (err) {
+          app.showErrorToastHandler(err)
+        }
+      }
+    },
+
+    /**
+     * 无法获取验证码
+     */
+    bindCantGetCode () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=noyzm')
+      util.telPhone('请拨打客服电话！')
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-section
+  background #fff url('https://cdn.doumistatic.com/209,01b55454d9fd9cc2.png') no-repeat
+  background-size 100% 356rpx
+  &-title
+    padding 28rpx 32rpx
+    font-size 24px
+    line-height 32px
+    font-weight 700
+.dm-cells
+  margin-top 63rpx
+  margin-right 80rpx
+  margin-left 80rpx
+  &::after
+    display none
+  .dm-cell
+    padding 16rpx 0
+    &:not(:last-child)::after
+      left 0
+  .dm-cell-hd
+    display none
+</style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "登录",
+  "usingComponents": {
+    "dm-button": "~/components/dmx/dm-button"
+  }
+}
+</script>

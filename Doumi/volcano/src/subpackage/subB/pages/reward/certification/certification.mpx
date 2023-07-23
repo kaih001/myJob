@@ -1,0 +1,469 @@
+<template>
+  <scroll-view class="dm-section certification" scroll-y>
+    <view class="mod-form-head">
+      <view class="mod-form-title">实名认证</view>
+      <view class="mod-form-desc">斗米会对您的资料进行保护，不会泄露您的资料</view>
+    </view>
+
+    <view class="dm-cells">
+      <dm-cell>
+        <view slot="label" class="">真实姓名</view>
+        <input
+          type="text"
+          class="dm-input"
+          placeholder="请输入自己的真实姓名"
+          maxlength="10"
+          wx:model="{{realName}}"
+          bindinput="bindNameInput"
+        />
+      </dm-cell>
+
+      <dm-cell>
+        <view slot="label" class="">身份证号</view>
+        <input
+          type="text"
+          class="dm-input"
+          placeholder="请输入自己的身份证号"
+          maxlength="18"
+          wx:model="{{idcard}}"
+          bindinput="bindIdcardInput"
+        />
+      </dm-cell>
+    </view>
+    <view class="dm-cells-tips"><view class="icon-warn"></view>确认填写本人真实信息，认证后不能修改</view>
+    <view class="dm-cells-text" bindtap="bindCheckedHandle">
+      <view class="icon-checkbox {{isChecked ? 'active' : ''}}"></view><text>我已阅读并同意</text><text class="link" catchtap="bindShowLayer">自由职业者承揽协议</text>
+    </view>
+
+    <button
+      class="dm-btn dm-btn-large dm-btn-primary"
+      wx:class="{{buttonClass}}"
+      disabled="{{buttonState}}"
+      hover-class="dm-touch"
+      formType="submit"
+      bindtap="bindValidateFormHandle"
+    >
+      确认并提交
+    </button>
+  </scroll-view>
+  <view class="dm-layer layer-rule {{isIpx ? 'iphonex-fixed' : ''}} {{isShowLayer ? 'active' : ''}}">
+    <view class="dm-layer-body">
+      <scroll-view class="dm-layer-scroll" scroll-y>
+        <view class="dm-layer-title">自由职业者承揽协议</view>
+        <view class="dm-layer-text">
+          <text>我司【北京新诚优聘咨询服务有限公司】，因自身业务的发展，需要聘请自由职业者为我司提供相关服务。为维护自由职业者的合法权益，在您点击同意本协议之前，请认真阅读本协议、充分理解各条款内容，尤其是以下特别提示条款、权利义务条款和管辖条款。除非您已阅读并接受本协议所有条款，否则您无权为我司提供服务。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>特别提示条款：</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、当您按照提示填写您的个人信息、阅读、同意并签署本协议后，即表示您已充分阅读、理解并接受本协议的全部内容，此后您不得以未阅读/不理解本协议内容或类似言辞做任何形式的抗辩。</text>
+          <text>2、您与我司通过本协议建立合作关系，适用《合同法》《民法总则》和其他民事法律，不适用《劳动合同法》及其他与劳动关系相关的法律法规。</text>
+          <text>3、您不属于我司及我司人事管理权限范围内的个人，我司不承担您任何社保福利待遇。</text>
+          <text>4、阅读本协议的过程中，如果您不同意本协议或其中任何条款约定，请您立即停止任何的申请/注册/或签署程序。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>协议条款：</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第一条 服务内容</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、我司将通过线上通知的方式与您确认您将提供的具体服务的内容和要求，届时您点击同意确认即视为同意，您应按照我司相关要求规定的标准完成服务及领取报酬。</text>
+          <text>2、您应承诺和保证，您具有提供本协议服务所对应的相应资质和专业能力，您依据本合同约定收取相关费用不违反任何法律法规和政策规定，不损害任何第三方的合法权益。</text>
+          <text>3、如按相关法律法规要求，为履行本协议您需要取得相关资质或许可，则您自行负责办理全部事宜，并自行负担相关费用。</text>
+          <text>4、若因您的原因未办理前述事宜，则您应承担由此引起的全部法律后果，并赔偿由此给我司及/或关联公司造成的全部经济损失。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第二条 双方的权利和义务</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、您的权利和义务</text>
+          <text>（1）您应根据我司的需求提供相关服务，服务期间您应遵守我司有关服务内容、服务质量等方面的要求。我司可根据自身的运营要求制定具体服务安排，您应予遵守。</text>
+          <text>（2）您作为我司的合作人员，您的相关费用结算将由我司根据提供服务情况完成支付。</text>
+          <text>（3） 您不可撤销地授权我司和为履行本协议获取您的个人信息（包括但不限于身份信息、实名登记手机号码、银行账户相关信息等），如有需要，将您的相关信息提交第三方机构进行身份验证。若您未提供真实有效的材料或信息，我司有权暂停或终止向您提供部分或全部服务，对此我司不承担任何责任，您应赔偿我司因此所产生的所有损失，包括但不限于直接损失、间接损失。</text>
+          <text>（4）您应按时尽责地完成我司要求的服务内容，并达到规定的质量标准，不得有侵犯他人合法权益以及其他违反国家法律法规、国家政策、或有悖于公序良俗的内容。</text>
+          <text>（5） 本协议期限内以及协议终止后，您均有义务对合作过程中知悉的我司的相关信息予以保密，未经书面许可，您不得以任何方式向其它方披露、给予或转让该等保密信息。否则，因此导致我司及/或关联公司的损失，由您负责赔偿。</text>
+          <text>2、我司的权利和义务</text>
+          <text>（1）我司将根据我司与您确定的标准向您支付服务费用。由于您所提供的服务内容、服务质量、服务时长等情况的不同，该等服务费用金额可能会呈现浮动，您清楚并了解该等浮动为正常情况，不得要求任何补偿或赔偿。</text>
+          <text>（2）我司将通过银行、支付宝或者微信账户向您支付上述服务费用。您应向我司提供以您本人实名注册的对应账户信息，以及相关必要的证件。</text>
+          <text>（3）我司服务费用支付以您提供的收款帐户为准，若具体账户信息是您在指定的网络平台在线提供的，则以您在线提供的信息为准。</text>
+          <text>（4）因您提供的收款帐户信息有误造成的一切损失由您自行承担。 如您帐号变更或发生不可用等情况时，应及时书面通知我司在指定的网络平台进行变更操作，否则由此造成的一切损失由您自行负责。</text>
+          <text>（5）为了您更好地提供服务，我司有权视情况为您提供相关资源，如某些网站账户使用权等，具体使用权限及费用收取政策由我司制定并告知您，您可以自愿选择是否使用。但您对于该等资源的使用应以向我司提供服务为限，如有他用，需经我司事先书面同事，否则应赔偿我司由此遭受的全部损失。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第三条 协议的终止</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、在以下情况下本协议自然终止，双方均不承担违约或赔偿责任：</text>
+          <text>（1） 经我司事先书面同意的情况下，您主动退出服务的，但您应提前三十日提出书面申请且并不得影响我司的运营；</text>
+          <text>（2）因我司原因不需要您继续履行本协议的；</text>
+          <text>（3）其他原因导致本协议不再继续履行的。</text>
+          <text>2、发生以下情形时，本协议终止，违约方或过错方应承担相应违约或赔偿责任：</text>
+          <text>（1）一方违反协议约定，且违约方在非违约方书面通知后15日内仍未予改正的，非违约方可以书面通知的形式终止本协议；</text>
+          <text>（2）您如未能达到我司的要求，我司在将给予警告；警告累计超过三次的，我司可提前终止本协议，如给我司造成损失，您应承担全部赔偿责任。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第四条 授权事项</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、您同意委托我司根据相关税务局的要求，在我司所在地税务局代征您临时性生产、经营所得税务；</text>
+          <text>2、您确认我司根据本合同授权提交的相关申报资料和信息是真实、完整、准确，和符合有关法律法规的。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第五条 违约责任</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、双方应按本协议约定履行，如有违反，守约方有权要求对方及时改正；造成对方损失的，守约方有权要求违约方赔偿。</text>
+          <text>2、因不可抗力造成损失的，彼此不负赔偿责任，但发生不可抗力一方应及时将有关情况通知另一方，并尽最大努力进行补救。本协议所称不可抗力是指不能预见、不能克服并不能避免且对一方当事人造成重大影响的客观事件，包括但不限于自然灾害如洪水、地震、火灾和风暴等以及社会事件如战争、动乱、政府行为、黑客事件、大范围电信事故等。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第六条 协议生效及期限</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、您的签约信息（包括您的姓名、身份证号等信息），以您提供的信息为准（包括但不限于线上提供或线下提供）。您承诺并保证您所提供的签约信息真实、准确，以免影响本协议效力。</text>
+          <text>2、本协议条款自双方签署之日起生效；若在我司授权的线上平台发布，自您线上点击确认之日起生效。</text>
+          <text>3、本协议长期有效，至本协议项下服务完成或至按照本协议约定终止时为止。</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>第七条 其他</text>
+        </view>
+        <view class="dm-layer-text">
+          <text>1、 因履行本协议发生的纠纷，双方应友好协商解决，协商不成的，提请北京市海淀区人民法院诉讼解决。</text>
+          <text>2、我司有权根据业务需要修改本协议条款，双方应签署补充协议；我司亦可通过线上方式通知给您，您或点击确认视为生效。</text>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="dm-layer-foot">
+      <view class="dm-layer-close" bindtap="bindHideLayer">关闭</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import util from '../../../../../utils/util'
+import api from '../../../../../utils/api'
+import { checkName, checkIdcard } from '../../../../../utils/validate'
+import cityStore from '../../../../../store/city'
+import pageRmlist from '../rmlist/rmlist?resolve'
+
+const app = getApp()
+
+createPage({
+  data: {
+    isIpx: false, // 判断是否是iPhoneX
+    realName: '', // 真实姓名
+    idcard: '', // 身份证号
+    isChecked: true, // 是否已勾选协议
+    loginFlag: false, // 是否已登录
+    isShowLayer: false, // 是否展示弹层
+  },
+
+  computed: {
+    ...cityStore.mapGetters(['currentCity']),
+    buttonState () {
+      return this.realName === '' || this.idcard === '' || this.isChecked === false
+    },
+    buttonClass () {
+      return {
+        disabled: this.buttonState
+      }
+    },
+    submitParams () {
+      return {
+        real_name: this.realName,
+        idcard: this.idcard
+      }
+    }
+  },
+
+  async onLoad () {
+    api.setLog(1, '/jianzhi/basic/information')
+    util.showLoading()
+    const userId = wx.getStorageSync('userId')
+    this.loginFlag = userId > 0 // userId === 0 表示未授权手机号但是已经授权了微信信息, userId === '' 表示未登录
+    util.hideLoading()
+
+    // 判断iPhone X
+    const { isIpx } = app.globalData
+    this.isIpx = isIpx
+  },
+
+  methods: {
+    /**
+     * 表单验证
+     */
+    bindValidateFormHandle () {
+      const { realName, idcard } = this
+      if (!checkName(realName)) {
+        wx.showToast({
+          icon: 'none',
+          title: '姓名格式有误'
+        })
+      } else if (!checkIdcard(idcard)) {
+        wx.showToast({
+          icon: 'none',
+          title: '身份证号码格式有误'
+        })
+      } else {
+        this.bindSubmitHandle()
+      }
+    },
+
+    /**
+     * 表单提交
+     */
+    bindSubmitHandle () {
+      const { realName, idcard, currentCity } = this
+      const time = new Date().getTime()
+      const url = 'headhunter/authentication'
+      util.requestByPost(
+        url,
+        {
+          real_name: realName,
+          id_no: idcard,
+          city_id: currentCity.id,
+          time
+        },
+        false,
+        res => {
+          const { code, message } = res.data
+          if (code === 200) {
+            wx.showToast({
+              icon: 'success',
+              title: '认证成功'
+            })
+            // 提交成功后的回调
+            setTimeout(() => {
+              this.bindSucceedCallback()
+            }, 1000)
+          } else {
+            wx.showToast({
+              icon: 'none',
+              title: message
+            })
+          }
+        },
+        err => {
+          // wx.stopPullDownRefresh()
+        }
+      )
+    },
+
+    /**
+     * 认证成功后执行回调操作
+     */
+    bindSucceedCallback () {
+      const pages = getCurrentPages()
+      const prevPage = pages[pages.length - 2] // - 拿到上一个页面的实例
+      const { callbackName } = this.options
+      if (pages.length > 1) {
+        wx.navigateBack({
+          delta: 1,
+          success: () => {
+            callbackName && prevPage[callbackName]()
+          }
+        })
+      } else {
+        wx.redirectTo({ url: pageRmlist })
+      }
+    },
+
+    /**
+     * 绑定姓名输入框
+     */
+    bindNameInput (e) {
+      this.realName = e.detail.value
+      // console.log('name：', this.realName)
+    },
+
+    /**
+     * 绑定身份证号输入框
+     */
+    bindIdcardInput (e) {
+      this.idcard = e.detail.value
+      // console.log('idcard', this.idcard)
+    },
+
+    /**
+     * 是否选中查看协议按钮
+     */
+    bindCheckedHandle () {
+      this.isChecked = !this.isChecked
+    },
+
+    /**
+     * 展示协议弹层
+     */
+    bindShowLayer () {
+      this.isShowLayer = !this.isShowLayer
+    },
+
+    /**
+     * 隐藏协议弹层
+     */
+    bindHideLayer () {
+      this.isShowLayer = !this.isShowLayer
+    },
+  }
+})
+</script>
+
+<style lang="stylus">
+.certification
+  background-color #fff
+  height 100vh
+  .mod-form-head
+    box-sizing border-box
+    height 90px
+    background url('https://cdn.doumistatic.com/194,01a34358af0570fd.png') no-repeat 0 0
+    background-size cover
+    border-radius 0 0 12px 12px
+    padding 16px 32rpx
+    .mod-form-title
+      color #fff
+      font-size 24px
+      font-weight 400
+      line-height 32px
+    .mod-form-desc
+      color #fff
+      font-size 12px
+      font-weight 400
+      line-height 20px
+  .dm-cells
+    margin 12px 40px
+    &::after
+      display none
+  .dm-cell
+    height 62px
+    padding 0
+    &::after
+      left 0 !important
+  .dm-cells-tips
+    text-align left
+    margin 10px 40px
+    padding: 0;
+    overflow hidden
+    .icon-warn
+      float left
+      width 12px
+      height 12px
+      background url('https://cdn.doumistatic.com/199,01a3483c68f3381b.png') no-repeat 0 0
+      background-size 12px auto
+      margin 4px 5px 4px 0
+  .dm-cells-text
+    justify-content left
+    color #4b4b4b
+    font-size 12px
+    line-height 20px
+    text-align left
+    margin 5px 40px 0
+    padding: 0;
+    overflow hidden
+    .icon-checkbox
+      width 12px
+      height 12px
+      background url('https://cdn.doumistatic.com/195,01a3493449b1183e.png') no-repeat 0 0
+      background-size 12px auto
+      margin 4px 5px 4px 0
+      &.active
+        background-image url('https://cdn.doumistatic.com/196,01a34968ca68dd40.png')
+    .link
+      color #69f
+      margin-left 10px
+  .dm-btn
+    margin 32px 40px
+    width calc(100% - 80px)
+.dm-layer
+  display none
+  position fixed
+  top 0
+  right 0
+  bottom 0
+  left 0
+  z-index 201
+  flex-direction column
+  background-color rgba(255, 255, 255, 0.96)
+  &.active
+    display flex
+  &-head
+    display block
+    flex none
+  &-body
+    flex auto
+    box-sizing border-box
+    height calc(100% - 44px)
+  &-scroll
+    height 100%
+    box-sizing border-box
+    padding 16px
+  &-foot
+    position relative
+    flex none
+    height 44px
+    text-align center
+    padding 0 12px
+    &::before
+      content ''
+      position absolute
+      top 0
+      left 0
+      width 100%
+      height 1px
+      background-color #e5e5e5
+      transform-origin 0 0
+      transform scale3d(1, .5, 1)
+  &-title
+    font-size 18px
+    font-weight 400
+    line-height 26px
+    text-align center
+  &-text
+    display block
+    font-size 14px
+    line-height 22px
+    word-break break-all
+    word-wrap break-word
+    margin 8px 0
+    text
+      display block
+  &-bold
+    font-weight 700
+  &-close
+    display block
+    position relative
+    width 24px
+    height 24px
+    background-color #404040
+    background-clip padding-box
+    border 10px solid rgba(255, 255, 255, 0.001)
+    border-radius 24px
+    font-size 0
+    line-height 0
+    text-align center
+    margin 0 auto
+    overflow hidden
+    &::before,
+    &::after
+      content ""
+      position absolute
+      top 50%
+      left 50%
+      width 1px
+      height 16px
+      background-color #fff
+      transform rotate(45deg)
+      margin-top -8px
+    &::after
+      transform rotate(-45deg)
+</style>
+
+<script type="application/json">
+  {
+    "navigationBarTitleText": "斗米微猎头",
+    "usingComponents": {
+      "dm-cell": "../../../../../components/dmx/dm-cell"
+    }
+  }
+</script>

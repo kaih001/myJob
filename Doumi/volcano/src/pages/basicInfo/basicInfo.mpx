@@ -1,0 +1,18 @@
+<template>
+
+</template>
+
+<script>
+  import { createPage } from '@mpxjs/core'
+  import basicInfoPath from '~/subpackage/subA/pages/basicInfo/basicInfo?resolve'
+
+  createPage({
+    onLoad () {
+      wx.redirectTo({ url: `${basicInfoPath}` })
+    }
+  })
+</script>
+
+<script type="application/json">
+  {}
+</script>

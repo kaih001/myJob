@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>成功</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="400" height="202" rx="2"></rect>
+        <filter x="-3.2%" y="-5.4%" width="106.5%" height="112.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.04 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter2" in2="SourceAlpha" operator="out" result="shadowBlurOuter2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="企业用工保" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="企业用工保_弹窗" transform="translate(-560.000000, -443.000000)">
+            <rect id="Rectangle" fill="#FFFFFF" x="220" y="0" width="1000" height="1143"></rect>
+            <g id="Group-3" transform="translate(301.000000, 424.000000)" fill="#707070" font-family="PingFang-SC-Bold, PingFang SC" font-size="16" font-weight="bold" letter-spacing="1.20000005" line-spacing="30">
+                <text id="企业用工保是专为灵活用工企业提供的一种意">
+                    <tspan x="49" y="65">企业用工保是专为灵活用工企业提供的一种意外保险申报服务，按天投保，节省企业费用.拥有多种意外</tspan>
+                    <tspan x="49" y="95">险套餐，为用工人员提供全方位的风险保障</tspan>
+                    <tspan x="375.800001" y="95">.</tspan>
+                </text>
+            </g>
+            <rect id="Rectangle-19" fill="#000000" opacity="0.5" x="0" y="0" width="1440" height="1144"></rect>
+            <g id="嵌套表单-dialog" transform="translate(520.000000, 367.000000)">
+                <g id="bg">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#E0E6ED" stroke-width="1" x="0.5" y="0.5" width="399" height="201" rx="2"></rect>
+                </g>
+                <path d="M60,76 C62.7564246,76 65.3525538,76.5208308 67.7884615,77.5624985 C70.2243692,78.6041723 72.3477477,80.0304369 74.1586523,81.8413477 C75.9695631,83.6522523 77.3958277,85.7756308 78.4375015,88.2115385 C79.4791692,90.6474462 80,93.2435754 80,96 C80,98.7564246 79.4791692,101.352554 78.4375015,103.788462 C77.3958277,106.224369 75.9695631,108.347748 74.1586523,110.158654 C72.3477477,111.969561 70.2243692,113.395828 67.7884615,114.4375 C65.3525538,115.479172 62.7564246,116 60,116 C57.2435754,116 54.6474462,115.479172 52.2115385,114.4375 C49.7756308,113.395828 47.6522523,111.969561 45.8413465,110.158654 C44.0304394,108.347748 42.6041717,106.224369 41.5624997,103.788462 C40.5208281,101.352554 40,98.7564246 40,96 C40,93.2435754 40.5208281,90.6474462 41.5624997,88.2115385 C42.6041717,85.7756308 44.0304394,83.6522523 45.8413465,81.8413477 C47.6522523,80.0304369 49.7756308,78.6041723 52.2115385,77.5624985 C54.6474462,76.5208308 57.2435754,76 60,76 Z M57.8737207,104.434232 L71.0900002,88.4461372 L68.5603251,86 L57.8737207,96.2726621 L52.7733015,92.3326152 L50,94.9111659 L57.8737207,104.434232 Z" id="Combined-Shape" fill="#63B45D"></path>
+            </g>
+        </g>
+    </g>
+</svg>

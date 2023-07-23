@@ -1,0 +1,131 @@
+.dm-cells
+  position relative
+  margin-bottom 12px
+  &::after
+    content ''
+    position absolute
+    right 0
+    bottom 0
+    left 0
+    height 1px
+    background-color white
+
+.dm-cell
+  height 92rpx
+  padding 12px 16px
+  display flex
+  align-items center
+  position relative
+  background-color #fff
+  &::after
+    content ''
+    position absolute
+    right 0
+    bottom 0
+    left 0
+    height 1px
+    background-color #e5e5e5
+    transform-origin 0 100%
+    transform scale3d(1, 0.5, 1)
+  &:not(:last-child)::after
+    left 16px
+  &.dm-touch
+    background-color #f5f5f5
+
+.dm-cell-bd
+  flex 1
+  overflow hidden
+.dm-cell-ft
+  color #999
+  font-size 14px
+  line-height 22px
+  text-align right
+.dm-cell-input
+  padding-top 0
+  padding-bottom 0
+.dm-cell-label
+  width 82px
+  white-space nowrap
+.dm-cell-code
+  .dm-cell-ft
+    position relative
+.dm-cell-code-btn
+  position relative
+  color #404040
+  font-size 14px
+  line-height 22px
+  padding-left 12px
+  &::after
+    content ''
+    position absolute
+    top 0
+    bottom 0
+    left 0
+    width 1px
+    background-color #e5e5e5
+    transform-origin 0 0
+    transform scale3d(0.5, 1, 1)
+  &.dm-disabled
+    color #999
+    pointer-events none
+.dm-cell-code-image
+  display block
+  width 90px
+  height 44px
+.dm-cell-code-refresh
+  position absolute
+  right 0
+  bottom 0
+  width 20px
+  height 20px
+  background url(https://cdn.doumistatic.com/41,62fe7cf3ad725b.png) no-repeat -40px -100px
+  background-size 100px auto
+.dm-cell-fd
+  position relative
+  padding-left 20px
+  &::after
+    content ''
+    position absolute
+    top 50%
+    right 2px
+    width 8px
+    height 8px
+    border-top 1px solid #999
+    border-right 1px solid #999
+    transform rotate(45deg)
+    margin-top -5px
+.dm-cells-btn
+  display flex
+  margin 32px 6px 0
+  &::after
+    display none
+  .dm-btn
+    flex 1
+    margin 0 6px
+    &:only-child
+      margin-right 34px
+      margin-left 34px
+  & + .dm-cells-text
+    justify-content flex-end
+    margin-top 24px
+    padding 0 40px
+  & ~ .dm-cells-text-center
+    justify-content center
+.dm-cells-tips
+  color #999
+  font-size 12px
+  line-height 20px
+  text-align center
+  word-break break-all
+  word-wrap break-word
+  padding 12px 16px
+.dm-cells-text
+  display flex
+  justify-content space-between
+  color #808080
+  font-size 12px
+  line-height 20px
+  word-break break-all
+  word-wrap break-word
+  margin-bottom 12px
+  padding 0 16px

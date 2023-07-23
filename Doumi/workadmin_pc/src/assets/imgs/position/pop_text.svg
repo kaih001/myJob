@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="270px" height="225px" viewBox="0 0 270 225" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>图例说明</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M260,127 L265.292893,132.292893 C265.683418,132.683418 265.683418,133.316582 265.292893,133.707107 L260,139 L260,215 C260,218.313708 257.313708,221 254,221 L6,221 C2.6862915,221 4.05812251e-16,218.313708 0,215 L0,6 C-4.05812251e-16,2.6862915 2.6862915,1.4968968e-15 6,8.8817842e-16 L254,8.8817842e-16 C257.313708,2.79460044e-16 260,2.6862915 260,6 L260,127 Z" id="path-1"></path>
+        <filter x="-1.3%" y="-1.1%" width="102.6%" height="103.2%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.686639002   0 0 0 0 0.697985643   0 0 0 0 0.74524341  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M9,22 L25.515381,22" id="path-3"></path>
+        <path d="M10.1080097,23.6107701 C4.37953227,22.712655 0,17.8020026 0,11.8787879 C0,5.31831449 5.372583,0 12,0 C18.627417,0 24,5.31831449 24,11.8787879 C24,17.9596322 19.3842684,22.9733041 13.4318398,23.6738908 C12.6801007,24.3653039 12.1593809,25.3817319 11.8696804,26.7231749 L11.5465009,26.6533805 C11.5526116,26.625085 11.5519472,26.5957457 11.5445618,26.5677558 C11.2022713,25.2705157 10.7234206,24.2848538 10.1080097,23.6107701 Z" id="path-4"></path>
+        <filter x="-12.5%" y="-11.2%" width="125.0%" height="122.5%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.522107244   0 0 0 0 0.578018707   0 0 0 0 0.506792681  0 0 0 0.371037138 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M10.2438978,23.8724196 C4.44893675,23.0226596 0,18.0308822 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.1779183 19.3314838,23.2654463 13.3298941,23.9271413 C12.631763,24.5789189 12.147921,25.5352505 11.8783684,26.7961363 L11.5774047,26.7317962 C11.5830216,26.7055219 11.5824138,26.678298 11.5756298,26.6523006 C11.2579211,25.4347906 10.8140105,24.5081637 10.2438978,23.8724196 Z" id="path-6"></path>
+        <filter x="-12.5%" y="-11.2%" width="125.0%" height="122.4%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.522107244   0 0 0 0 0.578018707   0 0 0 0 0.506792681  0 0 0 0.371037138 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <text id="text-8" font-family="PingFangSC-Regular, PingFang SC" font-size="9.6" font-weight="normal" line-spacing="12.8" fill="#FFFFFF">
+            <tspan x="7" y="15.6">上</tspan>
+        </text>
+        <filter x="-15.0%" y="-11.5%" width="130.0%" height="123.1%" filterUnits="objectBoundingBox" id="filter-9">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.284941959   0 0 0 0 0.552109906   0 0 0 0 0.265151741  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M10.2438978,23.8724196 C4.44893675,23.0226596 0,18.0308822 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.1779183 19.3314838,23.2654463 13.3298941,23.9271413 C12.631763,24.5789189 12.147921,25.5352505 11.8783684,26.7961363 L11.5774047,26.7317962 C11.5830216,26.7055219 11.5824138,26.678298 11.5756298,26.6523006 C11.2579211,25.4347906 10.8140105,24.5081637 10.2438978,23.8724196 Z" id="path-10"></path>
+        <filter x="-12.5%" y="-11.2%" width="125.0%" height="122.4%" filterUnits="objectBoundingBox" id="filter-11">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.522107244   0 0 0 0 0.578018707   0 0 0 0 0.506792681  0 0 0 0.371037138 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <text id="text-12" font-family="PingFangSC-Regular, PingFang SC" font-size="9.6" font-weight="normal" line-spacing="12.8" fill="#FFFFFF">
+            <tspan x="7" y="15.6">停</tspan>
+        </text>
+        <filter x="-15.0%" y="-11.5%" width="130.0%" height="123.1%" filterUnits="objectBoundingBox" id="filter-13">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.480555119   0 0 0 0 0.319776776   0 0 0 0 0.730654762  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M10.2438978,23.8724196 C4.44893675,23.0226596 0,18.0308822 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.1779183 19.3314838,23.2654463 13.3298941,23.9271413 C12.631763,24.5789189 12.147921,25.5352505 11.8783684,26.7961363 L11.5774047,26.7317962 C11.5830216,26.7055219 11.5824138,26.678298 11.5756298,26.6523006 C11.2579211,25.4347906 10.8140105,24.5081637 10.2438978,23.8724196 Z" id="path-14"></path>
+        <filter x="-12.5%" y="-11.2%" width="125.0%" height="122.4%" filterUnits="objectBoundingBox" id="filter-15">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.505713223   0 0 0 0 0.491908846   0 0 0 0 0.461515196  0 0 0 0.335795969 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <text id="text-16" font-family="PingFang-SC-Medium, PingFang SC" font-size="11.2" font-weight="400" line-spacing="12.8" fill="#FFFFFF">
+            <tspan x="8.5" y="15.6">1</tspan>
+        </text>
+        <filter x="-21.4%" y="-11.5%" width="142.9%" height="123.1%" filterUnits="objectBoundingBox" id="filter-17">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.816857993   0 0 0 0 0.493324407   0 0 0 0 0.242069601  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-18" x="12" y="23" width="2" height="13"></rect>
+        <circle id="path-19" cx="13" cy="13" r="13"></circle>
+        <text id="text-20" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="16" fill="#FFFFFF">
+            <tspan x="7" y="18">终</tspan>
+        </text>
+        <filter x="-12.5%" y="-9.4%" width="125.0%" height="118.8%" filterUnits="objectBoundingBox" id="filter-21">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.816857993   0 0 0 0 0.493324407   0 0 0 0 0.242069601  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-22" x="12" y="23" width="2" height="13"></rect>
+        <circle id="path-23" cx="13" cy="13" r="13"></circle>
+        <text id="text-24" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="16" fill="#FFFFFF">
+            <tspan x="7" y="18">起</tspan>
+        </text>
+        <filter x="-12.5%" y="-9.4%" width="125.0%" height="118.8%" filterUnits="objectBoundingBox" id="filter-25">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.445034876   0 0 0 0 0.596836417   0 0 0 0 0.855309311  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="图例气泡_切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-28.000000, -31.000000)">
+        <g id="Group-22-Copy" transform="translate(30.000000, 32.000000)">
+            <g id="Combined-Shape" opacity="0.849999964">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#161922" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Group-21" transform="translate(20.000000, 16.000000)">
+                <g id="Group-24" transform="translate(80.000000, 57.000000)">
+                    <text id="轨迹移动段" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="53">轨迹移动段</tspan>
+                    </text>
+                    <g id="Group-3" transform="translate(13.000000, 0.000000)">
+                        <rect id="Rectangle" fill="#D8D8D8" opacity="0" x="0" y="0" width="34" height="37"></rect>
+                        <g id="Path-3" stroke-linecap="round" stroke-linejoin="round">
+                            <use stroke="#2F9F79" stroke-width="8" xlink:href="#path-3"></use>
+                            <use stroke="#55BD9A" stroke-width="6" xlink:href="#path-3"></use>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-25" transform="translate(160.000000, 57.000000)">
+                    <g id="Group-23" transform="translate(13.000000, 0.000000)">
+                        <rect id="Rectangle" fill="#D8D8D8" opacity="0" x="0.5" y="0" width="34" height="37"></rect>
+                        <path d="M7,22 L27.515381,22" id="Path-3" stroke="#8B8F96" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3,5"></path>
+                    </g>
+                    <g id="Group-18" transform="translate(0.000000, 40.000000)" fill="#AAAAAA" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal">
+                        <text id="轨迹离线段">
+                            <tspan x="0" y="13">轨迹离线段</tspan>
+                        </text>
+                    </g>
+                </g>
+                <g id="Group-11" transform="translate(80.000000, 0.000000)">
+                    <text id="轨迹离线点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="45">轨迹离线点</tspan>
+                    </text>
+                    <g id="Pin" transform="translate(18.000000, 0.000000)">
+                        <ellipse id="Oval-6" fill="#000000" cx="11.5714286" cy="26.3030303" rx="4.71428571" ry="1.6969697"></ellipse>
+                        <g id="Oval">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        </g>
+                        <ellipse id="Oval-2" fill="#A0A4A9" cx="12" cy="11.8787879" rx="9.42857143" ry="9.33333333"></ellipse>
+                        <path d="M12,10.6788491 L13.5794675,9.09938158 C13.9108215,8.76802763 14.4480524,8.76802763 14.7794063,9.09938158 C15.1107602,9.43073552 15.1107602,9.96796641 14.7794063,10.2993204 L13.1999388,11.8787879 L14.7794063,13.4582554 C15.1107602,13.7896093 15.1107602,14.3268402 14.7794063,14.6581942 C14.4480524,14.9895481 13.9108215,14.9895481 13.5794675,14.6581942 L12,13.0787267 L10.4205325,14.6581942 C10.0891785,14.9895481 9.55194764,14.9895481 9.2205937,14.6581942 C8.88923975,14.3268402 8.88923975,13.7896093 9.2205937,13.4582554 L10.8000612,11.8787879 L9.2205937,10.2993204 C8.88923975,9.96796641 8.88923975,9.43073552 9.2205937,9.09938158 C9.55194764,8.76802763 10.0891785,8.76802763 10.4205325,9.09938158 L12,10.6788491 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+                <g id="Group-19">
+                    <text id="轨迹上线点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="45">轨迹上线点</tspan>
+                    </text>
+                    <g id="Pin" transform="translate(18.000000, 0.000000)">
+                        <ellipse id="Oval-6" fill="#000000" cx="11.6" cy="26.4" rx="4.4" ry="1.6"></ellipse>
+                        <g id="Oval">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-7)" xlink:href="#path-6"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-6"></use>
+                        </g>
+                        <circle id="Oval-2" fill="#63B45D" cx="12" cy="12" r="9.6"></circle>
+                        <g id="上" fill="#FFFFFF" fill-opacity="1">
+                            <use filter="url(#filter-9)" xlink:href="#text-8"></use>
+                            <use xlink:href="#text-8"></use>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-13" transform="translate(160.000000, 0.000000)">
+                    <text id="轨迹停留点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="45">轨迹停留点</tspan>
+                    </text>
+                    <g id="Pin" transform="translate(18.000000, 0.000000)">
+                        <ellipse id="Oval-6" fill="#000000" cx="11.6" cy="26.4" rx="4.4" ry="1.6"></ellipse>
+                        <g id="Oval">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-11)" xlink:href="#path-10"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-10"></use>
+                        </g>
+                        <circle id="Oval-2" fill="#A679EC" cx="12" cy="12" r="9.6"></circle>
+                        <g id="停" fill="#FFFFFF" fill-opacity="1">
+                            <use filter="url(#filter-13)" xlink:href="#text-12"></use>
+                            <use xlink:href="#text-12"></use>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-16" transform="translate(0.000000, 64.000000)">
+                    <text id="上报位置点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="46">上报位置点</tspan>
+                    </text>
+                    <g id="Pin-Copy" transform="translate(18.000000, 0.000000)">
+                        <ellipse id="Oval-6" fill="#000000" cx="11.6" cy="26.4" rx="4.4" ry="1.6"></ellipse>
+                        <g id="Oval">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-15)" xlink:href="#path-14"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-14"></use>
+                        </g>
+                        <circle id="Oval-2" fill="#FFA500" cx="12" cy="12" r="10.4"></circle>
+                        <g id="1" fill="#FFFFFF" fill-opacity="1">
+                            <use filter="url(#filter-17)" xlink:href="#text-16"></use>
+                            <use xlink:href="#text-16"></use>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-14" transform="translate(86.000000, 129.000000)">
+                    <text id="轨迹终点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="56">轨迹终点</tspan>
+                    </text>
+                    <g id="Group-4" transform="translate(11.000000, 0.000000)">
+                        <ellipse id="Oval" fill="#000000" cx="13" cy="36.5" rx="3" ry="1.5"></ellipse>
+                        <g id="Rectangle-5">
+                            <use fill="#D86730" fill-rule="evenodd" xlink:href="#path-18"></use>
+                            <rect stroke="#AA3724" stroke-width="0.5" x="12.25" y="23.25" width="1.5" height="12.5"></rect>
+                        </g>
+                        <g id="Oval-3">
+                            <use fill="#FA7C4E" fill-rule="evenodd" xlink:href="#path-19"></use>
+                            <circle stroke="#D35424" stroke-width="0.8" cx="13" cy="13" r="12.6"></circle>
+                        </g>
+                        <g id="终" fill="#FFFFFF" fill-opacity="1">
+                            <use filter="url(#filter-21)" xlink:href="#text-20"></use>
+                            <use xlink:href="#text-20"></use>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-15" transform="translate(6.000000, 129.000000)">
+                    <text id="轨迹起点" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#AAAAAA">
+                        <tspan x="0" y="56">轨迹起点</tspan>
+                    </text>
+                    <g id="Group-4" transform="translate(11.000000, 0.000000)">
+                        <ellipse id="Oval" fill="#000000" cx="13" cy="36.5" rx="3" ry="1.5"></ellipse>
+                        <g id="Rectangle-5">
+                            <use fill="#7194D1" fill-rule="evenodd" xlink:href="#path-22"></use>
+                            <rect stroke="#5273AA" stroke-width="0.5" x="12.25" y="23.25" width="1.5" height="12.5"></rect>
+                        </g>
+                        <g id="Oval-3">
+                            <use fill="#7DA7F1" fill-rule="evenodd" xlink:href="#path-23"></use>
+                            <circle stroke="#6181B6" stroke-width="0.8" cx="13" cy="13" r="12.6"></circle>
+                        </g>
+                        <g id="起" fill="#FFFFFF" fill-opacity="1">
+                            <use filter="url(#filter-25)" xlink:href="#text-24"></use>
+                            <use xlink:href="#text-24"></use>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,151 @@
+<!-- 报名成功页 applySuccess.wxml -->
+
+<scroll-view
+  class="dm-page"
+  scroll-y
+  bindscroll="bindScroll">
+  <view class="dm-send-msg" wx:if="{{isShowSendMsg}}" bindtap="bindSendMsg">
+    <view class="dm-send-msg-close" catchtap="bindCloseSendMsg"></view>
+  </view>
+  <view class="dm-section text-center">
+    <!-- 约面流程 -->
+    <view wx:if="{{isInterview}}" class="dm-deliver">
+      <image class="dm-deliver-icon" src="https://cdn.doumistatic.com/174,015f69e3fe449316.png"></image>
+      <view class="dm-deliver-title">预约成功</view>
+      <view class="dm-deliver-label">
+        已安排专属顾问联系您，请保持手机畅通，您也可以进入面试详情，联系招聘经理确认面试时间
+      </view>
+      <!-- 二维码展示区域 -->
+      <view class="qrcode-wrapper" wx:if="{{biz_qrcode}}">
+        <view bindtap="copyUrl">
+          <view class="qrcode-tips">点击复制网址到浏览器进行试玩</view>
+          <view class="qrcode-tips">{{url}}</view>
+        </view>
+        <view class="qrcode-img">
+          <image class="img" src="{{biz_qrcode}}" />
+        </view>
+      </view>
+      <view class="dm-deliver-btns">
+        <button
+          class="btn btn-next"
+          type="button"
+          bindtap="bindGoToJobList">继续报名
+        </button>
+        <button
+          class="btn btn-detail"
+          type="button"
+          bindtap="bindGoToInterview">面试详情
+        </button>
+      </view>
+    </view>
+
+    <!-- 普通帖子 -->
+    <view wx:else class="dm-deliver">
+      <button wx:if="{{consultingDisplay == 5}}" class="qq dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCopyNum">复制QQ群</button>
+      <button wx:if="{{consultingDisplay == 4}}" class="weixin dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCopyNum">复制微信公众号</button>
+      <button wx:if="{{consultingDisplay == 3}}" class="btn dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCopyNum">复制邮箱</button>
+      <button wx:if="{{consultingDisplay == 2}}" class="qq dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCopyNum">复制QQ号</button>
+      <button wx:if="{{consultingDisplay == 1}}" class="weixin dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCopyNum">复制微信号</button>
+      <!-- <button wx:if="{{consultingDisplay == 0}}" class="btn dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCallPhone">拨打商家电话</button> -->
+      <view wx:if="{{consultingDisplay == 0}}" class="tel-contact">
+        <block wx:if="{{!!phoneContact.is_show_contact}}">
+          <text class="success_tips" wx:if="{{phoneContact.is_shared == 0}}">分享职位后，可以获得招聘者联系方式</text>
+          <text class="success_tips">无需等待投递反馈，直接电话联系，<text style="color:#FF6600;">求职快人一步</text></text>
+          <button class="btn text_btn" type="button"  bindtap="phoneContactHandle">
+          {{phoneContact.is_shared == 0?'分享职位':'电话联系'}}
+        </button>
+        </block>
+        <block wx:else>
+          <button class="btn dm-btn dm-btn-primary dm-btn-large" type="button" bindtap="bindCallPhone">拨打商家电话</button>
+        </block>
+      </view>
+      <view wx:if="{{consultingDisplay == 0}}" class="sign-tip">
+        <text>{{showDesc}}</text>
+        <text wx:if="{{options.contactPerson}}">联系人：{{options.contactPerson}}</text>
+      </view>
+      <view wx:elif="{{consultingDisplay == 3}}" class="sign-tip">
+        <text>{{showDesc}}</text>
+        <text>邮件联系时请备注姓名和申请职位，若⽆⼈回复请联系职位顾问</text>
+      </view>
+      <view wx:else class="sign-tip">
+        <text>{{showDesc}}</text>
+        <text>加好友请备注姓名/性别/年龄</text>
+      </view>
+      <!-- 二维码展示区域 -->
+      <view class="qrcode-wrapper" wx:if="{{biz_qrcode}}">
+        <view bindtap="copyUrl">
+          <view class="qrcode-tips">点击复制网址到浏览器进行试玩</view>
+          <view class="qrcode-tips">{{url}}</view>
+        </view>
+        <view class="qrcode-img">
+          <image class="img" src="{{biz_qrcode}}" />
+        </view>
+      </view>
+      <button
+        class="btn continue"
+        type="button"
+        bindtap="bindGoToJobList">继续报名
+      </button>
+    </view>
+
+    <!--填写求职意向-->
+    <!-- <view class="mod-data-box" wx:if="{{!isExpectComplete}}">
+      <picker
+        mode="multiSelector"
+        bindchange="bindregionPickerChange"
+        bindcolumnchange="bindColumnchange"
+        range-key="short_name"
+        range="{{region}}"
+        value="{{value}}"
+      >
+        <view class="mod-input" bindtap="bindSelectRegion">
+          <view class="label">偏好区域</view>
+          <view class="text placeholder" wx:if="{{!townLabel}}">请选择偏好区域</view>
+          <view class="text" wx:else>{{provinceLabel === cityLabel ? (cityLabel + ' ' + townLabel) : (provinceLabel + ' ' + cityLabel + ' ' + townLabel)}}</view>
+        </view>
+      </picker>
+      <view class="mod-input" bindtap="bindSelectPost">
+        <view class="label">期望职位</view>
+        <view class="text placeholder" wx:if="{{!expectPost.text}}">请选择期望职位</view>
+        <view class="text" wx:else>{{ expectPost.text }}</view>
+      </view>
+    </view> -->
+
+    <!-- ad 广告位 -->
+    <view class='ad-wrapper' wx:if="{{isShowAd}}">
+      <ad unit-id="adunit-f8be026d7c2ae5ce"  bindclose="adClose"></ad>
+    </view>
+
+
+
+    <!-- XCX-92: 直聘帖 顾问分享（带顾问id）出去的, 职位详情页 和 报名(约面)成功页，不展示推荐职位列表。 -->
+    <recommend-job-list
+      wx:if="{{!consultantId}}"
+      id="recommendJobList"
+      job-id="{{options.id}}"
+      is-chao-jian-zhi="{{isChaoJianZhi}}"
+      job-type="{{options.jobType}}"
+      bind:complete="bindComplete">
+    </recommend-job-list>
+     <!-- 电话联系需要分享的弹层 -->
+    <dm-share-pop id="sharePop" bind:hide="successHide" prop-a="applySuccess"></dm-share-pop>
+    <!-- 第三方跳转 -->
+    <!--
+    <block wx:if="{{url}}">
+      <block wx:if="{{!isShowWebView}}">
+        <jump-outside-tips
+          id='jumpOutsideTips'
+          entry="{{ { animationName: 'pulse' } }}"
+          leave="{{ { animationName: 'fadeOut' } }}"
+          wx:ref="jobOutsideTips"
+          content="{{thrid_web_go_desc}}"
+          bindcountdownfinsh="onCountdownfinsh">
+        </jump-outside-tips>
+      </block>
+      <block wx:else>
+          <web-view src="{{url+'?uuid='+uuid}}"></web-view>
+      </block>
+    </block>
+    -->
+  </view>
+</scroll-view>

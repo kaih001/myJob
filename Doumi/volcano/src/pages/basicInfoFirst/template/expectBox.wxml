@@ -1,0 +1,63 @@
+<template name="expectBox">
+  <view class="dm-box">
+    <view class="dm-box-cell">
+      <label class="dm-box-cell__label">{{!iseqhd ? '求职类型' : '当前岗位类型'}}</label>
+      <dm-picker
+        wx:if="{{select.JOB_DATE_TYPE}}"
+        id="dmPicker2"
+        style="width: 100%; height: 100%"
+        mode="single"
+        title="{{!iseqhd ? '求职类型' : '当前岗位类型'}}"
+        range="{{select.JOB_DATE_TYPE}}"
+        range-key="label"
+        default-value="{{0}}"
+        bind:confirm="bindCareerTypePickerChange">
+        <input
+          class="dm-box-cell__value"
+          disabled
+          placeholder="请选择"
+          placeholder-class="input-placeholder"
+          data-log-type="intention"
+          value="{{select.JOB_DATE_TYPE[careerIndex].label}}"
+          bindtap="bindSetLog"
+        />
+      </dm-picker>
+    </view>
+    <view class="dm-box-cell">
+      <label class="dm-box-cell__label">{{!iseqhd ? '意向城市' : '当前工作城市'}}</label>
+      <dm-picker
+        id="dmPicker3"
+        style="width: 100%; height: 100%"
+        mode="multiple"
+        title="意向城市"
+        range="{{region}}"
+        range-key="name"
+        default-value="{{[0, 0, 0]}}"
+        bind:columnchange="bindCityChange"
+        bind:confirm="bindCityConfirm"
+        bind:cancel="bindCityCancel">
+        <input
+          class="dm-box-cell__value"
+          disabled
+          placeholder="请选择"
+          placeholder-class="input-placeholder"
+          value="{{province.name === city.name ? (province.name + town.name) : (province.name + city.name + town.name)}}"
+          data-log-type="city"
+          bindtap="bindSetLog"
+        />
+      </dm-picker>
+    </view>
+    <view wx:if="{{careerIndex !== 3}}" class="dm-box-cell">
+      <label class="dm-box-cell__label">{{!iseqhd ? '期望职位' : '当前岗位'}}</label>
+      <input
+        class="dm-box-cell__value"
+        disabled
+        placeholder="请选择"
+        placeholder-class="input-placeholder"
+        value="{{expectPost.text}}"
+        data-log-type="tag"
+        bindtap="bindSelectPost"
+      />
+    </view>
+  </view>
+</template>

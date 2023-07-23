@@ -1,0 +1,90 @@
+<!--我的求职进度列表详情-->
+<view class="dm-detail-box">
+  <navigator
+    class="dm-product-box"
+    hover-class="dm-touch"
+    url="../../pages/jobDetailInterview/jobDetailInterview?id={{item.id}}&jobType={{item.job_type}}"
+    bindtap="goToJobDetailEv">
+    <view class="dm-product-title">{{item.title}}</view>
+    <view class="dm-product-info dm-product-info-first">
+      <view class="dm-product-meta city">
+        {{item.company_city_name}}
+      </view>
+      <view class="dm-product-meta company">
+        {{item.corp_name}}
+      </view>
+    </view>
+    <view class="dm-product-info">
+      <view class="dm-product-price">
+        <text class="dm-product-price-value">{{item.salary}}</text>
+        <block wx:if="{{item.is_salary_nego != 1}}">{{item.salary_unit_str}}/{{item.salary_type_str}}</block>
+      </view>
+      <view class="dm-product-label">
+        <icon class="dm-icon dm-icon-danbao" wx:if="{{item.is_wages_guarantee == 1}}"></icon>
+        <view class="dm-tag">
+          <text class="dm-tag-text" wx:if="{{!!item.date}}">{{item.date}}</text>
+        </view>
+      </view>
+      <view class="dm-product-status {{showStatus[item.show_status_code]}}">{{item.show_status_str}}</view>
+    </view>
+  </navigator>
+  <view class="product-address">
+    <view class="dm-product-box">
+      <view class="dm-product-image">
+        <image src="https://cdn.doumistatic.com/164,0151f0787247e226.png"></image>
+      </view>
+      <view class="dm-product-info" bindtap="goToMap" data-address="{{item.interview_address.address}}" data-latitude="{{item.interview_address.lat}}" data-longitude="{{item.interview_address.lng}}" data-id="{{item.id}}">
+        <view id="dm-icon-location-box">
+          <view class="dm-product-title">
+            <text class="dm-product-place">{{item.interview_address.address}}</text>
+            <view wx:if="{{item.distance > -1}}" class="dm-product-location">距你{{item.distance_txt}}</view>
+          </view>
+        </view>
+        <view class="addrIcon">导航</view>
+      </view>
+    </view>
+    <view class="dm-box">
+      <view wx:if="{{item.interview_times.start_time}}" class="product-time">
+        <view class="title">面试时间</view>
+        <view class="text">{{item.interview_times.time}}</view>
+      </view>
+      <view wx:if="{{item.interview_address.address}}" class="product-place">
+        <view class="title">面试地点</view>
+        <view class="text">{{item.interview_address.address}}</view>
+      </view>
+      <slot name="sign-entry"></slot>
+    </view>
+  </view>
+  <view class="product-contacts">
+    <view class="dm-product-box">
+      <view class="product-adviser">
+        <!-- <image class="product-adviser-avatar" src=""></image> -->
+        <view class="product-adviser-info">
+          <view class="title">招聘经理</view>
+          <view class="text">{{item.contact_name}} {{item.contact_mobile}}</view>
+        </view>
+        <view class="product-adviser-btn" bindtap="bindCallPhone">联系TA</view>
+      </view>
+      <view class="product-work">
+        <view class="title">工作地点</view>
+        <view class="text">{{item.work_address}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="product-matter" wx:if="{{!!item.attentions}}">
+    <view class="dm-product-box">
+      <view class="dm-matter-hd">
+        <view class="dm-matter-title">注意事项</view>
+      </view>
+      <view class="short-line"></view>
+      <view class="dm-product-text">{{item.attentions}}</view>
+      <!-- <view class="dm-product-list">
+        <view class="dm-product-item">1.需要自备纸质简历</view>
+        <view class="dm-product-item">2.携带一寸照片</view>
+        <view class="dm-product-item">3.请穿着正装</view>
+        <view class="dm-product-item">4.提前一天电话联系，确定面试时间及地点</view>
+      </view> -->
+    </view>
+  </view>
+  <slot name="buttons"></slot>
+</view>

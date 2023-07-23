@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="277px" height="116px" viewBox="0 0 277 116" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>背景提示气泡</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="105.357422%" y1="12.2619048%" x2="0%" y2="64.6875%" id="linearGradient-1">
+            <stop stop-color="#FFB948" offset="0%"></stop>
+            <stop stop-color="#F5974E" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="35.7105655%" x2="0%" y2="72.1800595%" id="linearGradient-2">
+            <stop stop-color="#FFA766" offset="0%"></stop>
+            <stop stop-color="#F78329" offset="100%"></stop>
+        </linearGradient>
+        <path d="M66,169 L274,169 L274,169 C280.627417,169 286,174.372583 286,181 L286,233 L286,233 C286,239.627417 280.627417,245 274,245 L66,245 L66,245 C59.372583,245 54,239.627417 54,233 L54,181 L54,181 C54,174.372583 59.372583,169 66,169 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-23.000000, -142.000000)">
+            <g id="Combined-Shape">
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#linearGradient-2)" stroke-width="1" d="M66,168.5 L274,168.5 C280.903559,168.5 286.5,174.096441 286.5,181 L286.5,233 C286.5,239.903559 280.903559,245.5 274,245.5 L66,245.5 C59.0964406,245.5 53.5,239.903559 53.5,233 L53.5,181 C53.5,174.096441 59.0964406,168.5 66,168.5 Z"></path>
+            </g>
+            <g id="Group-6" transform="translate(25.000000, 144.000000)">
+                <path d="M69,6 C70.6568542,6 72,4.65685425 72,3 C72,1.34314575 70.6568542,0 69,0 C68.1001037,0 67.2927502,0.396222782 66.7428789,1.02372898 C66.2803484,1.55156293 66,2.24304203 66,3" id="Oval-3" stroke="#F8A04C" stroke-width="4" stroke-linecap="round"></path>
+                <path d="M272.5,14.5 L272.5,26.5791769" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M272.539588,14.5395884 L260.460412,14.5395884" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M272.5,99.5 L272.5,111.579177" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M272.079177,112 L260,112" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M17.5,98.5 L17.5,110.579177" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M30.0791769,111 L18,111" id="Line-2" stroke="#FEB648" stroke-width="3" stroke-linecap="round"></path>
+                <circle id="Oval-4" stroke="#F8A04C" stroke-width="3" cx="4" cy="28" r="4"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,355 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+
+  <!-- 切环境按钮 -->
+  <!-- <dm-switch-env
+    bind:on-test="clickToggleENV"
+    bind:on-sim="clickToggleENV">
+  </dm-switch-env> -->
+
+  <!-- 收集formId -->
+  <!-- <dm-formid-collector bind:complate="bindCollectComplate" catchtouchmove> -->
+  <!-- 授权弹窗组件调用 -->
+  <dialog
+    wx:ref="dialog"
+    closable
+    enable-animation
+    open-type="getPhoneNumber"
+    title="先登录开启快速求职"
+    cancel-text="账户登录"
+    auto-hide="{{false}}"
+    bind:close="bindGoBasic"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack"
+  ></dialog>
+  <!-- </dm-formid-collector> -->
+
+  <!-- 报名弹层 -->
+  <apply-popup wx:ref="applyPopup" bind:tracker="bindTracker" catchtouchmove> </apply-popup>
+
+  <!-- 方便面面试提醒框 -->
+  <dm-interview-pop wx:ref="dmInterviewPop" catchtouchmove></dm-interview-pop>
+
+  <!-- 方便面签到调研框 -->
+  <dm-survey-pop wx:ref="dmSurveyPop" catchtouchmove></dm-survey-pop>
+
+  <!-- 将可视区域包裹在一个view中,用来控制点击之后隐藏收藏卡片 -->
+  <view style="height: 100vh" bindtap="bindPageClick">
+    <!-- 首页自定义header -->
+    <dm-nav-header bind:tracker="bindTracker" bind:zizhi="bindZizhi">
+      <!-- 引导收藏 -->
+      <image wx:show="{{!isCollected}}" class="dm-collect-main" src="https://cdn.doumistatic.com/206,01b42967e2734cf5.png" />
+    </dm-nav-header>
+
+    <!-- 筛选项 -->
+    <view class="dm-filter" wx:style="{{ { paddingTop: navHeaderHeight + 'px' } }}">
+      <view class="dm-filter-nav">
+        <dm-nav options="{{ dmList }}" selected="{{selected}}" bind:change="bindNavChange"> </dm-nav>
+      </view>
+      <dm-filter
+        class="{{curTab==3||curTab==4?'show-filter':''}}"
+        wx:if="{{isShowFilter}}"
+        wx:ref="dmFilter"
+        options="{{filterConfig}}"
+        bind:on-show="bindFilterShow"
+        bind:on-hide="bindFilterHide"
+        bind:reset="bindFilterReset"
+        bind:confirm="bindFilterConfirm"
+        bind:tracker="bindTracker"
+        catchtouchmove
+      ></dm-filter>
+    </view>
+    <!-- 内容区 -->
+    <dm-pull-refresh-view
+      class="dm-page dm-page-index"
+      wx:ref="pullRefreshView"
+      wx:style="{{ { height: 'calc(100% - ' + filterHeight + 'px)' } }}"
+      scroll-y="{{isScrollY}}"
+      bind:pulldownrefresh="bindPullDownRefresh"
+      bind:scroll="bindScroll"
+      bind:scrolltolower="bindLoadMore"
+      nomore="{{nomore}}"
+      refreshing="{{refreshing}}"
+    >
+      <template is="error" wx:if="{{showErrorTemp && errorType !== 'noLocation'}}" data="{{type: errorType, noListTxt: '抱歉~暂无符合条件的职位'}}"> </template>
+      <view wx:else class="dm-section">
+        <view class="dm-pannel">
+          <view class="dm-pannel-bd">
+            <!-- 订阅消息 -->
+            <view class="dm-send-msg {{curTab==3?'show-filter':''}}" wx:if="{{isShowSendMsg}}" bindtap="bindSendMsg">
+              <view class="dm-send-msg-close" catchtap="bindCloseSendMsg"></view>
+            </view>
+            <view class="dm-list" wx:for="{{listData}}" wx:key="addr_id" data-id="{{item.id}}" data-ad_type="{{item.ad_types}}" data-ca_kw="{{index}}" data-reqid="{{reqid}}" bindtap="bindItemClick">
+              <block wx:if="{{curTab==3}}">
+                <dm-job-item-paywall
+                  reqid="{{reqid}}"
+                  list-item="{{item}}"
+                  show-distance="{{showDistance}}">
+                </dm-job-item-paywall>
+              </block>
+              <block wx:elif="{{curTab==5}}">
+                <dm-job-item-ali
+                  reqid="{{reqid}}"
+                  list-item="{{item}}"
+                  show-distance="{{showDistance}}">
+                </dm-job-item-ali>
+              </block>
+              <block wx:else>
+                <dm-job-item reqid="{{reqid}}" list-item="{{item}}" curTab="{{curTab}}" show-distance="{{showDistance}}">
+                  <form report-submit="true" catchtap bindsubmit="bindApplyData(item.id, $event)">
+                    <button wx:if="{{item.is_applied}}" class="dm-apply-btn dm-apply-btn-disable">已投递</button>
+                    <button wx:elif="{{isBindPhone}}" class="dm-apply-btn" hover-stop-propagation form-type="submit">投简历</button>
+                    <button wx:else class="dm-apply-btn" hover-stop-propagation form-type="submit" open-type="getPhoneNumber" bindgetphonenumber="bindGetPhoneNumberAndApply">投简历</button>
+                  </form>
+                </dm-job-item>
+              </block>
+              <!-- 新版运营页展示在第五个职位之后,若小于五个职位则不展示；若没有运营位数据，则不展示运营位 -->
+              <view wx:if="{{index === 4  && zoneData.length !== 0&&curTab!=3}}" class="yyw">
+                <view class="yyw-title">职位专区</view>
+                <scroll-view class="yyw-scroll" scroll-x>
+                  <view class="yyw-main">
+                    <image
+                      class="yyw-item"
+                      src="{{item.icon}}"
+                      wx:for="{{zoneData}}"
+                      wx:key="index"
+                      data-path="{{item.path}}"
+                      data-index="{{index}}"
+                      data-dmalog="{{item.dmalog}}"
+                      bindtap="bingtGoToPrefecture"
+                    />
+                  </view>
+                </scroll-view>
+              </view>
+              <!-- 广告管理 -->
+              <view class="ad-wrapper" wx:if="{{index === 4&&isShowAd}}">
+                <ad unit-id="adunit-e7ee241c47a2404f" bindclose="adClose"></ad>
+              </view>
+            </view>
+            <view class="dm-loadmore" wx:if="{{showButtomLoading}}">
+              <icon class="dm-loadmore-icon"></icon>
+              <text class="dm-loadmore-text">正在加载</text>
+            </view>
+            <view class="dm-loadmore" wx:if="{{showNoMore && !showButtomLoading}}">
+              <text class="dm-loadmore-text">没有更多职位啦！</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </dm-pull-refresh-view>
+
+    <!-- 关注微信公众号 -->
+    <block wx:if="{{isShowOfficial}}">
+      <view class="closeOfficial" bindtap="bindCloseOfficial"></view>
+      <official-account class="foucsOfficial"></official-account>
+    </block>
+
+    <!-- 返回顶部刷新按钮 -->
+    <view class="dm-refresh" wx:class="{{ { rotate: updateIconRotate } }}" bindtap="bindBackTop">
+      <image class="dm-refresh-icon" wx:style="{{ { opacity: isUpdateIconShow ?  1 : 0.6 } }}" src="https://cdn.doumistatic.com/190,019c073437e62f37.png" />
+    </view>
+  </view>
+  <!-- 邀请活动失效弹窗 -->
+  <view class="invite-mask" wx:if="{{showInvite}}">
+    <view class="invite-section">
+      <view class="invite-body">{{inviteStateMsg}}</view>
+      <view class="invite-footer" bindtap="exitMiniProgram">知道了</view>
+    </view>
+  </view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+  @import '../../styles/util.styl'
+
+  page
+    background-color white
+  .dm-page-index
+    position relative
+  // 订阅消息
+  .dm-send-msg
+    position relative
+    width 100%
+    height 41px
+    background-image url('https://cdn.doumistatic.com/220,01bf2fe7efc37903.png')
+    background-size 100%
+    background-repeat no-repeat
+  .dm-send-msg-close
+    position absolute
+    right 14px
+    top 14px
+    width 12px
+    height 12px
+    background-image url('https://cdn.doumistatic.com/218,01bb8f2b94638087.png')
+    background-size 100%
+    background-repeat no-repeat
+  // 公众号引导
+  .foucsOfficial
+    position fixed
+    bottom 0
+    width 100%
+    height 84px
+  // 关闭公众号引导
+  .closeOfficial
+    position fixed
+    right 8px
+    bottom 61px
+    height 15px
+    width 15px
+    z-index 9
+    background-image url('https://cdn.doumistatic.com/198,01a420c528b8eb44.png')
+    background-size 100% 100%
+  // 收藏引导卡片
+  .dm-collect-main
+    width 100vw
+    height 192rpx
+    position relative
+    top -66rpx
+    // left -16rpx
+    left 0
+    z-index 1
+  .dm-refresh
+    position fixed
+    bottom 90px
+    left 12px
+    z-index 10
+    height 44px
+    &-icon
+      width 44px
+      height 44px
+      opacity 1
+    &.rotate
+      animation rotate 0.7s linear forwards infinite
+  .dm-filter
+    position relative
+    z-index 1
+    box-shadow 0 5px 4px -4px rgba(0, 0, 0, 0.1)
+    &-nav
+      position relative
+      z-index 1001
+  .dm-list
+    .dm-apply-btn
+      margin 0
+      padding 0
+      width 66px
+      height 26px
+      background-color white
+      overflow visible
+      position relative
+      left 1px
+      border-width 0
+      border-color #F80
+      border-radius 3px
+      text-align center
+      color #F80
+      line-height 26px
+      font-size 14px
+      &::after
+        content ''
+        display block
+        border-width 1px
+        border-style solid
+        border-color inherit
+        border-radius 6px
+        box-sizing border-box
+        transform-origin 0 0
+        transform scale(0.5) translate(50%, 50%)
+        position absolute
+        top calc(-50% - 1rpx)
+        left -50%
+        right -50%
+        bottom -50%
+      &-disable
+        color #999
+        border-color #CCC
+  .yyw
+    padding-bottom 14rpx
+    bottomBorder1px()
+    &-title
+      font-weight 700
+      font-size 16px
+      padding 16px 30rpx
+    &-scroll
+      height 180rpx
+      overflow-y hidden
+    &-main
+      white-space nowrap
+      background #fff
+      padding-left 4px
+    &-item
+      display inline-block
+      width 292rpx
+      height 180rpx
+      margin-left 12px
+      &:nth-last-of-type(1)
+        margin-right 16px
+  .show-filter
+    position absolute
+    left -100000px
+    top -10000px
+  .ad-wrapper
+    width 350px
+    margin 5px auto
+    box-sizing border-box
+  .invite-mask
+    position fixed
+    top 0
+    left 0
+    bottom 0
+    right 0
+    z-index 9999
+    background-color rgba(0, 0, 0, 0.4)
+    display flex
+    align-items center
+    justify-content center
+    .invite-section
+      width 620rpx
+      min-height 400rpx
+      background #ffffff
+      border-radius 10rpx
+      display flex
+      flex-direction column
+      align-items center
+      justify-content center
+      .invite-body
+        width 100%
+        padding 10rpx 20rpx
+        flex 1
+        display flex
+        align-items center
+        justify-content center
+      .invite-footer
+        width 100%
+        height 100rpx
+        line-height 100rpx
+        border-top 1rpx solid  #dddddd
+        text-align center
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTitleText": "",
+    "navigationStyle": "custom",
+    "navigationBarBackgroundColor": "#FFD930",
+    "backgroundColor": "#FFD930",
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+      "dm-switch-env": "~/components/bus/dm-switch-env",
+      "dialog": "~/components/dialog/dialog",
+      "selector": "~/components/selector/selector",
+      "dm-nav-header": "~/components/bus/dm-nav-header",
+      "dm-nav": "~/components/dmx/dm-nav",
+      "dm-filter": "./filter",
+      "dm-job-item": "~/components/dm-job-item",
+      "dm-job-item-paywall": "~/components/dm-job-item-paywall",
+      "dm-job-item-ali": "~/components/dm-job-item-ali",
+      "apply-popup": "./apply-popup",
+      "dm-pull-refresh-view": "~/components/dmx/dm-pull-refresh-view",
+      "dm-survey-pop": "~/components/dm-survey-pop",
+      "dm-interview-pop": "~/components/dm-interview-pop",
+      "dm-formid-collector": "~/components/dmx/dm-formid-collector"
+    }
+  }
+</script>

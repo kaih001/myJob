@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>考勤管理</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-81.000000, -68.000000)" fill="#6699EE">
+            <g id="日历" transform="translate(81.000000, 68.000000)">
+                <g id="Group-5-Copy-4">
+                    <g>
+                        <path d="M14,1 L15,1 C15.5522847,1 16,1.44771525 16,2 L16,14 C16,15.1045695 15.1045695,16 14,16 L2,16 C0.8954305,16 -1.05228703e-14,15.1045695 -1.0658141e-14,14 L-1.0658141e-14,2 C-1.07257764e-14,1.44771525 0.44771525,1 1,1 L1,1 L2,1 L2,-1.0658141e-14 L5,-1.0658141e-14 L5,1 L11,1 L11,-1.0658141e-14 L14,-1.0658141e-14 L14,1 Z M-1.0658141e-14,3 L-1.0658141e-14,5 L16,5 L16,3 L-1.0658141e-14,3 Z M7.6111319,10.3999939 L5.70004099,8.94563022 L4.63121256,9.97317932 L7.6111319,13 L12.0815538,8.19553014 L11.1370737,7.2697798 L7.6111319,10.3999939 Z" id="Combined-Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

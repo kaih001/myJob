@@ -1,0 +1,405 @@
+<template>
+  <view class="dm-page">
+    <view class="dm-select-res">
+      <view class="select-tips" wx:show="{{selectedJobs.length === 0}}">选择感兴趣的标签 最多选择5个</view>
+      <scroll-view
+        wx:show="{{showSelectedJobs.length > 0}}"
+        class="select-list active"
+        scroll-x>
+        <view
+          class="select-list-item"
+          wx:for="{{showSelectedJobs}}"
+          wx:key="index"
+          data-job="{{item}}"
+          bindtap="bindRemoveJob">{{ item }}
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 58px为.dm-select-res高度, 44px为底部按钮高度, 34px为iPhoneX底部预留空间 -->
+    <view
+      class="dm-select-box"
+      wx:style="{{ { height: isIpx ? 'calc(100vh - 58px - 44px - 34px)' : 'calc(100vh - 58px - 44px)' } }}">
+      <scroll-view class="filter-wrap filter-main" scroll-y>
+        <view class="mod-list">
+          <view
+            class="mod-list-item {{selectedWorkIndex === index ? 'active' : ''}}"
+            wx:for="{{jobList}}"
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="bindSelectWork"
+          >{{ item.name }}<text wx:show="{{item.name !== '热门' && item.count !== 0}}" class="count-icon" data-index="{{index}}">{{ item.count }}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <scroll-view class="filter-wrap filter-jianzhi" scroll-y>
+        <view
+          class="mod-box"
+          wx:for="{{currentWork}}"
+          wx:for-index="key"
+          wx:key="key">
+            <view class="mod-title">{{ key }}</view>
+            <view class="mod-list">
+              <view
+                class="mod-list-item {{ citem.isActive ? 'active' : '' }}"
+                wx:for="{{item}}"
+                wx:for-item="citem"
+                wx:key="index"
+                data-job="{{citem}}"
+                bindtap="bindToggleJob"
+              >{{ citem.name }}
+              </view>
+            </view>
+          </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view wx:style="{{ { marginBottom: isIpx ? '34px' : 0 } }}">
+    <dm-button
+      size="middle"
+      type="primary"
+      disabled="{{selectedJobs.length === 0}}"
+      bind:click="bindClickOk">完成
+    </dm-button>
+  </view>
+</template>
+<script>
+import { createPage } from '@mpxjs/core'
+import util from '~/utils/util'
+import api from '~/utils/api'
+import globalDataStore from '~/store/globalData'
+
+const app = getApp()
+
+createPage({
+  // -------------------------------------------------------------------------
+  // 页面初始数据
+  // -------------------------------------------------------------------------
+
+  data: {
+    jobList: [],
+    selectedWorkIndex: 0, // - 默认勾选兼职类目下
+    selectedJobs: [],
+    showSelectedJobs: [],
+    careerType: 0
+  },
+
+  computed: {
+    ...globalDataStore.mapState(['isIpx']),
+    currentWork () {
+      const curWork = this.jobList[this.selectedWorkIndex]
+      if (!curWork || !curWork.items) return {}
+      return curWork.items
+    }
+  },
+
+  // -------------------------------------------------------------------------
+  // 小程序生命周期
+  // -------------------------------------------------------------------------
+
+  async onLoad ({ careerType }) {
+    if (careerType) this.careerType = ~~careerType
+    await this.__initData()
+
+    const { value } = app.globalData.expectPost
+    value.forEach(job => this.bindToggleJob({ target: { dataset: { job } } })) // - 模拟点击选中
+  },
+
+  onShow () {
+    api.setLog(1, '/jianzhi/addtag/expect')
+  },
+
+  methods: {
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    /**
+     * 选择切换工作类型
+     */
+    bindSelectWork (e) {
+      this.selectedWorkIndex = e.target.dataset.index
+    },
+
+    /**
+     * 选择切换职位类型
+     */
+    bindToggleJob (e) {
+      let temp1 = this.selectedJobs
+      let temp2 = []
+
+      const { job } = e.target.dataset
+      const isExist = x => x.value === job.value
+
+      api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=tag@item=${job.name}`)
+
+      if (temp1.some(isExist)) {
+        // - 如果已经选中, 就移除勾选
+        return this.bindRemoveJob(e)
+      } else {
+        // - 未选中, 处理勾选的逻辑
+        for (const currentWork of this.jobList) {
+          for (const x of Object.values(currentWork.items)) {
+            for (const xx of x) {
+              if (xx.name === job.name) {
+                delete xx.isActive // - 向接口发送的参数中不应有 isActive 属性
+                temp1 = [...temp1, JSON.parse(JSON.stringify(xx))] // - 添加到该数组中, 表示添加勾选
+                temp2 = [...new Set(temp1.map(x => x.name))] // - 对全职和兼职同职位名称的去重
+
+                if (temp2.length > 5) { // - 最多可以选5个
+                  return wx.showToast({ title: '只能选5个哦~', icon: 'none' })
+                }
+
+                currentWork.count++ // - 一级分类下子分类勾选的数目
+                xx.isActive = true // - 子分类设置勾选态
+              }
+            }
+          }
+        }
+
+        this.selectedJobs = temp1
+        this.showSelectedJobs = temp2
+      }
+    },
+
+    /**
+     * 移除某个选中的职位
+     */
+    bindRemoveJob (e) {
+      let { selectedJobs, showSelectedJobs } = this
+      const { job } = e.target.dataset
+      const jobName = typeof job === 'string' ? job : job.name
+      const isExist = x => x.name === jobName
+
+      if (selectedJobs.some(isExist)) {
+        selectedJobs = selectedJobs.filter(x => x.name !== jobName)
+        showSelectedJobs = [...new Set(selectedJobs.map(x => x.name))] // - 对全职和兼职同职位名称的去重
+
+        for (const currentWork of this.jobList) {
+          for (const x of Object.values(currentWork.items)) {
+            for (const xx of x) {
+              if (xx.name === jobName) {
+                currentWork.count--
+                xx.isActive = false
+              }
+            }
+          }
+        }
+      }
+
+      this.selectedJobs = selectedJobs
+      this.showSelectedJobs = showSelectedJobs
+    },
+
+    bindClickOk () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=sure')
+
+      const pages = getCurrentPages()
+      const prevPage = pages[pages.length - 2] // - 拿到上一个页面的实例
+      const { selectedJobs, showSelectedJobs } = this
+      const jobTypeRelation = []
+      selectedJobs.forEach(x => { // - 全职兼职同职位去重
+        if (!jobTypeRelation.some(xx => xx.value === x.value)) jobTypeRelation.push(x)
+      })
+      const expectPost = {
+        value: jobTypeRelation,
+        text: showSelectedJobs.join('、')
+      }
+
+      app.globalData.expectPost = expectPost
+      prevPage.setData({ expectPost })
+      wx.navigateBack()
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    async __initData () {
+      const { careerType } = this
+      const query = util.obj2uri({
+        hidden_operation: 1, // 是否展示运营推荐分类 1不展示
+        hidden_hot: 0, // 是否展示兼职热门类目 1不展示
+        citydomain: '', // 当前城市
+        hidden_other: 1, // 是否展示其他类目 1不展示
+        hidden_guide: 0, // 将热门标签中的子类别从全职和兼职中移除 1合并 0不合并
+        job_type: careerType, // 是否将标签进行拆分成 0:'不限';1:'兼职';2:'全职'
+      })
+
+      try {
+        util.showLoading()
+        const res = await util.getData(`common/jobtype/list?${query}`)
+        if (res.data.code === 1000) {
+          this.__transformJobData(res.data.data)
+          util.hideLoading()
+        } else {
+          app.showErrorToastHandler(res.data)
+        }
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    /**
+     * 转换接口返回的职位列表数据为界面展示所需的格式
+     * @param {Object[]} jobList
+     */
+    __transformJobData (jobList) {
+      for (const work of jobList) {
+        const items = {}
+        for (const job of work.items) {
+          job.parent = work.name
+          job.parentValue = work.value
+          job.isActive = false
+          items[job.tag] = items[job.tag] ? [...items[job.tag], job] : [job]
+        }
+        work.items = items
+        work.count = 0 // - 某一工作类型下选中的职位数量, 此处作为初始值
+      }
+
+      this.jobList = jobList
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-page
+  background-color #fff
+.dm-select-res
+  position relative
+  padding-top 10px
+  padding-bottom 16px
+  .select-tips
+    font-size 14px
+    color #999
+    line-height 32px
+    text-align center
+  .select-list
+    font-size 0
+    text-align left
+    white-space nowrap
+    box-sizing border-box
+    margin-top -6px
+    &.active
+      display block
+  .select-list-item
+    position relative
+    display inline-block
+    padding 0 12px
+    font-size 14px
+    color #404040
+    text-align center
+    line-height 32px
+    background #fffcf5
+    border-radius 3px
+    margin-right 20px
+    margin-top 6px
+    &::before
+      position absolute
+      top -6px
+      right -6px
+      width 12px
+      height 12px
+      content ''
+      background url(https://cdn.doumistatic.com/157,013ca6a1423e405c.png) no-repeat
+      background-size 100% auto
+.select-list
+  .select-list-item
+    &:first-child
+      margin-left 12px
+    &:last-child
+      margin-right 12px
+.dm-select-box .filter-jianzhi .active::after,
+.dm-select-res .select-list-item::after
+  content ""
+  position absolute
+  top 0
+  left 0
+  box-sizing border-box
+  width 200%
+  height 200%
+  background-color transparent
+  background-clip padding-box
+  border 1px solid #fa0
+  border-radius 6px
+  transform-origin 0 0
+  transform scale(0.5)
+  pointer-events none
+.dm-select-box
+  position relative
+  width 100%
+  display flex
+  overflow hidden
+  .filter-wrap
+    height 100%
+  .filter-jianzhi
+    width 66.66%
+    .mod-box
+      clear both
+    .mod-title
+      font-size 12px
+      color #999
+      line-height 20px
+      padding 12px
+    .mod-list-item
+      position relative
+      float left
+      width 40.8%
+      box-sizing border-box
+      line-height 20px
+      padding 10px 0
+      margin 0 6px 12px 15px
+      color #404040
+      text-align center
+      background-color #f7f7f7
+      border-radius 4px
+      &:nth-child(2n)
+        margin-right 0
+    .active
+      background #fffcf5
+  .filter-main
+    flex 1
+    .mod-list-item
+      position relative
+      font-size 14px
+      color #404040
+      padding 12px
+      line-height 20px
+      background-color #f7f7f7
+    .active
+      color #fa0
+      background-color #fff
+    .count-icon
+      position absolute
+      top 14px
+      right 11px
+      width 16px
+      height 16px
+      line-height 16px
+      background #f0f0f0
+      border-radius 100px
+      font-size 10px
+      color #404040
+      text-align center
+.dm-select-res::after,
+.dm-select-box .filter-main .mod-list-item::after
+  position absolute
+  left 0
+  bottom 0
+  width 100%
+  height 1px
+  content ''
+  background-color #e5e5e5
+  transform scale3d(1, 0.5, 1)
+</style>
+
+<script type="application/json">
+{
+  "disableScroll": true,
+  "usingComponents": {
+    "dm-button": "~/components/dmx/dm-button"
+  }
+}
+</script>

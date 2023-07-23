@@ -1,0 +1,225 @@
+<template>
+  <!-- popup的蒙层 -->
+  <dm-mask
+    wx:ref="dmMask"
+    enable-animation="{{enableAnimation}}"
+    z-index="1002"
+    auto-hide="{{false}}">
+  </dm-mask>
+  <!-- popup的内容 -->
+  <view
+    wx:show="{{isShow || (!isShow && !isLeft)}}"
+    class="dm-popup-wrapper"
+    wx:style="{{ { ...extendStyle, ...animateStyle } }}">
+    <view class='dialog-wrapper'>
+      <view class="dialog-composition-handle">
+        <view class="go-to">{{counts}}s后跳转</view>
+        <view class="close-btn" bindtap="bindClose">关 闭</view>
+      </view>
+      <view class="dialog-wrapper-content">{{content}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import api from '~/utils/api'
+
+const ENTRY = {
+  animationName: 'fadeIn',
+  animationDuration: '.35s',
+  animationTimingFunction: 'ease-in'
+}
+const LEAVE = {
+  animationName: 'fadeOut',
+  animationDuration: '.2s',
+  animationTimingFunction: 'ease-out'
+}
+
+let timer=null
+
+createComponent({
+  properties: {
+    // 进入视图时的动画, 不需要动画时请传 `none`
+    // 可选属性: `animationName`、`animationDuration`、`animationTimingFunction`
+    // 动画name可以在 `animate.styl` 中找到
+    entry: {
+      type: [Object, String],
+      value: ENTRY
+    },
+    // 离开视图时的动画, 不需要动画时请传 `none`
+    // 可选属性: `animationName`、`animationDuration`、`animationTimingFunction`
+    // 动画name可以在 `animate.styl` 中找到
+    leave: {
+      type: [Object, String],
+      value: LEAVE
+    },
+    // 内容基于popup-wrapper元素的x轴位置
+    // 可选值 `left`、`right`、`center`
+    positionX: {
+      type: String,
+      value: 'center'
+    },
+    // 内容基于popup-wrapper元素的y轴位置
+    // 可选值 `top`、`bottom`、`center`
+    positionY: {
+      type: String,
+      value: 'center'
+    },
+    content:{
+      type: String,
+      value: '即将跳转第三方试玩平台'
+    }
+  },
+  data: {
+    isShow: false,
+    isLeft: true, // 是否已经过渡完离开的动画
+    counts:3
+  },
+  computed: {
+    extendStyle () {
+      const alias = {
+        left: 'flex-start',
+        right: 'flex-end',
+        top: 'flex-start',
+        bottom: 'flex-end'
+      }
+      const calc = attr => alias[attr] || attr
+      return {
+        alignItems: calc(this.positionX),
+        justifyContent: calc(this.positionY)
+      }
+    },
+    animateStyle () {
+      const entry = { ...ENTRY, ...this.entry }
+      const leave = { ...LEAVE, ...this.leave }
+      const calc = ani => ani.animationName === 'none' ? {} : ani
+      return this.isShow ? calc(entry) : calc(leave)
+    },
+    enableAnimation () {
+      return this.entry.animationName !== 'none' && this.leave.animationName !== 'none'
+    }
+  },
+  watch: {
+    isShow (val) {
+      this.$refs.dmMask[val ? 'show' : 'hide']()
+    }
+  },
+
+  methods: {
+    // 关闭按钮点击
+    bindClose () {
+      this.hideDialog()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=t_login_close')
+    },
+    // 隐藏弹框
+    hideDialog () {
+      if (!this.isShow){
+        return
+      }
+      this.isShow = false
+      this.isLeft=false
+      if(timer){
+        clearTimeout(timer)
+        this.counts = 0
+        this.triggerEvent('close')
+      }
+      const delay = parseFloat(this.leave.animationDuration) * 1000
+      setTimeout(() => this.isLeft = true, delay) // 等待离开动画执行完毕在进行隐藏
+    },
+    // 展示弹框
+    showDialog () {
+      this.isShow = true
+      this.handleGoTo()
+    },
+    handleGoTo(){
+      let that = this;
+      timer = setTimeout(() => {
+        if (that.counts == 0) {
+          clearTimeout(timer)
+          that.hideDialog()
+          this.triggerEvent('countdownfinsh')
+          return
+        }
+        that.counts--
+        that.handleGoTo()
+      }, 1000);
+    }
+  }
+})
+</script>
+
+<style lang="stylus" scoped>
+.dm-popup-wrapper
+  display flex
+  flex-direction column
+  width 100%
+  height 100%
+  position fixed
+  z-index 1003
+  left 0
+  right 0
+  top 0
+  right 0
+.dialog-wrapper
+  width 60%
+  max-width 600rpx
+  background-color #fff
+  border-radius 4px
+  overflow hidden
+  position relative
+  &-title
+    font-size 16px
+    line-height 22px
+    padding 40rpx 52rpx 48rpx
+    position relative
+    .dialog-wrapper-close
+      display block
+      width 28rpx
+      height 28rpx
+      padding 24rpx
+      position absolute
+      top 0
+      right 0
+  &-content
+   width 100%
+   color blue
+   text-align center
+  //  height 625rpx
+  //  background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  padding 80rpx 20rpx 40rpx
+.dialog-composition-handle
+    position absolute
+    color #000000
+    top 10rpx
+    right 20rpx
+    padding 5rpx
+    display flex
+    align-items center
+    justify-content center
+    text-align center
+.go-to
+  position relative
+  padding-right 10rpx
+  &::after
+    content ''
+    width 3rpx
+    height 25rpx
+    background #000000
+    position absolute
+    top 50%
+    right 0
+    transform translateY(-50%)
+.close-btn
+  padding-left 10rpx
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-popup-wrapper": "../dmx/dm-popup-wrapper",
+      "dm-mask": "../dmx/dm-mask"
+    }
+  }
+</script>

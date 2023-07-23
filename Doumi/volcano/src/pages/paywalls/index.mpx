@@ -1,0 +1,127 @@
+<template>
+  <import src="../../template/error/error.wxml" />
+   <!-- 筛选项 -->
+    <view class="dm-filter"
+      <view class="dm-filter-nav">
+        <dm-nav
+          options="{{ [
+            { label: '最新', value: 0 }
+          ] }}"
+          bind:change="bindNavChange">
+        </dm-nav>
+      </view>
+    </view>
+    <!-- 内容区 -->
+    <dm-pull-refresh-view
+      class="dm-page dm-page-index"
+      wx:ref="pullRefreshView"
+      bind:pulldownrefresh="bindPullDownRefresh"
+      bind:scroll="bindScroll"
+      bind:scrolltolower="bindLoadMore"
+      refreshing="{{refreshing}}">
+      <template
+        is="error"
+        wx:if="{{showErrorTemp && errorType !== 'noLocation'}}"
+        data="{{type: errorType, noListTxt: '抱歉~暂无符合条件的职位'}}">
+      </template>
+      <view wx:else class="dm-section">
+        <view class="dm-pannel">
+          <view class="dm-pannel-bd">
+            <view
+              class="dm-list"
+              wx:for="{{listData}}"
+              wx:key="addr_id"
+              data-id="{{item.id}}"
+              data-ad_type="{{item.ad_types}}"
+              data-ca_kw="{{index}}"
+              data-reqid="{{reqid}}"
+              bindtap="bindItemClick">
+              <dm-job-item-paywall
+                reqid="{{reqid}}"
+                list-item="{{item}}"
+                show-distance="{{showDistance}}">
+              </dm-job-item-paywall>
+            </view>
+            <view class="dm-loadmore" wx:if="{{showButtomLoading}}">
+              <icon class="dm-loadmore-icon"></icon>
+              <text class="dm-loadmore-text">正在加载</text>
+            </view>
+            <view class="dm-loadmore" wx:if="{{showNoMore && !showButtomLoading}}">
+              <text class="dm-loadmore-text">没有更多职位啦！</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </dm-pull-refresh-view>
+  </view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+@import '../../styles/util.styl'
+
+page
+  background-color white
+.dm-page-index
+  position relative
+
+.dm-filter
+  position relative
+  z-index 1
+  box-shadow 0 5px 4px -4px rgba(0, 0, 0, .1)
+  &-nav
+    position relative
+    z-index 1001
+
+.dm-list
+  .dm-apply-btn
+    margin 0
+    padding 0
+    width 66px
+    height 26px
+    background-color white
+    overflow visible
+    position relative
+    left 1px
+    border-width 0
+    border-color #F80
+    border-radius 3px
+    text-align center
+    color #F80
+    line-height 26px
+    font-size 14px
+    &::after
+      content ''
+      display block
+      border-width 1px
+      border-style solid
+      border-color inherit
+      border-radius 6px
+      box-sizing border-box
+      transform-origin 0 0
+      transform scale(.5) translate(50%, 50%)
+      position absolute
+      top calc(-50% - 1rpx)
+      left -50%
+      right -50%
+      bottom -50%
+    &-disable
+      color #999
+      border-color #CCC
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTitleText": "付费专区",
+    "navigationBarBackgroundColor": "#FFD930",
+    "backgroundColor": "#FFD930",
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+      "dm-nav": "~/components/dmx/dm-nav",
+      "dm-job-item-paywall": "~/components/dm-job-item-paywall",
+      "dm-pull-refresh-view": "~/components/dmx/dm-pull-refresh-view"
+    }
+  }
+</script>

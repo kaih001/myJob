@@ -1,0 +1,910 @@
+<script>
+import mpx from "@mpxjs/core";
+import apiProxy from "@mpxjs/api-proxy";
+import "./utils/three-statistical/ald/ald-stat";
+import "./utils/three-statistical/talkingdata/tdweapp";
+import tracker from "@doumi/mpx-plugin-tracker";
+import { AppVersion } from "./utils/version";
+import util from "./utils/util";
+import api from "./utils/api";
+import config from "./config";
+import cityStore from "./store/city";
+import globalDataStore from "./store/globalData";
+
+wx.mpx = mpx; // 用于控制台快速调试mpx
+
+mpx.use(apiProxy, { usePromise: true });
+mpx.use(tracker, {
+  caSource: "miniprogram_wechat",
+  platform: 4,
+  appid: "01",
+  version: AppVersion,
+  // - 自定义 uuid 的生成方式(openid 转 uuid)
+  // - uuid生成规则:
+  // - 1、openid + openid 经过 md5 后取前四位
+  // - 2、将得到的值反转
+  // - 3、按一定位数规则中间混入四个横杆
+  // - 如：
+  // - openid是: o98Qf0fFybfLMJNv7S6jFHxe7PRM
+  // - 将 openid 经过 md5 加密后为： 61382e2615813ad661a331ae1219bb63
+  // - 则生成的 uuid 为：8316MRP7-exHF-j6S7-vNJM-LfbyFf0fQ89o
+  getUuid: (context) => {
+    let uuid = wx.getStorageSync("uuid");
+    if (!uuid) {
+      const openId = globalDataStore.state.openId;
+      uuid = openId + util.md5(openId).substr(0, 4);
+      uuid = uuid
+        .split(/(?=\w)/)
+        .reverse()
+        .join("");
+      uuid = uuid.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5");
+      wx.setStorageSync("uuid", uuid);
+      wx.setStorageSync("uuid_nead_post", 1);
+    }
+    return uuid || "-";
+  },
+});
+
+wx.clickIds = []; // - 点击过的帖子列表
+wx.appliedIds = []; // - 报名过的帖子列表
+wx.calcelApplyIds = []; // - 取消报名的帖子列表
+wx.exposureIds = []; // - 曝光过的帖子列表
+
+// - 添加小程序运行期间点击过的帖子
+wx.$addClickIds = (id) => {
+  id = +id;
+  if (wx.clickIds.every((xx) => xx.id !== id)) {
+    // - 去重已缓存进列表的的帖子
+    const item = { id, time: Math.floor(Date.now() / 1000) };
+    wx.clickIds = [...wx.clickIds, item].slice(-100); // - 最大存储上限 100 条, 此处截取后 100 条
+  }
+};
+
+// - 添加小程序运行期间报名过的帖子
+wx.$addAppliedIds = (id) => {
+  id = +id;
+  if (wx.appliedIds.every((xx) => xx.id !== id)) {
+    // - 去重已缓存进列表的的帖子
+    const item = { id, time: Math.floor(Date.now() / 1000) };
+    wx.appliedIds = [...wx.appliedIds, item].slice(-100); // - 最大存储上限 100 条, 此处截取后 100 条
+    wx.calcelApplyIds = wx.calcelApplyIds.filter((x) => x.id !== id); // - 把 报名过的帖子 在 取消报名帖子列表 中筛掉
+  }
+};
+
+// - 添加小程序运行期间取消报名的帖子
+wx.$addCalcelApplyIds = (id) => {
+  id = +id;
+  if (wx.calcelApplyIds.every((xx) => xx.id !== id)) {
+    // - 去重已缓存进列表的的帖子
+    const item = { id, time: Math.floor(Date.now() / 1000) };
+    wx.calcelApplyIds = [...wx.calcelApplyIds, item];
+    wx.appliedIds = wx.appliedIds.filter((x) => x.id !== id); // - 把 取消报名的帖子 在 报名过的帖子列表 中筛掉
+  }
+};
+
+// - 添加小程序运行期间曝光过的帖子
+wx.$addExposureIds = (list) => {
+  const ids = list
+    .filter((x) => wx.exposureIds.every((xx) => xx.id !== x.id)) // - 去重已缓存进列表的的帖子
+    .map((x) => ({ id: x.id, time: Math.floor(Date.now() / 1000) }));
+  wx.exposureIds = [...wx.exposureIds, ...ids].slice(-100); // - 最大存储上限 100 条, 此处截取后 100 条
+};
+
+wx.$cleanAllIds = () => {
+  wx.exposureIds = [];
+  wx.clickIds = [];
+  wx.appliedIds = [];
+  wx.calcelApplyIds = [];
+};
+
+wx.$tracker.onResolve((res) => {
+  // - 全局守卫, 监听所有埋点, 当其中一个埋点请求发起成功时会触发
+  res.atype === "scroll" && wx.$addExposureIds(res.list); // atype === `scroll` 表示是曝光埋点
+});
+wx.$tracker.onReject((err) => {
+  // - 全局守卫, 监听所有埋点, 当其中一个埋点请求执行错误时会触发
+  err.request.atype === "scroll" && wx.$addExposureIds(err.request.list); // atype === `scroll` 表示是曝光埋点
+});
+
+// app.js
+App({
+  ...globalDataStore.mapMutations([
+    "setIsIpx",
+    "updateLoginStatus",
+    "setOpenId",
+    "setShowSwitchEnvBtn",
+  ]),
+
+  // -------------------------------------------------------------------------
+  // globalData
+  // -------------------------------------------------------------------------
+
+  globalData: {
+    locationData: {},
+    cityInfo: {
+      domain: "",
+    },
+    scene: "",
+    fromMinePage: false, // 在我的页面点击了首页 加埋点用
+    openId: "",
+    isIpx: false, // 是否为 iPhone X
+    reqid: "-",
+    expectRegion: {
+      // 偏好区域
+      value: {},
+      text: "",
+    },
+    expectPost: {
+      // 期望职位
+      value: [],
+      text: "",
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // App生命周期
+  // -------------------------------------------------------------------------
+
+  async onLaunch ({ scene, query }) {
+    this.globalData.scene = scene;
+
+    if (query.from) {
+      wx.setStorageSync("from", query.from); // 通用参数from传递
+    } else {
+      wx.setStorageSync("from", "");
+    }
+
+    wx.getSystemInfo({
+      success: (res) => {
+        // model中包含着设备信息
+        const isIpx = res.model.search("iPhone X") !== -1;
+        this.globalData.isIpx = isIpx;
+        this.setIsIpx(isIpx);
+      },
+    });
+
+    // - 非线上环境
+    if (config.env !== 2) {
+      this.setShowSwitchEnvBtn(true);
+      wx.setStorageSync("envFlag", config.env);
+      wx.setEnableDebug({ enableDebug: true }); // 自动开启vConsole调试
+    }
+
+    await this.code2login();
+  },
+
+  onShow ({ scene }) {
+    this.checkAppUpdate();
+
+    if (wx.getStorageSync("pvPath")) {
+      api.setLog(1, wx.getStorageSync("pvPath"));
+    }
+    api.setCasource(scene || "", api.getTracker().from);
+  },
+
+  // -------------------------------------------------------------------------
+  // 页面方法, 双下划线开头表示私有方法, 供内部调用
+  // -------------------------------------------------------------------------
+
+  /**
+   * 通过code登录(老用户), 并获取 openid 和 cookie 信息
+   * @param {number?} failCount - 第几次登录失败, 用来第3次失败后不再请求
+   */
+  async code2login (failCount = 1) {
+    try {
+      let res = await mpx.login();
+
+      if (res.code) {
+        const param = { code: res.code };
+        res = await util.getData(`client/code/login`, param, "POST");
+        const { code, data } = res.data;
+        util.setCookie(res.header["Set-Cookie"] || res.header["set-cookie"]); // 为失败的情况也要setCookie
+        this.setOpenId((this.globalData.openId = data.openid));
+        if (code === 1000) {
+          wx.setStorageSync("userId", ~~data.user_id); // 为有绑定关系的老用户自动登录
+          util.setCookie(res.header["Set-Cookie"] || res.header["set-cookie"]); // 登录成功后的setCookie操作必须在存储userId之后
+          this.updateLoginStatus();
+          return Promise.resolve(res);
+        } else if (failCount < 3) {
+          // 登录失败, 在重新调用一次登录, 连续3次调用失败将不再调用
+          return this.code2login(++failCount);
+        } else {
+          // 这里是第三次调用失败时终止调用
+          return Promise.reject(res);
+        }
+      } else if (failCount < 3) {
+        // code获取失败, 在重新调用一次登录
+        return this.code2login(++failCount);
+      } else {
+        return Promise.reject(res);
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+
+  /**
+   * 通过unionid授权登录
+   * @param {number?} failCount - 第几次登录失败, 用来第3次失败后不再请求
+   */
+  async login (failCount = 1) {
+    try {
+      let res = await mpx.login();
+      const userInfo = await this.getUserInfo();
+
+      if (userInfo) {
+        // 授权信息获取成功
+        const { encryptedData, iv } = userInfo;
+        const param = { code: res.code, encryptedData, vi: iv };
+        res = await util.getData(`client/authlogin`, param, "POST");
+        const { code, data, msg } = res.data;
+        const userId = +data.user_id;
+
+        if (code === 1000) {
+          // unionid授权登录成功
+          wx.setStorageSync("userId", userId);
+          util.setCookie(res.header["Set-Cookie"] || res.header["set-cookie"]);
+          wx.setStorageSync("auth_str", data.auth_str);
+          return Promise.resolve(userInfo);
+        } else if (code === 2048 && failCount < 3) {
+          // 2048表示登录失败, 在重新调用一次登录, 连续3次调用失败将不再调用
+          return this.login(++failCount);
+        } else {
+          // 这里是第三次调用失败时终止调用
+          util.showToast(msg);
+          return Promise.reject(res);
+        }
+      } else {
+        // unionid授权信息获取失败
+        return Promise.reject(res);
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  },
+
+  /**
+   * 通过手机号授权方式登录
+   * @param {object} event
+   */
+  async getPhoneNumber ({ detail: { errMsg, encryptedData, iv } }) {
+    if (errMsg === "getPhoneNumber:ok") {
+      // 同意授权
+      try {
+        let res = await mpx.login();
+        const param = { encryptedData, iv, code: res.code };
+        res = await util.getData(`client/phone/login`, param, "POST");
+        const { code, msg, data } = res.data;
+
+        if (code === 1000) {
+          // - 登录成功
+          api.setLog(
+            2,
+            "@atype=click@ca_name=doumi@ca_source=h5@ca_from=wechat_success"
+          );
+          wx.setStorageSync("userId", ~~data.id);
+          util.setCookie(res.header["Set-Cookie"] || res.header["set-cookie"]);
+          this.updateLoginStatus();
+          return Promise.resolve(data);
+        } else if (res.data.code === 2202) {
+          this.code2login();
+          wx.showToast({ title: res.data.msg, icon: "none" });
+          return Promise.reject(res.data);
+        } else {
+          wx.showToast({ title: msg, icon: "none" });
+          return Promise.reject(res.data);
+        }
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    } else {
+      // 拒绝授权
+      return Promise.reject(errMsg);
+    }
+  },
+
+  /**
+   * 检查小程序是否有更新
+   * @see https://developers.weixin.qq.com/miniprogram/dev/api/base/update/UpdateManager.html
+   */
+  checkAppUpdate () {
+    const updateManager = wx.getUpdateManager();
+
+    updateManager.onCheckForUpdate((res) => {
+      // 请求完新版本信息的回调
+      // console.log(res.hasUpdate)
+    });
+
+    updateManager.onUpdateReady(() => {
+      wx.showModal({
+        title: "更新提示",
+        content: "新版本已经准备好，是否重启应用？",
+        success: (res) => {
+          if (res.confirm) {
+            // 清理缓存
+            wx.clearStorage();
+            // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+            updateManager.applyUpdate();
+          }
+        },
+      });
+    });
+
+    updateManager.onUpdateFailed(() => {
+      // 新版本下载失败
+    });
+  },
+
+  /**
+   * 获取职位所在商家的联系方式
+   * @param {string} - 职位id
+   */
+  async getPostContact (jobId) {
+    try {
+      const res = await util.getData(`post/contact/${jobId}`);
+      const { code, data } = res.data;
+
+      if (code === 1000) {
+        return Promise.resolve(data);
+      } else {
+        this.showErrorToastHandler(res.data);
+        return Promise.reject(res);
+      }
+    } catch (err) {
+      this.showErrorToastHandler(err);
+    }
+  },
+
+  /**
+   * 获取意向职位和偏向区域的参数
+   */
+  getExpectParams () {
+    const { expectRegion, expectPost } = this.globalData;
+    let job_type_relation = JSON.stringify(expectPost.value);
+    let place = JSON.stringify(expectRegion.value);
+
+    if (job_type_relation === "[]") job_type_relation = "";
+    if (place === "{}") place = "";
+
+    return { job_type_relation, place, job_date_type: 0 };
+  },
+
+  /**
+   * 获取位置信息
+   */
+  getLocation () {
+    return new Promise((resolve, reject) => {
+      wx.getLocation({
+        // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
+        type: "gcj02",
+        success: (res) => {
+          const { latitude, longitude } = res;
+          api.setLog(2, "@atype=click@ca_name=doumi@ca_source=h5@ca_from=location_allow");
+          if (longitude && latitude) {
+            api.setLog(2, "@atype=click@ca_name=doumi@ca_source=h5@ca_from=location_success");
+          }
+          cityStore.commit("SET_LOCATION", { latitude, longitude });
+          this.globalData.locationData = { latitude, longitude }
+          resolve({ latitude, longitude });
+        },
+        fail: (err) => {
+          api.setLog(2, "@atype=click@ca_name=doumi@ca_source=h5@ca_from=location_refuse");
+          reject(err);
+        },
+      });
+    });
+  },
+
+  /**
+   * 检查定位权限并且获取定位
+   * @return {Promise<{ latitude, longitude } | 'noLocation'>}
+   */
+  checkAuthAndGetLocation () {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // 有定位权限，返回位置信息(精度、维度)
+        const location = await this.getLocation();
+        resolve(location);
+      } catch (err) {
+        // 没有定位权限，无法获取定位的提示（用户拒绝获取定位权限）
+        reject("noLocation");
+      }
+    });
+  },
+
+  /**
+   * 获取所有城市数据(省市区)
+   * @param {object} opts - 选项
+   * @property {boolean?} isCache - 是否缓存城市到本地存储
+   * @return {object[]} 所有城市数据(省市区)
+   */
+  async getAllCityList (opts = { isCache: true }) {
+    const key = "allCityList";
+    const cacheCityList = wx.getStorageSync(key);
+    if (cacheCityList) return cacheCityList; // 如果缓存中存在将从缓存中读取数据, 而不进行接口请求
+    const res = await util.getData( "https://jz-c-miniapp.doumi.com/api/mini/common/area-list");
+    const { code, data } = res.data;
+    if (code === 1000) {
+      if (opts.isCache) wx.setStorage({ key, data });
+      return data;
+    }
+    return [];
+  },
+
+  /**
+   * 获取城市信息
+   */
+  async getCityInfo () {
+    const { latitude, longitude } = cityStore.state;
+    // const longitude = '113.92061062282986' // - mock data
+    // const latitude = '22.492786729600695' // - mock data
+    try {
+      const res = await util.getData(`client/latlng/${latitude},${longitude}`);
+      if (res && res.data) {
+        const cityInfo = res.data;
+        api.setCity(cityInfo.id);
+        cityInfo.domain = cityInfo.domain || "";
+        cityStore.commit("SET_LOCATION_CITY", { locationCity: cityInfo });
+        this.globalData.cityInfo = cityInfo;
+        return Promise.resolve(cityInfo);
+      } else {
+        // 获取城市信息失败
+        return Promise.reject("loadFail");
+      }
+    } catch (err) {
+      return Promise.reject(err === "offline" ? "offline" : "loadFail");
+    }
+  },
+
+  /**
+   * 获取用户信息
+   */
+  getUserInfo () {
+    return new Promise((resolve, reject) => {
+      wx.getUserInfo({
+        withCredentials: true,
+        success: (res) => {
+          resolve(res);
+        },
+        fail: (err) => reject(err),
+      });
+    });
+  },
+
+  /**
+   * 获取用户授权信息
+   * @param {string} authType - 要检测的授权类型
+   * @param {boolean?} isCallAuth - 未授权时是否自动发起授权弹框
+   */
+  getSetting (authType, isCallAuth = false) {
+    const done = (resolve, reject) => {
+      wx.authorize({
+        scope: authType,
+        success: (res) => resolve(res),
+        fail: (err) => reject(err),
+      });
+    };
+
+    return new Promise((resolve, reject) => {
+      wx.getSetting({
+        success: (res) => {
+          if (res.authSetting[authType]) return resolve();
+          isCallAuth ? done(resolve, reject) : reject(res);
+        },
+        fail: (err) => reject(err),
+      });
+    });
+  },
+
+  /**
+   * 打开权限设置页面
+   */
+  setAuthorize () {
+    const locationFail = async () => {
+      const res = await util.showToast(
+        "请在手机“设置”中打开定位服务，斗米知道您的位置才可提供更好的服务哦！"
+      );
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@ca_from=${res.confirm ? "ok" : "cancel"
+        }`
+      );
+    };
+
+    return new Promise((resolve, reject) => {
+      wx.openSetting({
+        success: async (res) => {
+          if (res.authSetting["scope.userLocation"]) {
+            try {
+              resolve(await this.getLocation());
+            } catch (err) {
+              locationFail();
+              reject(err);
+            }
+          } else {
+            locationFail();
+            reject(res);
+          }
+        },
+        fail: (err) => {
+          locationFail();
+          reject(err);
+        },
+      });
+    });
+  },
+
+  /**
+   * 全局捕获无网络或者接口请求失败显示错误页面的处理
+   * @param {object | string} err
+   */
+  showErrorPageHandler (err) {
+    util.hideLoading();
+    if (typeof err === "object") {
+      console.warn(err);
+      if (Number.isInteger(+err.code)) {
+        const errMsg = err.msg || err.message || err.errMsg;
+        wx.showToast({ title: errMsg, icon: "none" });
+      }
+    } else {
+      const pages = getCurrentPages();
+      const curPage = pages[pages.length - 1];
+
+      curPage.setData({
+        showErrorTemp: true,
+        errorType: err,
+      });
+    }
+  },
+
+  /**
+   * 全局捕获接口请求失败或者接口 code 返回值为非 1000 时的处理
+   * @param {object | string} err
+   */
+  showErrorToastHandler (err) {
+    util.hideLoading();
+    if (typeof err === "object") {
+      console.warn(err);
+      if (Number.isInteger(+err.code)) {
+        const errMsg = err.msg || err.message || err.errMsg;
+        wx.showToast({ title: errMsg, icon: "none" });
+      }
+    } else {
+      console.error("-------------------");
+      console.log(err);
+      util.showToast(err === "offline" ? "网络异常" : "服务器异常");
+    }
+  },
+});
+</script>
+
+<style lang="stylus">
+  @import './styles/animate.styl'
+  @import './styles/button.styl'
+  @import './styles/cell.styl'
+  @import './styles/checkbox.styl'
+  @import './styles/radio.styl'
+  @import './styles/input.styl'
+
+  /* 隐藏 scroll-view 滚动条 */
+  ::-webkit-scrollbar
+    width 0
+    height 0
+    color transparent
+  page
+    height 100%
+    display flex
+    flex-direction column
+    background-color #f5f5f5
+    color #404040
+    font 14px / 1.5714285 -apple-system-font, Helvetica Neue, Helvetica, sans-serif
+  .dm-page
+    display block
+    flex 1
+    height 100%
+  .dm-page-error
+    overflow hidden
+  .dm-section
+    box-sizing border-box
+    min-height 100%
+  .dm-touch
+    background-color #f5f5f5 !important
+  .dm-footbar
+    position fixed
+    bottom 0
+    right 0
+    left 0
+    z-index 99
+    width 100%
+    height 50px
+    overflow hidden
+    &::after
+      content ''
+      position absolute
+      top 0
+      right 0
+      left 0
+      height 1px
+      background-color #e5e5e5
+      transform-origin 0 0
+      transform scale3d(1, 0.5, 1)
+  .iphonex-fixed
+    bottom 34px !important
+    overflow visible
+    &::before
+      content ''
+      position fixed
+      bottom 0 !important
+      left 0
+      right 0
+      width 100%
+      height 34px !important
+      background-color #fff
+  .dm-footbar-show
+    .dm-section
+      padding-bottom 82px
+    &.iphonex
+      .dm-section
+        padding-bottom 116px
+  .dm-flex
+    display flex
+  .dm-flex-item
+    flex 1
+    max-width 100%
+  .dm-form
+    display block
+  .dm-applyed
+    color #999
+    width 100%
+    font-size 16px
+    line-height 44px
+    border-radius 0
+    display flex
+    justify-content center
+    align-items center
+    &::after
+      border none
+  .dm-pannel-hd
+    overflow hidden
+  .dm-pannel-title
+    position relative
+    float left
+    color #404040
+    font-size 16px
+    font-weight 700
+    line-height 24px
+    &::after
+      content ''
+      position absolute
+      bottom -12px
+      left 0
+      width 27px
+      height 3px
+      background-color #f5f5f5
+  .dm-pannel-tool
+    float right
+    color #999
+    font-size 12px
+    font-weight 400
+    line-height 20px
+    margin-right 12px
+  .dm-loadmore
+    position relative
+    color #808080
+    font-size 12px
+    line-height 20px
+    text-align center
+    padding 12px
+    background url('https://cdn.doumistatic.com/27,60db2b264f3aca.png') no-repeat center bottom
+    background-size 100% auto
+    &::after
+      content ''
+      position absolute
+      right 0
+      bottom 0
+      left 0
+      height 1px
+      background-color #e5e5e5
+      transform-origin 0 100%
+      transform scale3d(1, 0.5, 1)
+  .dm-loadmore-icon
+    display inline-block
+    width 20px
+    height 20px
+    background url('https://cdn.doumistatic.com/34,6380e6b42a3bc0.png') no-repeat
+    background-size 20px auto
+    vertical-align middle
+    margin-right 8px
+    animation spin 0.9s infinite linear
+  .dm-loadmore-text
+    display inline-block
+  .dm-flexible
+    display none
+    position relative
+    color #404040
+    font-size 12px
+    line-height 20px
+    text-align center
+    &::after
+      content ''
+      display inline-block
+      position relative
+      top -4px
+      width 6px
+      height 6px
+      border-bottom solid 1px #404040
+      border-left solid 1px #404040
+      transform rotate(-45deg)
+      vertical-align middle
+      margin-left 8px
+    &.dm-active
+      display block
+    &.dm-toggle
+      &::after
+        top 0
+        transform rotate(135deg)
+  .dm-flexible-body
+    text-overflow ellipsis
+    overflow hidden
+  .dm-icon
+    display inline-block
+    position relative
+    width 20px
+    height 20px
+    vertical-align middle
+    font-size 0
+    line-height 0
+    overflow hidden
+    &::after
+      content ''
+      display block
+      width 20px
+      height 20px
+      background url('https://cdn.doumistatic.com/112,e91c156371fcee.png') no-repeat
+      background-size 100px auto
+  .dm-gotop
+    display none
+    position fixed
+    right 20px
+    bottom 32px
+    z-index 99
+    width 34px
+    height 34px
+    background url('https://cdn.doumistatic.com/41,62fe7cf3ad725b.png') no-repeat 0 -40px
+    background-size 100px auto
+    font-size 0
+    line-height 0
+    overflow hidden
+    &.dm-active
+      display block
+  .dm-text-bold
+    font-weight 700
+  .dm-text-assist
+    color #808080
+  .dm-text-tiny
+    color #999
+  .dm-text-link
+    color #456db4
+  .dm-toptips
+    position fixed
+    top 0
+    right 0
+    left 0
+    z-index 99
+    background-color #f0f0f0
+    color #999
+    font-size 12px
+    line-height 20px
+    text-align center
+    word-wrap break-word
+    word-break break-all
+    padding 6px 12px
+  .dm-toptips-warn
+    background-color #f60
+    color #fff
+  .dm-status
+    padding 0
+    .dm-btn-group
+      margin 0 40px
+  .dm-status-image
+    display block
+    width 320rpx
+    height 320rpx
+    margin 80rpx auto 0
+  .dm-status-text
+    display block
+    color #808080
+    font-size 14px
+    line-height 22px
+    text-align center
+    margin 16px
+  .dm-mask
+    position fixed
+    top 0
+    right 0
+    left 0
+    bottom 0
+    z-index 1000
+    background rgba(0, 0, 0, 0.6)
+    &.dm-active
+      display block
+  .disabled
+    color #999 !important
+    background-color #e5e5e5 !important
+</style>
+
+<script type="application/json">
+  {
+    "debug": false,
+    "pages": [
+      "pages/index/index",
+      "pages/citySelector/citySelector",
+      "pages/login/login",
+      "pages/jobDetail/jobDetail",
+      "pages/jobDetailInterview/jobDetailInterview",
+      "pages/interview/signIn/signIn",
+      "pages/basicInfoFirst/basicInfoFirst",
+      "pages/prefecture/prefecture",
+      "pages/companyDetail/companyDetail",
+      "pages/mine/mine",
+      "pages/myTabList/myTabList",
+      "pages/search/search",
+      "pages/myInterviewDetail/myInterviewDetail",
+      "pages/basicInfo/basicInfo",
+      "pages/operationalActivities/addCounselor/addCounselor",
+      "pages/reward/rmjobdetail/rmjobdetail",
+      "pages/ziZhiMiddle/ziZhiMiddle",
+      "pages/certification/certification",
+      "pages/paywalls/index",
+      "pages/workDet/workDet",
+      "pages/adTest/adTest",
+      "pages/zhima/zhimaAgreement"
+    ],
+    "packages": ["./subpackage/subA/subA.mpx?root=subA&name=subA", "./subpackage/subB/subB.mpx?root=subB&name=subB"],
+    "preloadRule": {
+      "pages/index/index": {
+        "network": "all",
+        "packages": ["subA", "subB"]
+      }
+    },
+    "window": {
+      "navigationBarTextStyle": "black",
+      "navigationBarTitleText": "斗米找工作",
+      "navigationBarBackgroundColor": "#ffffff",
+      "backgroundColor": "#f5f5f5"
+    },
+    "tabBar": {
+      "color": "#999",
+      "selectedColor": "#404040",
+      "borderStyle": "white",
+      "backgroundColor": "#ffffff",
+      "list": [
+        {
+          "pagePath": "pages/index/index",
+          "iconPath": "assets/image/nav_home.png",
+          "selectedIconPath": "assets/image/nav_home_active.png",
+          "text": "首页"
+        },
+        {
+          "pagePath": "pages/mine/mine",
+          "iconPath": "assets/image/nav_avatar.png",
+          "selectedIconPath": "assets/image/nav_avatar_active.png",
+          "text": "我的"
+        }
+      ]
+    },
+    "networkTimeout": {
+      "request": 10000,
+      "connectSocket": 10000,
+      "uploadFile": 10000,
+      "downloadFile": 10000
+    },
+    "requiredPrivateInfos": ["getLocation"],
+    "permission": {
+      "scope.userLocation": {
+        "desc": "我们将为你推荐附近的优质职位"
+      }
+    },
+    "navigateToMiniProgramAppIdList": ["wx0b41f63682e0e800", "wxf69f0f2e0cffc68f", "wx31e8d13f7e1ee404", "wxb7229fa392b99203", "wx274d646e4a33808a"]
+  }
+</script>

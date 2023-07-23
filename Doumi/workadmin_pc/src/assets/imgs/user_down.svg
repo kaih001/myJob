@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="5px" viewBox="0 0 8 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>下拉</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-16.000000, -16.000000)">
+        <path d="M19.2197498,16.2866964 C19.6138595,15.9032151 20.255346,15.9056559 20.6469472,16.2866964 L23.4082333,18.9735158 C24.1994678,19.7434121 23.9525559,20.3675364 22.830977,20.3675364 L17.03572,20.3675364 C15.9256757,20.3675364 15.6673823,19.7432632 16.4584637,18.9735158 L19.2197498,16.2866964 Z" id="arrow" fill="#BFBFBF" transform="translate(19.935000, 18.183768) scale(1, -1) translate(-19.935000, -18.183768) "></path>
+    </g>
+</svg>

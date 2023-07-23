@@ -1,0 +1,65 @@
+/**
+ * 绘制三角形
+ * @param $color 三角形颜色
+ * @param $rotateZ 要旋转的角度
+ * @param $width 宽度
+ */
+drawTriangle($color = #404040, $rotateZ = 0deg, $width = 8rpx)
+  &::after
+    content ''
+    display inline-block
+    width 0
+    height 0
+    border-width $width
+    border-style solid
+    border-color $color transparent transparent transparent
+    transform rotateZ($rotateZ) translateY(-100%)
+
+/**
+ * 绘制1px边框
+ * @param $color 边框颜色
+ * @param $borderRadius 边框圆角
+ */
+border1px($color = #E5E5E5, $borderRadius = 4px)
+  position relative
+  &::after
+    position absolute
+    top 0
+    left 0
+    box-sizing border-box
+    width 200%
+    height 200%
+    background-color transparent
+    background-clip padding-box
+    content ''
+    border 1px solid $color
+    border-radius $borderRadius
+    transform-origin 0 0
+    transform scale(0.5)
+    pointer-events none
+
+topBorder1px($color = #E5E5E5, $left = 0, $right = 0)
+  position relative
+  &::before
+    content ''
+    position absolute
+    left $left
+    right $right
+    top 0
+    height 1px
+    background-color $color
+    transform-origin 0 100%
+    transform scale3d(1, 0.5, 1)
+
+bottomBorder1px($color = #E5E5E5, $left = 0, $right = 0)
+  position relative
+  &::after
+    content ''
+    position absolute
+    left $left
+    right $right
+    bottom 0
+    height 1px
+    background-color $color
+    transform-origin 0 100%
+    transform scale3d(1, 0.5, 1)

@@ -1,0 +1,13 @@
+<view class="getPN" hidden="{{ isShow }}">
+  <view class="getPNC">
+    <text>{{ title }}</text>
+    <button
+      hover-class="gp-touch"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumberCallBack"
+      bindtap="btn"
+    >
+      好的
+    </button>
+  </view>
+</view>

@@ -1,0 +1,664 @@
+/* pages/reward/rmjobdetail/rmjobdetail.wxss */
+
+page {
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+}
+
+.box-1 {
+  background: no-repeat url("https://cdn.doumistatic.com/144,012569811c8b641f.png");
+  background-size: 100% 100%;
+  height: 620rpx;
+}
+
+.box-2 {
+  background: no-repeat url("https://cdn.doumistatic.com/123,01066e241a41fa62.png");
+  background-size: 100% 100%;
+  height: 614rpx;
+}
+
+.box-2-nologin {
+  background: no-repeat url("https://cdn.doumistatic.com/127,01066e45ee5704d9.png");
+  background-size: 100% 100%;
+  height: 437rpx;
+}
+
+.box-money {
+  margin: auto auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 106rpx;
+  align-items: flex-end;
+  height: 84rpx;
+}
+
+.money {
+  font-size: 84rpx;
+  color: #fff;
+  letter-spacing: 0;
+  line-height: 84rpx;
+}
+
+.recruitment {
+  font-size: 36rpx;
+  color: #fff;
+  letter-spacing: 0;
+  line-height: 36rpx;
+  margin-left: 4rpx;
+  margin-bottom: 10rpx;
+}
+
+.job-name {
+  margin-top: 88rpx;
+  font-size: 44rpx;
+  color: #fff;
+  margin-left: 96rpx;
+  margin-right: 96rpx;
+}
+
+.box-wage {
+  margin: auto auto;
+  display: flex;
+  margin-top: 16rpx;
+  align-items: flex-end;
+  margin-left: 96rpx;
+}
+
+.wage-text {
+  font-size: 24px;
+  color: #ffd36d;
+  line-height: 32px;
+}
+
+.wage-unit {
+  font-size: 12px;
+  color: #fff;
+  text-align: right;
+  line-height: 20px;
+  margin-bottom: 6rpx;
+}
+
+.box-address {
+  margin: auto auto;
+  display: flex;
+  margin-top: 16rpx;
+  align-items: center;
+  margin-left: 96rpx;
+}
+
+.box-address image {
+  height: 14rpx;
+  width: 14rpx;
+}
+
+.box-address text {
+  font-size: 12px;
+  color: #fff;
+  line-height: 20px;
+  margin-left: 8rpx;
+}
+
+.box-label {
+  margin: auto auto;
+  display: flex;
+  margin-top: 16rpx;
+  align-items: center;
+  margin-left: 96rpx;
+}
+
+.box-label-text {
+  font-size: 10px;
+  color: #ffd36d;
+  letter-spacing: 0;
+  border: #ffd36d 1rpx solid;
+  border-radius: 6rpx;
+  padding-left: 6rpx;
+  padding-right: 6rpx;
+  height: 28rpx;
+}
+
+.box-icon {
+  margin-top: 236rpx;
+  margin-left: 96rpx;
+  display: flex;
+  align-items: center;
+}
+
+.box-icon image {
+  height: 80rpx;
+  width: 80rpx;
+  border-radius: 80rpx;
+}
+
+.box-icon text {
+  font-size: 12px;
+  color: #404040;
+  line-height: 20px;
+  margin-left: 40rpx;
+}
+
+.box-2-label {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40rpx;
+}
+
+.box-2-label text {
+  font-size: 12px;
+  color: #404040;
+  line-height: 20px;
+}
+
+.box-2-login {
+  display: flex;
+  flex-direction: row;
+  margin-left: 96rpx;
+  margin-top: 96rpx;
+}
+
+.login-label {
+  font-size: 12px;
+  color: #404040;
+  line-height: 20px;
+}
+
+.login-text {
+  font-size: 12px;
+  color: #456db4;
+  line-height: 20px;
+  margin-left: 48rpx;
+}
+
+.login-icon {
+  width: 14rpx;
+  height: 28rpx;
+  margin-left: 10rpx;
+  margin-top: 4rpx;
+}
+
+.job-detail {
+  margin-top: 24rpx;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.job-detail-image-top {
+  height: 208rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.job-detail-image-top image {
+  width: 356rpx;
+  height: 158rpx;
+}
+
+.job-detail-image-top-content {
+  flex: 1;
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+}
+
+.job-detail-image-top-more {
+  height: 104rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.job-detail-image-top-more text {
+  font-size: 12px;
+  color: #404040;
+  line-height: 20px;
+}
+
+.job-detail-image-top-more image {
+  height: 12rpx;
+  width: 18rpx;
+  margin-left: 8rpx;
+}
+
+.view-item {
+  margin-top: 24rpx;
+  height: 192rpx;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+}
+
+.view-item-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+
+.view-item-right {
+  display: flex;
+  flex-direction: column;
+  width: 256rpx;
+  background: no-repeat url("https://cdn.doumistatic.com/127,01067bada5d62407.png");
+  background-size: 100% 100%;
+  height: 100%;
+  align-items: flex-end;
+}
+
+.job-title {
+  font-size: 16px;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 16px;
+  margin-left: 32rpx;
+  margin-top: 32rpx;
+}
+
+.box-label-item {
+  display: flex;
+  margin-top: 26rpx;
+  align-items: center;
+  margin-left: 32rpx;
+}
+
+.box-label-item text {
+  font-size: 10px;
+  color: #808080;
+  letter-spacing: 0;
+  border: #808080 1rpx solid;
+  border-radius: 6rpx;
+  padding-left: 6rpx;
+  padding-right: 6rpx;
+  margin-right: 32rpx;
+}
+
+.box-address-item {
+  margin: auto auto;
+  display: flex;
+  margin-top: 18rpx;
+  align-items: center;
+  margin-left: 32rpx;
+}
+
+.box-address-item image {
+  height: 14rpx;
+  width: 14rpx;
+  background: no-repeat url("https://cdn.doumistatic.com/122,01067f5226fdfcfd.png");
+  background-size: 100% 100%;
+}
+
+.box-address-item text {
+  font-size: 12px;
+  color: #808080;
+  line-height: 20px;
+  margin-left: 8rpx;
+}
+
+.view-item-right-money-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 50rpx;
+}
+
+.view-item-right-money {
+  font-size: 14px;
+  color: #f60;
+  line-height: 20px;
+  margin-left: 8rpx;
+  margin-right: 40rpx;
+}
+
+.view-item-right-money-image {
+  height: 28rpx;
+  width: 20rpx;
+}
+
+.view-item-right-btn {
+  border: 1px solid #fff;
+  border-radius: 100px;
+  width: 124rpx;
+  height: 48rpx;
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 60rpx;
+  margin-top: 20rpx;
+}
+
+.dm-resu-phone {
+  position: fixed;
+  height: 96rpx;
+  z-index: 100;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.dm-btn-apply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 14px;
+  color: #404040;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.dm-btn-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 548rpx;
+  background: no-repeat url("https://cdn.doumistatic.com/127,01069fcbe13f969f.png");
+  background-size: 100% 100%;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 96rpx;
+}
+
+.image-share {
+  width: 176rpx;
+  height: 196rpx;
+  background: no-repeat url("https://cdn.doumistatic.com/122,0106a10a7b213b03.png");
+  background-size: 100% 100%;
+}
+
+.dm-resu-share {
+  position: fixed;
+  height: 96rpx;
+  z-index: 100;
+  bottom: 320rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.to-index {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 124rpx;
+  background: #fff;
+}
+
+.to-index text {
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #404040;
+  letter-spacing: 0;
+  line-height: 28rpx;
+}
+
+.to-index image {
+  width: 14rpx;
+  height: 28rpx;
+  margin-left: 18rpx;
+}
+
+.dm-btn-apply-cancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  padding: 0;
+  flex: 1;
+  color: #404040;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 96rpx;
+}
+
+.dm-btn-apply-now {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background: no-repeat url("https://cdn.doumistatic.com/127,01069fcbe13f969f.png");
+  background-size: 100% 100%;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 96rpx;
+  padding: 0;
+}
+
+.dm-select-address {
+  position: fixed;
+
+  /* height: 744rpx; */
+  z-index: 102;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+}
+
+.dm-select-address scroll-view {
+  height: 534rpx;
+  width: 100%;
+  padding-top: 24rpx;
+}
+
+.dm-select-address-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.box-prompt {
+  height: 112rpx;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.box-prompt text {
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+  background: #fff5ed;
+  text-align: center;
+  line-height: 72rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #f60;
+}
+
+.text-label {
+  font-family: PingFangSC-Medium;
+  font-size: 32rpx;
+  color: #404040;
+  line-height: 48rpx;
+  margin-left: 32rpx;
+}
+
+.bg-show-dialog {
+  position: fixed;
+  height: 100%;
+  z-index: 101;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.select-content-box {
+  margin-top: 12rpx;
+  margin-left: 32rpx;
+  margin-bottom: 12rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.select-content-box text {
+  max-width: 484rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #808080;
+  line-height: 44rpx;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.select-content-box-icon {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 32rpx;
+  margin-right: 32rpx;
+  background-size: 100% 100%;
+}
+
+.dm-resu-share-box {
+  position: fixed;
+  height: 352rpx;
+  z-index: 106;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.dm-resu-share-box-top {
+  height: 232rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.dm-resu-share-box-top-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+button {
+  background-color: #fff;
+}
+
+.dm-resu-share-box-top-item image {
+  width: 100rpx;
+  height: 100rpx;
+}
+
+.dm-resu-share-box-top-item text {
+  margin-top: 24rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #404040;
+  line-height: 28rpx;
+}
+
+.line-share-box {
+  height: 24rpx;
+  background: #f7f7f7;
+}
+
+.share-cancel {
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #404040;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-summary .dm-product-text .dm-flexible-body {
+  -webkit-line-clamp: 10;
+}
+
+
+.product-summary .dm-flexible {
+  margin-top: 12px;
+}
+
+.product-worktime .dm-flexible-body {
+  -webkit-line-clamp: 4;
+  max-height: 80px;
+}
+
+.letter-wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.product-worktime .dm-flexible {
+  text-align: right;
+  padding-right: 2px;
+  margin: 8px 0;
+}
+
+.product-interview .dm-flexible-body {
+  padding-bottom: 16px;
+  margin-bottom: 0;
+}
+
+.product-interview .dm-flexible {
+  position: relative;
+  top: -12px;
+  background-color: #fff;
+  padding: 0 12px;
+}
+
+.product-interview .dm-flexible.dm-active {
+  display: inline-block;
+}
+
+.dm-footbar .dm-btn-primary.dm-active {
+  position: relative;
+}
+
+.dm-footbar .dm-btn-default ~ .dm-btn-default::before,
+.dm-footbar .dm-btn-primary.dm-active::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: #e5e5e5;
+  transform-origin: 0 0;
+  transform: scale3d(0.5, 1, 1);
+}
+
+
+.product-interview .dm-flexible.dm-active {
+  display: inline-block;
+}
+
+.product-confirm.dm-active {
+  display: block;
+}

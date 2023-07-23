@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.1 (43504) - http://www.bohemiancoding.com/sketch -->
+    <title>驳回+支付失败</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-204.000000, -231.000000)">
+            <g id="取消执行" transform="translate(204.000000, 231.000000)">
+                <circle id="Oval-104-Copy-3" fill="#FF7663" cx="6" cy="6" r="6"></circle>
+                <path d="M6,4.94086495 L4.05913505,3 L3,4.05913505 L4.94086495,6 L3,7.94086495 L4.05913505,9 L6,7.05913505 L7.94086495,9 L9,7.94086495 L7.05913505,6 L9,4.05913505 L7.94086495,3 L6,4.94086495 Z" id="Rectangle-55-Copy-2" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.1 (43504) - http://www.bohemiancoding.com/sketch -->
+    <title>待审核+支付中</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-175.000000, -79.000000)" fill="#F4B90E">
+            <g id="Group-11-Copy" transform="translate(175.000000, 79.000000)">
+                <g id="Group-14">
+                    <path d="M6,12 C2.6862915,12 0,9.3137085 0,6 C0,2.6862915 2.6862915,0 6,0 C9.3137085,0 12,2.6862915 12,6 C12,9.3137085 9.3137085,12 6,12 Z M5,7.35520118 L9.66113183,7.35520118 L9.66113183,5.50806832 L6.84713287,5.50806832 L6.84713287,2.30000305 L5,2.30000305 L5,7.35520118 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

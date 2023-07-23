@@ -1,0 +1,870 @@
+<template>
+  <nav-bar title="斗米找工作" backShow="{{true}}"></nav-bar>
+  <import src="../../../template/error/error.wxml" />
+  <import src="./template/inner.wxml" />
+
+  <!-- 授权unionid组件 -->
+  <dialog
+    id="dialog"
+    open-type="getUserInfo"
+    title="微信极速授权"
+    confirm-text="微信极速授权"
+    auto-hide="{{false}}"
+    show-cancel="{{false}}"
+    bind:getUserInfo="bindGetUserInfoCallBack">
+  </dialog>
+  <!-- 授权手机号组件 -->
+  <dialog
+    id="dialog2"
+    open-type="getPhoneNumber"
+    title="微信极速登录"
+    confirm-text="微信极速登录"
+    cancel-text="账号登录"
+    auto-hide="{{false}}"
+    bind:cancel="bindAccountLogin"
+    bind:getPhoneNumber="bindGetPhoneNumberCallBack">
+  </dialog>
+
+  <template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+
+  <scroll-view
+    wx:else
+    scroll-y
+    class="dm-page signin">
+    <!-- <dm-formid-collector bind:complate="bindCollectComplate"> -->
+      <template is="inner" data="{{ signInStatus, signInFailText, jobList, jobItem, wxNumber, time, mobile }}" />
+    <!-- </dm-formid-collector> -->
+  </scroll-view>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import { dateFormat } from '../../../utils/date'
+import util from '../../../utils/util'
+import api from '../../../utils/api'
+import cityStore from '../../../store/city'
+import commonApi from '../../../interface/common'
+import interviewApi from '../../../interface/interview'
+import loginPath from '~/pages/login/login?resolve'
+import applyInterviewPath from '~/subpackage/subA/pages/interview/applyInterview/applyInterview?resolve'
+
+const app = getApp()
+const fmtInterviewTime = (start, end) => {
+  return `${dateFormat(start, 'YYYY/MM/DD')}  ${dateFormat(start, 'HH:mm')} - ${dateFormat(end, 'HH:mm')}`
+}
+
+createPage({
+  data: {
+    postId: '', // 职位id
+    primaryCode: '', // RPO端由项目ID和面试地点ID生成的主键ID
+    showErrorTemp: false,
+    errorType: '',
+    // signInStatus: 'success', // 'success' | 'fail' | 'unsign'
+    signInStatus: null, // 'success' | 'fail' | 'unsign'
+    signInFailText: [],
+    wxNumber: '斗米招聘求职官方',
+    jobItem: {
+      post: {},
+      counselor: {},
+      interview_time: {},
+      interview_addr: {}
+    },
+    selectedJob: {},
+    tel: '',
+    jobList: [],
+    isQRCodeEntry: false // 是否通过二维码进入的页面
+  },
+
+  computed: {
+    mobile () {
+      return this.tel || this.jobItem.counselor.contact_mobile_str || ''
+    },
+    time () {
+      const { start_time, end_time } = this.jobItem.interview_time
+      if (!start_time || !end_time) return ''
+      return fmtInterviewTime(start_time, end_time)
+    }
+  },
+
+  watch: {
+    signInStatus (val) { // 根据签到的状态的不同变更 pv 中的 `list_type` 值
+      if (val === 'success') this.__postPv('qdcg')
+      else if (val === 'fail') this.__postPv('qdsb')
+      else this.__postPv('qdym')
+    }
+  },
+
+  async onLoad ({ id, scene }) {
+    if (scene) { // 通过二维码进来
+      scene = util.decodeURI(scene)
+      this.primaryCode = util.getQueryFieldVal(scene, 'pcode')
+      this.isQRCodeEntry = true
+    } else {
+      this.postId = id
+    }
+
+    try {
+      if (await this.__checkUnionId()) this.__next()
+    } catch (err) {}
+  },
+
+  onShow () {
+    this.__postPv()
+  },
+
+  methods: {
+    // 收集formid完成时触发
+    // bindCollectComplate ({ detail: { formId } }) {
+    //   const param = {
+    //     formId,
+    //     openId: app.globalData.openId,
+    //     pushType: 12
+    //   }
+    //   commonApi.collectFormid(param)
+    // },
+
+    // unionid授权反馈
+    async bindGetUserInfoCallBack (e) {
+      try { // 允许
+        await app.getUserInfo(e)
+        this.selectComponent('#dialog').hideDialog()
+        util.showLoading()
+        await app.login()
+        await this.__next()
+      } catch (err) { // 拒绝
+
+      }
+      util.hideLoading()
+    },
+
+    // 手机号授权反馈
+    async bindGetPhoneNumberCallBack (e) {
+      await app.getPhoneNumber(e)
+      try {
+        await this.init()
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // 账号登录
+    bindAccountLogin () {
+      wx.navigateTo({ url: `${loginPath}?callbackName=init` })
+    },
+
+    // 未绑定手机号新用户, 在通过手机号授权或者账号登录后执行
+    async init () {
+      this.selectComponent('#dialog2').hideDialog()
+      util.showLoading()
+
+      const signInStatus = await this.__checkSignIn()
+
+      if (['unsign', 'unsign-select'].includes(signInStatus)) { // 未签到
+        if (this.isQRCodeEntry) {
+          // 有签到记录直接签到成功, 无后续流程
+          if (await this.__checkApplyRecord()) {
+            const param = await this.__getSignInPost()
+            await this.bindSignIn({ ...param, isBtnClick: false })
+            return util.hideLoading()
+          } else {
+            await this.__done()
+          }
+        } else {
+          await this.__done()
+        }
+      }
+      util.hideLoading()
+    },
+
+    // 打开权限设置页
+    openAuthSetting () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=getposition', { list_type: 'qdym' })
+      app.setAuthorize().then(async res => {
+        this.showErrorTemp = false
+        this.errorType = ''
+        this.__next()
+      })
+    },
+
+    // 职位选择后提交(二维码进入时有效)
+    async bindSubmitJob (evt) {
+      const { job } = evt.detail
+
+      this.selectedJob = job
+
+      util.showLoading()
+      if (await this.__checkResume(job)) { // 先检查简历是否完善
+        const applyId = job.is_interview === 1
+          ? await this.__interviewApplyJob(job) // 约面帖先约面报名, 获取applyId
+          : await this.__generalApplyJob(job) // 普通帖先报名, 后去applyId
+        util.hideLoading()
+        const params = {
+          applyId,
+          postId: job.id,
+          addressId: job.address_id
+        }
+        this.bindSignIn({ ...params, isBtnClick: false }) // 约面成功后, 进行签到
+      }
+    },
+
+    // 复制微信号
+    bindCopyWxNumber () {
+      wx.setClipboardData({
+        data: this.wxNumber,
+        success: res => {
+          wx.showToast({ title: '复制成功' })
+          api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=fz_wechat', { list_type: 'qdcg' })
+        }
+      })
+    },
+
+    // 拨打电话
+    bindCallMobile () {
+      wx.makePhoneCall({ phoneNumber: this.mobile.replace(/-/g, '') })
+      this.signInStatus === 'fail'
+        ? api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=fail_call', { list_type: 'qdsb' })
+        : api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=call', { list_type: 'qdym' })
+    },
+
+    // 签到
+    async bindSignIn ({
+      isBtnClick = true,
+      postId = this.postId,
+      addressId = this.jobItem.interview_addr.id,
+      applyId = ''
+    } = {}) {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=sign', { list_type: 'qdym' })
+
+      if (isBtnClick) { // 通过 `签到` 按钮点击过来的
+        const locationStatus = await this.__checkSignInLocation()
+        if (!locationStatus) return // 位置不符合
+      }
+
+      const { isQRCodeEntry, primaryCode } = this
+      const type = isQRCodeEntry ? 'qrcode' : 'direct'
+      const params = { postId, primaryCode, addressId, applyId }
+
+      try {
+        await interviewApi
+          .showErrorToast()
+          .signIn(type, params)
+        // 签到成功
+        this.signInStatus = 'success'
+        api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=sign_success', { list_type: 'qdym' })
+      } catch (err) {
+        if (err.code === -218) { // 面试前取消面试,但是通过模板消息点击进来的签到页面,点击签到按钮, 直接签到失败
+          this.signInFailText = [
+            '您无有效报名记录',
+            `如有问题请联系项目经理：${this.jobItem.counselor.contact_name}`
+          ]
+          this.signInStatus = 'fail'
+          api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=fail_apply', { list_type: 'qdym' })
+          return Promise.reject()
+        }
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    __postPv (list_type = 'qdym') {
+      api.setLog(1, '/jianzhi/yuemianqd', { list_type })
+    },
+
+    // 授权之后执行的流程
+    async __next () {
+      util.showLoading()
+      try {
+        const signInStatus = await this.__checkSignIn()
+
+        if (['unsign', 'unsign-select'].includes(signInStatus)) { // 未签到
+          if (!this.isQRCodeEntry) await this.__done()
+
+          await app.checkAuthAndGetLocation()
+          await app.getCityInfo()
+
+          if (await this.__checkSignInLocation()) { // 位置符合
+            if (!this.__checkLoginInfo()) { // 未绑手机号的新用户
+              this.selectComponent('#dialog2').showDialog()
+              return util.hideLoading()
+            }
+            if (this.isQRCodeEntry) {
+              try {
+                // 有签到记录直接签到成功, 无后续流程
+                if (await this.__checkApplyRecord()) {
+                  const param = await this.__getSignInPost()
+                  await this.bindSignIn({ ...param, isBtnClick: false })
+                } else {
+                  await this.__done()
+                }
+              } catch (err) {
+                await this.__done()
+              }
+            }
+          }
+        }
+        util.hideLoading()
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // 绑定手机号后的流程
+    async __done () {
+      const { isQRCodeEntry, primaryCode, postId } = this
+      try {
+        if (isQRCodeEntry) { // 扫码进入加载推荐的帖子列表
+          const { data } = await interviewApi
+            .showErrorToast()
+            .getRecommendList({ primaryCode }) // 获取推荐职位列表
+
+          this.signInStatus = 'unsign-select'
+          this.jobList = data.map(x => {
+            x.time = fmtInterviewTime(x.start_time, x.end_time)
+            return x
+          })
+        } else { // 直接进入检查报名记录 并 加载一个帖子详情数据
+          const { data } = await interviewApi
+            .showErrorToast()
+            .getMyInterviewInfo({ postId })
+          this.jobItem = data
+        }
+      } catch (err) {
+        if (err.code === 1001) {
+          const { contact_name, tel } = err.data
+          this.signInFailText = [
+            '抱歉，暂时没有匹配的职位',
+            `如有问题请联系项目经理：${contact_name}`
+          ]
+          this.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+          this.signInStatus = 'fail'
+        } else if (err.code) {
+          this.signInStatus = null
+        } else {
+          app.showErrorToastHandler(err)
+        }
+      }
+    },
+
+    /**
+     * 普通帖子报名
+     * @param {object} job - 报名的职位
+     */
+    async __generalApplyJob (job) {
+      const param = {
+        domain: cityStore.getters.currentCity.domain,
+        addrId: job.addr_id,
+        openId: app.globalData.openId,
+        postId: job.id,
+        userId: wx.getStorageSync('userId'),
+        workTimeId: job.interview_time_id || 0,
+        noLimit: true
+      }
+
+      try {
+        await commonApi.applyJob(param)
+      } catch (err) {
+        if (err.code === 0) { // 老接口报名成功 code为 0
+          return Promise.resolve(err.id)
+        } else if (err.code) {
+          return Promise.reject()
+        }
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    /**
+     * 约面报名
+     * @param {object} job - 报名的职位
+     */
+    async __interviewApplyJob (job) {
+      const interviewAddress = {
+        id: job.address_id,
+        address: job.address,
+        lng: job.lng,
+        lat: job.lat
+      }
+      const interviewTime = {
+        id: job.interview_time_id,
+        start_time: job.start_time,
+        end_time: job.end_time
+      }
+      const param = {
+        domain: cityStore.getters.currentCity.domain,
+        addrId: job.addr_id,
+        openId: app.globalData.openId,
+        postId: job.id,
+        interviewAddress,
+        interviewTime,
+        noLimit: true
+      }
+      try {
+        const { data } = await interviewApi
+          .showErrorToast()
+          .applyJob(param)
+        api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=apply_success@from=yuemiansign', { list_type: 'qdym' })
+        return Promise.resolve(data.apply_id)
+      } catch (err) {
+        if (err.code) return Promise.reject()
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    /**
+     * 极速报名(普通帖)
+     * @param {object} args - 简历信息
+     */
+    async __fastGeneralApplyJob (args) {
+      const param = {
+        postId: this.selectedJob.id,
+        resume: args,
+        noLimit: true
+      }
+
+      try {
+        await commonApi.fastApplyJob(param)
+      } catch (err) {
+        if (err.code === 0) {
+          try {
+            const applyId = await this.__generalApplyJob(this.selectedJob)
+            return Promise.resolve(applyId)
+          } catch (err) {
+            return Promise.reject(err)
+          }
+        } else if (err.code) {
+          return Promise.reject(err)
+        }
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    /**
+     * 极速约面(填简历约面报名)
+     * @param {object} args - 简历信息
+     */
+    async __fastInterviewApplyJob (args) {
+      args = {
+        ...this.__getInterviewParams(this.selectedJob),
+        resume: args
+      }
+      try {
+        console.log(2)
+        debugger
+        const { data } = await interviewApi
+          .showErrorToast()
+          .fastApplyJob(args)
+
+        api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=apply_success@from=yuemiansign', { list_type: 'qdym' })
+        return Promise.resolve(data.apply_id)
+      } catch (err) {
+        if (err.code) return Promise.reject(err)
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    /**
+     * 拼接并获取约面报名所需的参数
+     */
+    __getInterviewParams (job) {
+      const interviewAddress = {
+        id: job.address_id,
+        address: job.address,
+        lng: job.lng,
+        lat: job.lat
+      }
+      const interviewTime = {
+        id: job.interview_time_id,
+        start_time: job.start_time,
+        end_time: job.end_time
+      }
+
+      const params = {
+        domain: app.globalData.cityInfo.domain || '',
+        addrId: job.addr_id,
+        openId: app.globalData.openId,
+        postId: job.id,
+        interviewAddress,
+        interviewTime,
+        noLimit: true
+      }
+      return params
+    },
+
+    // 检查unionid授权状态
+    async __checkUnionId () {
+      try {
+        await app.getUserInfo()
+        return Promise.resolve(true)
+      } catch (err) {
+        this.selectComponent('#dialog').showDialog()
+        return Promise.resolve(false)
+      }
+    },
+
+    // 检查签到位置
+    async __checkSignInLocation () {
+      const { isQRCodeEntry, primaryCode, postId } = this
+      const type = isQRCodeEntry ? 'qrcode' : 'direct'
+      const params = {
+        lng: cityStore.state.longitude,
+        lat: cityStore.state.latitude,
+        primaryCode,
+        postId,
+        addressId: this.jobItem.interview_addr.id
+      }
+      try {
+        await interviewApi
+          .showErrorToast()
+          .checkSignInLocation(type, params)
+        return Promise.resolve(true)
+      } catch (err) {
+        if (err.code === -210) {
+          // 地址不符合
+          api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=fail_location', { list_type: 'qdym' })
+
+          // 扫码进来位置不符合直接签到失败
+          if (isQRCodeEntry) {
+            const { contact_name, contact_mobile } = err.data
+            this.signInFailText = [
+              '您的位置不符合',
+              `如有问题请联系项目经理：${contact_name}`
+            ]
+            this.tel = contact_mobile.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+            this.signInStatus = 'fail'
+          }
+          return Promise.resolve(false)
+        }
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // 检查签到状态
+    async __checkSignIn () {
+      const { isQRCodeEntry, primaryCode, postId } = this
+      try {
+        const type = isQRCodeEntry ? 'qrcode' : 'direct'
+        const params = { primaryCode, postId }
+        await interviewApi.checkSignIn(type, params)
+
+        return Promise.resolve(this.signInStatus = 'success')
+      } catch (err) {
+        if (err.code === -201 || err.code === 1001) { // -201:没有签到记录 1001未登录
+          if (isQRCodeEntry) return Promise.resolve('unsign-select')
+          return Promise.resolve(this.signInStatus = 'unsign')
+        }
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    // 返回登录状态
+    __checkLoginInfo () {
+      const userId = wx.getStorageSync('userId')
+      return userId > 0
+    },
+
+    // 检查报名记录
+    async __checkApplyRecord () {
+      try {
+        const { status } = await interviewApi
+          .showErrorToast()
+          .checkApplyRecord()
+
+        if (status === 1) {
+          return Promise.resolve(true)
+        }
+        return Promise.resolve(false)
+      } catch (err) {
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    // 检查简历五项是否全
+    async __checkResume ({ id, job_type }) {
+      const query = util.obj2uri({
+        // pierceParams,
+        // ca_campaign: caCampaign,
+        id,
+        jobType: job_type,
+        isInterview: true,
+        callbackName: 'applyCallback' // 补充完个人信息后的回调函数
+      })
+
+      try {
+        let { data } = await commonApi.checkResume()
+        data = data.filter(x => !['job_date_type', 'job_type_relation'].includes(x))
+        if (data.length > 0) { // 存在需要补充简历信息的字段
+          wx.navigateTo({ url: `${applyInterviewPath}?${query}` })
+          return Promise.resolve(false)
+        }
+        return Promise.resolve(true)
+      } catch (err) {
+        app.showErrorToastHandler(err)
+      }
+    },
+
+    // 获取签到的职位信息
+    async __getSignInPost () {
+      try {
+        const param = { primaryCode: this.primaryCode }
+        const { data } = await interviewApi.getSignInPost(param)
+
+        return Promise.resolve({
+          postId: data.post_id,
+          applyId: data.apply_id,
+          addressId: data.address_id
+        })
+      } catch (err) {
+        if (err.code === 1001) { // 没有报名记录
+          return Promise.reject(err)
+        }
+        app.showErrorPageHandler(err)
+      }
+    },
+
+    async applyCallback (args) {
+      try {
+        util.showLoading()
+        const applyId = this.selectedJob.is_interview === 1
+          ? await this.__fastInterviewApplyJob(args) // 约面贴先约面报名, 获取applyId
+          : await this.__fastGeneralApplyJob(args) // 普通帖先普通报名, 获取applyId
+        const params = {
+          applyId,
+          postId: this.selectedJob.id,
+          addressId: this.selectedJob.address_id
+        }
+        await this.bindSignIn({ ...params, isBtnClick: false }) // 约面成功后, 进行签到
+        util.hideLoading()
+        wx.navigateBack() // 签到成功后, 从简历五项页面 回到签到页
+      } catch (err) {
+        util.hideLoading()
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus" src="../../../styles/icon.styl"></style>
+<style lang="stylus">
+image
+  display block
+.signin
+  position relative
+  background-color #6549F7
+.dm-banner
+  position absolute
+  left 0
+  right 0
+  top 0
+  z-index 0
+  image
+    width 100%
+    max-width 100%
+    height 1164rpx
+.dm-title
+.dm-pannel
+  position relative
+  z-index 1
+.dm-title
+  padding-top 20%
+  padding-left 32rpx
+  padding-right 32rpx
+  text-align center
+  .dm-h1
+    font-size 36px
+    color white
+    text-shadow 0 2px 16px #482CD5
+  .dm-h2
+    font-size 28px
+    color white
+    text-shadow 0 2px 16px #482CD5
+.dm-pannel
+  margin 82rpx 44rpx
+  padding-bottom 120rpx
+  .dm-pannel-hd
+    position absolute
+    z-index 1
+    left 50%
+    top 0
+    transform translate(-50%, -46%)
+    width 278rpx
+    height 106rpx
+    overflow visible
+    image
+      width 100%
+      height 100%
+  .dm-pannel-bd
+    min-height 672rpx
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+    width 100%
+    height 100%
+    padding 0 16px
+    box-sizing border-box
+    background #FFFFFF
+    box-shadow 0 2px 20px 0 #2B1A88
+    border-radius 12px
+    border-radius 12px
+    & > view
+      width 100%
+      box-sizing border-box
+    .dm-btn
+      width 376rpx
+      margin-top 47rpx
+    .tips
+      font-size 16px
+      text-align center
+  &.success
+    .info
+      display flex
+      justify-content space-around
+      align-items center
+      margin-top 102rpx
+      padding 0 53rpx
+      .avatar
+        width 130rpx
+        height 130rpx
+        border-radius 50%
+        border 8rpx solid #2B1A88
+        overflow hidden
+      .user-box
+        margin-left 30rpx
+        flex 1
+        .nickname
+          margin-bottom 8rpx
+          font-size 16px
+          color #442BC7
+    .dm-box.contact
+      margin-top 56rpx
+    .tips:nth-of-type(2)
+      margin-bottom -9rpx
+  &.fail
+    .dm-pannel-bd
+      padding-bottom 60rpx
+    .icon
+      width 228rpx
+      height 228rpx
+      margin-top 100rpx
+    .tips:nth-of-type(1)
+      margin-top 26rpx
+  &.unsign
+    .dm-pannel-hd
+      height 152rpx
+      .sign-btn
+        width 310rpx
+        height 152rpx
+    .job-card
+      line-height 1
+      padding-top 130rpx
+      padding-bottom 32rpx
+      background-color white
+    .job-title
+      font-size 16px
+      font-weight 700
+      line-height 24px
+      margin-right 8px
+      margin-top -4px
+      white-space nowrap
+      text-overflow ellipsis
+      overflow hidden
+    .job-info
+      margin-top 8px
+      overflow hidden
+      display flex
+      align-items center
+    .job-meta
+      color #808080
+      height 12px
+      font-size 12px
+      margin-right 12px
+      flex none
+      &-corp
+        text-overflow ellipsis
+        overflow hidden
+        white-space nowrap
+        flex auto
+      .dmx-icon
+        float left
+        margin 1px 4px 5px -1px
+        width 10px
+        height 10px
+    .job-label
+      display flex
+      flex-wrap wrap
+      align-items flex-end
+      margin-left -8px
+      margin-top 10px
+      font-size 12px
+      line-height 20px
+      overflow hidden
+      .price
+        padding-left 8px
+        color #f60
+        &-value
+          font-size 16px
+          font-weight 600
+          margin-right 2px
+      .tag
+        position relative
+        margin-left 8px
+        padding-left 8px
+        &::before
+          content ''
+          display block
+          position absolute
+          width 2px
+          height 8.5px
+          background-color #808080
+          left -1px
+          top 50%
+          transform translateY(-50%)
+    .dm-box.interview
+      margin-top 20rpx
+      margin-bottom 80rpx
+      padding 32rpx 24rpx
+      line-height 40rpx
+      font-size 12px
+      .time
+        margin-bottom 16rpx
+      .place
+        text-overflow ellipsis
+        white-space nowrap
+        overflow hidden
+      .title
+        color #808080
+      .text
+        padding-left 6px
+
+  .dm-box
+    background-color #fff
+    box-shadow 0 2px 14px 0 rgba(0, 0, 0, 0.08)
+    border-radius 0 0 4px 4px
+  .dm-box.contact
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+    margin-bottom 20rpx
+    padding 40rpx 32rpx
+  .mobile
+    margin-top 20rpx
+    margin-bottom -27rpx
+    font-size 28px
+    color #4C34DD
+    line-height 36px
+    text-align center
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTitleText": "斗米找工作",
+    "navigationStyle": "custom",
+    "backgroundColor": "#6549F7",
+    "usingComponents": {
+      "dialog": "../../../components/dialog/dialog",
+      "nav-bar": "../../../components/navBar/navBar",
+      "dm-formid-collector": "../../../components/dmx/dm-formid-collector",
+      "job-selector": "./job-selector"
+    }
+  }
+</script>

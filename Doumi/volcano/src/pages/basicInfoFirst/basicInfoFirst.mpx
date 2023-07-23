@@ -1,0 +1,230 @@
+<template>
+  <import src="./template/expectBox.wxml" />
+  <import src="./template/basicInfoBox.wxml" />
+
+  <!-- 44px为底部按钮高度, 34px为iPhoneX底部预留空间 -->
+  <scroll-view
+    class="dm-page"
+    scroll-y
+    wx:style="{{ { height: isIpx ? 'calc(100vh - 44px - 34px)' : 'calc(100vh - 44px)' } }}">
+    <view class="dm-pannel-hd">
+      <view class="hd-title" wx:if="{{!iseqhd}}">我的简历</view>
+      <view class="hd-title" wx:else>免费领取保障第1步</view>
+      <view class="hd-info" wx:show="{{!iseqhd}}" bindtap="bindClickSkip">跳过</view>
+      <view class="dm-select-res">
+        <view class="select-tips" wx:if="{{!iseqhd}}">简单介绍自己，可以更快入职哦！</view>
+        <view class="select-tips" wx:else>*请填写以下必要信息</view>
+      </view>
+    </view>
+    <view wx:show="{{isUpdateLayout}}" class="dm-pannel-bd">
+      <!-- 基本信息(未完善 或者 都完善的时候显示) -->
+      <view wx:show="{{!isCompleteBaseInfo || (isCompleteBaseInfo && isCompleteExpect)}}">
+        <template is="basicInfoBox" data="{{ realName, gender, select, state }}" />
+      </view>
+      <!-- 意向信息 -->
+      <template is="expectBox" data="{{ select, region, careerIndex, province, city, town, expectPost, iseqhd }}" />
+    </view>
+  </scroll-view>
+
+  <view wx:style="{{ { marginBottom: isIpx ? '34px' : 0 } }}">
+    <dm-button
+      wx:if="{{isBindPhone}}"
+      size="middle"
+      type="primary"
+      disabled="{{buttonState}}"
+      bind:click="bindClickOk">{{!iseqhd ? '完成' : '确认·去领取保障'}}
+    </dm-button>
+    <dm-button
+      wx:else
+      size="middle"
+      type="primary"
+      disabled="{{buttonState}}"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumber">{{!iseqhd ? '完成' : '确认·去领取保障'}}
+    </dm-button>
+  </view>
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+.dm-page
+  background-color #fff
+  position relative
+  z-index 1
+
+.dm-pannel-hd
+  position relative
+  padding 40rpx 32rpx
+  box-sizing border-box
+  background url('https://cdn.doumistatic.com/148,013ca6911f4024ef.png') no-repeat
+  background-size 100% 356rpx
+  height 356rpx
+  color #404040
+  .hd-title
+    font-size 24px
+    line-height 32px
+    font-weight 700
+  .hd-info
+    position absolute
+    right 32rpx
+    top 40rpx
+    font-size 14px
+    line-height 32px
+    color #808080
+
+.dm-pannel-bd
+  padding-left 32rpx
+  padding-right 32rpx
+  padding-bottom 120rpx
+  margin-top -168rpx
+
+.dm-select-res
+  .select-tips
+    font-size 14px
+    color #999
+    line-height 34px
+    margin-bottom 28rpx
+
+.dm-box
+  position relative
+  margin-top 32rpx
+  padding-left 32rpx
+  padding-right 32rpx
+  padding-bottom 32rpx
+  background #fff
+  box-shadow 0 2px 14px 0 rgba(0, 0, 0, 0.08)
+  border-radius 12px
+  box-sizing border-box
+  &::before
+    content ''
+    display block
+    width 100%
+    height 1rpx
+
+.dm-box-cell
+  display flex
+  justify-content space-between
+  align-items center
+  height 104rpx
+  line-height 104rpx
+  margin-top 32rpx
+  padding-left 32rpx
+  padding-right 32rpx
+  background-color #fafafa
+  border-radius 4px
+
+.dm-box-cell__label,
+.dm-box-cell__value
+  height 100%
+.dm-box-cell__label
+  min-width 128rpx
+  white-space nowrap
+.dm-box-cell__value
+  flex 1
+  text-align right
+  overflow hidden
+  text-overflow ellipsis
+  white-space nowrap
+
+/* 性别单选框样式-start */
+.dm-box-cell__radio_group
+  display flex
+  align-items center
+  justify-content flex-end
+
+  .dm-box-cell__radio
+    position relative
+    display inline-flex
+    justify-content center
+    width 116rpx
+    height 64rpx
+    line-height 64rpx
+    margin-left 24rpx
+    background-color white
+    border-radius 4px
+    color #999
+    &:nth-of-type(1)
+      radio
+        .wx-radio-input
+          background-position-y -85rpx
+          &.wx-radio-input-checked
+            background-position-y -125rpx
+    &::before
+      content ''
+      position absolute
+      left -1px
+      top 0
+      width 200%
+      height 200%
+      border-radius 4px
+      border 1px solid #e5e5e5
+      transform-origin 0 0
+      transform scale(0.5)
+    &.active
+      border-color transparent
+      color white
+      &::before
+        border-color transparent
+    &:nth-of-type(1).active
+      background-color #69f
+    &:nth-of-type(2).active
+      background-color #ff8c8c
+    radio
+      height 100%
+      .wx-radio-input
+        border none
+        background-color transparent
+        background-repeat no-repeat
+        background-position-x center
+        background-position-y -5rpx
+        background-size 40rpx
+        background-image url('data:image/png;base64,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')
+        &.wx-radio-input-checked
+          border none !important
+          background-color transparent !important
+          background-position-y -45rpx
+          &::before
+            display none
+
+/* 性别单选框样式-end */
+.dm-box-state-cell
+  height 142rpx
+  padding 0
+  text
+    margin-top 24rpx
+  & > view
+    position relative
+    width 33.33333%
+    padding-left 32rpx 28rpx
+    &:not(:nth-last-child(1))::after
+      content ''
+      position absolute
+      right 0
+      top -12rpx
+      bottom -12rpx
+      width 1px
+      background-color #e5e5e5
+      transform-origin 0 0
+      transform scale3d(0.5, 1, 1)
+
+.dm-box-state-cell label,
+.dm-box-state-cell text
+  display block
+  text-align center
+  line-height 1
+.input-placeholder
+  text-align right
+  color #999
+</style>
+
+<script type="application/json">
+{
+  "disableScroll": true,
+  "navigationBarTitleText": "我的简历",
+  "usingComponents": {
+    "dm-picker": "~/components/dmx/dm-picker",
+    "dm-button": "~/components/dmx/dm-button"
+  }
+}
+</script>

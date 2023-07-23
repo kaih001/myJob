@@ -1,0 +1,42 @@
+<template>
+  <view class="dm-flex" wx:style="{{ styleObject }}">
+    <slot></slot>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+createComponent({
+  properties: {
+    direction: {
+      type: String,
+      value: 'row' // `row` or `column`
+    },
+    xAlign: {
+      type: String,
+      value: 'space-between' // 同 `justify-content`
+    },
+    yAlign: {
+      type: String,
+      value: 'center' // 同 `align-items`
+    }
+  },
+
+  computed: {
+    styleObject () {
+      return {
+        flexDirection: this.direction,
+        justifyContent: this.xAlign,
+        alignItems: this.yAlign
+      }
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-flex
+  display flex
+</style>
+

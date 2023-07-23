@@ -1,0 +1,516 @@
+<template>
+  <!-- 没有视频的展示模版A -->
+  <block wx:if="{{!hasVideoSwitch && templateASwitch && commonSwitch}}">
+    <view class="wrapperA commonWrapper">
+      <image src="https://cdn.doumistatic.com/218,01c68be1d25427cd.png" mode="widthFix" class="commonImage"></image>
+      <image src="https://cdn.doumistatic.com/218,01c68be3e3bd0cfd.png" mode="widthFix" class="middleImage commonImage">
+        <image
+        wx:if="{{loginFlag}}"
+        src="https://cdn.doumistatic.com/222,01c68be6a3a6c511.png"
+        mode="widthFix"
+        class="addBtn"
+        bindtap="chooseVideo(['album', 'camera'])"></image>
+        <button
+        wx:if="{{!loginFlag}}"
+        class="addBtn delCommonStyle"
+        open-type="getPhoneNumber"
+        bindgetphonenumber="bindGetPhoneNumber">
+          <image
+          src="https://cdn.doumistatic.com/222,01c68be6a3a6c511.png"
+          mode="widthFix"></image>
+        </button>
+      </image>
+      <image src="https://cdn.doumistatic.com/221,01c68be5e976059e.png" mode="widthFix" class="commonImage bottomImage"></image>
+    </view>
+  </block>
+  <!-- 没有视频的展示模版B -->
+  <block wx:elif="{{!hasVideoSwitch && !templateASwitch && commonSwitch}}">
+    <view class="videoResumeBg commonWrapper">
+      <button
+      wx:if="{{loginFlag && videoResumeBtnSwitch}}"
+      class="videoResumeBtn commonBtn"
+      bindtap="openVideoTips">
+      + 开始录制自我介绍
+      </button>
+      <button
+      wx:else
+      class="videoResumeBtn commonBtn"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="bindGetPhoneNumber">
+      + 开始录制自我介绍
+      </button>
+    </view>
+    <!-- 拍摄视频引导提示遮罩 -->
+    <view class="tipsMask commonWrapper" wx:show="{{videoTipsSwitch}}">
+      <view class="tipsContent">
+        <view class="tipSpace {{tipsInfo.length === 3 ? 'tipsLen' : ''}}" ></view>
+        <view class="tipsWrapper">
+          <view class="oneLine">
+            <view
+              class="tipsInfo {{tipsInfo.length === 3 ? 'tipsLen' : ''}}"
+              wx:for="{{tipsInfo}}" wx:key="index">
+              <view class="circleIndex">
+                <view class="outer"><view class="inner"></view></view>
+              </view>
+              <view class="tipItem">
+                <view class="tipTitle">{{item.title}}</view>
+                <view class="tipDesc">{{item.desc}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view
+        class="closeIcon"
+        bindtap="closeVideoTips">
+        </view>
+        <button
+        class="startMake commonBtn"
+        bindtap="chooseVideo(['album', 'camera'])">
+        开始制作</button>
+        <view class="bottomTip">建议时长控制在1分钟内</view>
+      </view>
+    </view>
+  </block>
+  <!-- 已有视频的展示模版 -->
+  <block wx:if="{{hasVideoSwitch && commonSwitch}}">
+    <view class="commonWrapper myVideo">
+      <view>
+        <video
+          id="myVideo"
+          class="videoPlayer"
+          src="{{videoUrl}}"
+          object-fit="cover">
+        </video>
+        <view class="updateDate" wx:if="{{updateDate}}" >修改日期: {{updateDate}}</view>
+        <button
+        class="editResume commonBtn"
+        bindtap="showPopup">
+          编辑简历
+        </button>
+      </view>
+    </view>
+    <!-- 修改视频操作入口 -->
+    <dm-upload-pop
+      wx:ref="uploadPop"
+      bind:reShoot="chooseVideo(['camera'])"
+      bind:reUpload="chooseVideo(['album'])"
+      bind:delVideo="delVideo">
+    </dm-upload-pop>
+  </block>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import api from '~/utils/api'
+import util from '~/utils/util'
+const app = getApp()
+
+createPage({
+  // -------------------------------------------------------------------------
+  // 页面初始数据
+  // -------------------------------------------------------------------------
+
+  data: {
+    videoResumeBtnSwitch: false, // 录制视频button展示开关
+    videoTipsSwitch: false, // 录制视频提示引导展示开关
+    updateDate: '', // 最近一次修改视频日期
+    hasVideoSwitch: false, // 是否以录制上传视频开关
+    tipsInfo: [
+      { title: '介绍下自己', desc: '姓名、年龄、求职地点' },
+      { title: '上一份工作经历', desc: '什么公司、什么岗位、有什么业绩' },
+      { title: '求职偏好', desc: '求职岗位、期望薪资、通勤时间' },
+      { title: '自己的优点', desc: '1~3个即可' }], // 提示内容
+    scene: '', // 扫小程序码进来携带的参数
+    videoUrl: '', // 视频地址
+    loginFlag: false, // 登陆标识
+    limitSwitch: false, // 限制开关
+    shareTitle: '上传视频简历求职快人一步', // 分享链接的标题
+    templateASwitch: false, // 模版A的展示开关
+    commonSwitch: false
+  },
+
+  // -------------------------------------------------------------------------
+  // 小程序生命周期
+  // -------------------------------------------------------------------------
+  onLoad ({ scene, hasVideo, from }) {
+    let self = this
+    if (hasVideo === 'true') {
+      self.hasVideoSwitch = true
+    }
+    // 从WAP页进入
+    if (from === 'wap') {
+      self.templateASwitch = true
+    }
+    // 扫码进来的参数处理。
+    if (scene) {
+      scene = util.decodeURI(scene)
+      self.scene = scene
+    }
+    self.$nextTick(() => {
+      self.videoResumeBtnSwitch = true
+    })
+    // 是否登陆
+    self.loginFlag = wx.getStorageSync('userId') > 0
+    self.initData()
+  },
+
+  onShow () {
+    api.setLog(1, '/jianzhi/my/vresume')
+  },
+
+  onHide () {
+
+  },
+
+  methods: {
+    // 初始化方法
+    initData () {
+      let self = this
+      util.showLoading()
+      try {
+        util.getData('ucenter/profile/video/info').then(res => {
+          // console.log(res, 'ucenter/profile/video/info')
+          util.hideLoading()
+          self.commonSwitch = true
+          if (util.isObject(res) && util.isObject(res.data) && res.data.code === 1000) {
+            if (util.isObject(res.data.data) && 'modify_at' in res.data.data && 'video_url' in res.data.data && res.data.data.video_url) {
+              self.updateDate = res.data.data.modify_at
+              self.videoUrl = res.data.data.video_url
+              self.hasVideoSwitch = true
+            }
+          }
+        }, err => {
+          app.showErrorToastHandler(err)
+        })
+        util.getData(`ucenter/profile/video/desc?${self.scene}`).then(res => {
+          // console.log(res, `ucenter/profile/video/desc?${self.scene}`)
+          self.commonSwitch = true
+          if (util.isObject(res) && util.isObject(res.data) && res.data.code === 1000) {
+            if (util.isObject(res.data.data) && util.isArray(res.data.data.desc)) {
+              self.tipsInfo = res.data.data.desc
+            }
+          }
+        })
+      } catch (err) {
+        util.hideLoading()
+        app.showErrorToastHandler(err)
+      }
+    },
+    // 打开录制视频引导提示弹窗
+    openVideoTips () {
+      api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=make_vresume`)
+      this.videoTipsSwitch = true
+    },
+    // 关闭录制视频引导提示弹窗
+    closeVideoTips () {
+      this.videoTipsSwitch = false
+    },
+    // 打开编辑视频弹窗
+    showPopup () {
+      this.$refs.uploadPop.show()
+    },
+    // 删除视频
+    delVideo () {
+      let self = this
+      util.showLoading('删除中')
+      var param = {}
+      util.getData('ucenter/profile/video/remove', param, 'POST').then(res => {
+        // console.log(res, 'ucenter/profile/video/remove')
+        util.hideLoading()
+        self.hasVideoSwitch = false
+      }, err => {
+        // console.log(err)
+        app.showErrorToastHandler(err)
+      })
+    },
+    // 上传视频
+    uploadFile (res) {
+      util.showLoading('上传中')
+      let self = this
+      util.uploadFile('ucenter/profile/video/upload', res.tempFilePath, 'file').then((data) => {
+        util.hideLoading()
+        let videoData = JSON.parse(data.data)
+        if ('code' in videoData && videoData.code === 1000) {
+          wx.showToast({
+            title: '上传成功',
+            icon: 'success',
+            mask: true,
+            duration: 1500
+          })
+          if (util.isObject(videoData.data) && 'modify_at' in videoData.data) {
+            self.updateDate = videoData.data.modify_at
+          }
+          self.hasVideoSwitch = true
+          self.videoTipsSwitch = false
+          self.videoUrl = res.tempFilePath
+        } else if ('code' in videoData && videoData.code === 2001) {
+          wx.showToast({
+            title: videoData.msg,
+            icon: 'none',
+            mask: true,
+            duration: 1500
+          })
+        } else if ('code' in videoData && videoData.code === 2002) {
+          wx.showToast({
+            title: videoData.msg,
+            icon: 'none',
+            mask: true,
+            duration: 1500
+          })
+        } else {
+          wx.showToast({
+            title: '上传失败，请重新上传',
+            icon: 'none',
+            mask: true,
+            duration: 1500
+          })
+        }
+      }, err => {
+        // console.log(err)
+        app.showErrorToastHandler(err)
+      })
+    },
+    /**
+     * 用户点击右上角分享
+     */
+    onShareAppMessage () {
+      return {
+        title: this.shareTitle,
+        imageUrl: 'https://cdn.doumistatic.com/219,01c5ce5092a376bf.jpg'
+      }
+    },
+    // 获取用户登陆信息
+    async bindGetPhoneNumber (e) {
+      api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=make_vresume`)
+      await app.getPhoneNumber(e)
+      this.loginFlag = true
+      this.initData()
+    },
+    // 录制 / 本地上传视频
+    chooseVideo (sourceType) {
+      let self = this
+      if (self.limitSwitch) return
+      self.limitSwitch = true
+      if (sourceType.length === 2) {
+        api.setLog(2, `@atype=click@ca_name=doumi@ca_source=h5@ca_from=start_vresume`)
+      }
+      wx.chooseVideo({
+        sourceType,
+        maxDuration: 60,
+        camera: 'front',
+        success (res) {
+          // console.log(res)
+          if (res.duration < 10) {
+            wx.showToast({
+              title: '您录制的时间过短，请重新录制',
+              icon: 'none',
+              mask: true,
+              duration: 1500
+            })
+          } else if (Math.ceil(res.size / 1024 / 1024) > 8) {
+            wx.showToast({
+              title: '文件大小请不要超出8M',
+              icon: 'none',
+              mask: true,
+              duration: 1500
+            })
+          } else {
+            self.uploadFile(res)
+          }
+        },
+        fail (err) {
+          console.log(err)
+        },
+        complete () {
+          self.limitSwitch = false
+        }
+      })
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.wrapperA
+  width 100%
+  background-color rgba(0, 0, 0, 1)
+  .commonImage
+    width 100%
+    vertical-align middle
+  .middleImage
+    position relative
+    .addBtn
+      position absolute
+      bottom 0px
+      left 104rpx
+      width 544rpx
+    .delCommonStyle
+      padding 0
+      font-size inherit
+      background-color transparent
+      line-height 0
+      image
+       width 100%
+  .bottomImage
+    position fixed
+    bottom 0
+    left 0
+
+.commonBtn
+  border-radius 20rpx
+  background-image linear-gradient(270deg, #FF333A 0%, #FFC701 100%);
+  font-size 20px
+  color #ffffff
+  text-align center
+  font-weight 700
+  //  box-shadow 0 25px 50px -12px rgba(255, 199, 1, 0.25);
+.commonWrapper
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  right 0
+.videoResumeBg
+  background url('https://cdn.doumistatic.com/228,01e07825cf121da0.png') no-repeat
+  background-size 100% auto
+  background-color #FFDF0E
+  .videoResumeBtn
+    width 584rpx
+    line-height 120rpx
+    margin 374rpx auto 0
+.tipsMask
+  background-color rgba(0, 0, 0, .7)
+  .tipsContent
+    position relative
+    width 572rpx
+    height 832rpx
+    background url('https://cdn.doumistatic.com/223,01c4828c29e99905.png') no-repeat
+    background-size 100% auto
+    margin 120rpx auto 0
+    .closeIcon
+      position absolute
+      bottom -140rpx
+      left 258rpx
+      width 56rpx
+      height 56rpx
+      background url('../../../../assets/image/close_icon.png') no-repeat
+      background-size contain
+      padding 10rpx
+    .tipsWrapper
+      margin-left 74rpx
+      .oneLine
+       border-left 2px solid #fc0
+    .tipsInfo
+      display flex
+      width 434rpx
+      margin-bottom 18rpx
+      .circleIndex
+        width 34rpx
+        height 92rpx
+        position relative
+        .outer
+          position absolute
+          top 30rpx
+          left -9px
+          width 16px
+          height 16px
+          box-sizing border-box
+          border-radius 50%
+          border 2px solid #ffcc00
+        .inner
+          position absolute
+          top: 2px
+          left 2px
+          width 8px
+          height 8px
+          border-radius 50%
+          background-color #fc0
+      .tipItem
+        flex 1
+        height 92rpx
+        background-color #fafafa
+        padding-left 24rpx
+        .tipTitle
+          font-size 16px
+          color #404040
+          font-weight 700
+          line-height 40rpx
+          margin-top 12rpx
+          overflow hidden
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          max-width: 370rpx;
+        .tipDesc
+          font-size 12px
+          color #808080
+          margin-top 4rpx
+          overflow hidden
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          max-width: 370rpx;
+    .tipsInfo.tipsLen
+      margin-bottom 32rpx
+    .tipSpace
+      width 100%
+      height 52rpx
+    .tipSpace.tipsLen
+      height 78rpx
+    .startMake
+      position absolute
+      bottom 66rpx
+      width 504rpx
+      margin 0 34rpx
+    .bottomTip
+      position absolute
+      bottom 0
+      width 100%
+      line-height 66rpx
+      text-align center
+      font-size 12px
+      color #404040
+.myVideo
+  background-color #ffffff
+  .videoPlayer
+    width 600rpx
+    height 800rpx
+    border 8rpx solid #FF7C1E;
+    border-radius 32rpx
+    margin 74rpx 74rpx 0
+    box-sizing border-box
+  .updateDate
+    width 100%
+    padding 0 74rpx
+    font-size 12px
+    color #999
+    line-height 34rpx
+    text-align right
+    box-sizing border-box
+  .editResume
+    width 584rpx
+    line-height 120rpx
+    margin 48rpx auto
+@media screen and (max-width: 370px) {
+  .tipsMask .tipsContent .tipsInfo .tipItem .tipTitle {
+    font-size: 14px;
+  }
+  .tipsMask .tipsContent .tipsInfo .tipItem .tipDesc {
+    font-size: 10px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .wrapperA .bottomImage {
+    position: static;
+  }
+}
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "视频简历",
+    "usingComponents": {
+      "dm-upload-pop": "./dm-upload-pop"
+    }
+  }
+</script>

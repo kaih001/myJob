@@ -1,0 +1,20 @@
+<template>
+  <web-view src="https://m.doumi.com/zhima_agreement.html"></web-view>
+</template>
+
+<style lang="stylus">
+
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTitleText": "",
+    "navigationStyle": "default",
+    "navigationBarBackgroundColor": "#FFD930",
+    "backgroundColor": "#FFD930",
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+    }
+  }
+</script>

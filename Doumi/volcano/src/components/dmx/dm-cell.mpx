@@ -1,0 +1,58 @@
+<template>
+  <view
+    class="dm-cell dm-cell-input"
+    wx:class="{{ className }}"
+    hover-class="{{ tapHighlight ? 'dm-touch' : '' }}">
+    <view class="dm-cell-hd">
+      <view class="dm-cell-label">
+        <block wx:if="{{label}}">{{label}}</block>
+        <slot name="label"></slot>
+      </view>
+    </view>
+    <view class="dm-cell-bd">
+      <slot></slot>
+    </view>
+    <view wx:if="{{showArrow}}" class="dm-cell-fd"></view>
+    <view wx:else class="dm-cell-ft">
+      <slot name="after"></slot>
+    </view>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+createComponent({
+  options: {
+    multipleSlots: true, // - 启用多slot支持
+    styleIsolation: 'apply-shared'
+  },
+
+  externalClasses: [],
+
+  properties: {
+    // - 左侧标题
+    label: {
+      type: String,
+      value: ''
+    },
+    // - 是否显示右侧箭头
+    showArrow: {
+      type: Boolean,
+      value: false
+    },
+    // - 是否点击态高亮
+    tapHighlight: {
+      type: Boolean,
+      value: false
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../styles/cell.styl'
+dm-cell:not(:last-child) .dm-cell::after
+  left 16px
+</style>
+

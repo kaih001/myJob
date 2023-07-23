@@ -1,0 +1,173 @@
+<!--pages/reward/rmjobdetail/rmjobdetail.wxml-->
+<view class='box-1'>
+  <view class='box-money'>
+    <!-- <text class='money'>  1</text>
+    <text class='recruitment'> 1  </text> -->
+  </view>
+
+  <view class='job-name' style="{{jobDetail.title.length > 12 ? 'font-size: 28rpx;':'font-size: 44rpx;'}}">{{jobDetail.title}}</view>
+
+  <view class='box-wage'>
+    <text class='wage-text'>{{jobDetail.salaryShow}}</text>
+    <text class='wage-unit'>{{jobDetail.salary_unit_str}}/{{jobDetail.salary_type_str}}</text>
+  </view>
+
+  <view class='box-address'>
+    <image src='https://cdn.doumistatic.com/124,01067c9e9f400b31.png'></image>
+    <text>{{jobDetail.city_name}}</text>
+
+    <image style='margin-left:48rpx' src='https://cdn.doumistatic.com/126,01067caca49aa41a.png'></image>
+    <text>{{jobDetail.hire_number}}人报名</text>
+  </view>
+
+  <view class='box-label'>
+    <view class='box-label-text' style="{{0 == index ? '':'margin-left:32rpx'}}" wx:for="{{jobDetail.tab_treatment_tags}}" wx:key="this" wx:if='{{index<3}}'>
+      {{item.value}}
+    </view>
+  </view>
+</view>
+<view class="{{!isLogin? 'box-2':'box-2-nologin'}}">
+  <view class='box-icon'>
+    <image src='{{headimgurl}}'></image>
+    <text>认为你很适合这个职位，快来报名吧！</text>
+  </view>
+  <view wx:if="{{!isLogin}}">
+    <text class='box-2-label'>转发好友入职，你也可得奖金！</text>
+  </view>
+
+  <view class='box-2-login' hidden='{{isLogin}}'>
+    <text class='login-label'>只有登录才能获得奖金哦！</text>
+    <text bindtap='showGetPhone' class='login-text'>去登录</text>
+    <image class='login-icon' src='https://cdn.doumistatic.com/132,0110335d4f27d4f0.png'></image>
+  </view>
+</view>
+
+<view style='height:30rpx;background:#fff;'></view>
+
+<view class='job-detail'>
+  <view class='job-detail-image-top'>
+    <image src='https://cdn.doumistatic.com/125,010672626b66a067.png'></image>
+  </view>
+  <rich-text wx:if="{{canIUseFlag}}" style="{{morecount > 10 ? '-webkit-line-clamp:10;':''}} margin-left: 32rpx;;margin-buttom:24rpx" class="letter-wrap {{expendList[0].expendShow ? (expendList[0].isExpend == 'dm-toggle' ? '' : 'dm-flexible-body') : ''}}" nodes="{{jobDetail.post_detail_content}}"></rich-text>
+
+  <text style='margin-left: 32rpx;margin-buttom:24rpx;' class="letter-wrap" wx:else>{{jobDetail.post_detail_content}}
+                        </text>
+  <view style='height:24rpx;' hidden='{{expendList[0].expendShow}}'></view>
+  <view wx:if="{{expendList[0].expendShow}}" class="dm-flexible letter-wrap dm-active {{expendList[0].isExpend}}" style='margin-top:24rpx;' data-index="0" bindtap='setToggle'>{{expendList[0].isExpendText}}</view>
+
+<!-- <view  class='job-detail-image-top-content'>
+    <text style='max-height: 250rpx;'>{{jobDetail.post_detail_content}}</text>
+
+  </view>
+
+  <view class='job-detail-image-top-more'>
+    <text>展开</text>
+    <image></image>
+  </view> -->
+</view>
+
+<view class='job-detail-image-top' hidden='{{true}}' style='background:#fff;margin-top:24rpx;'>
+  <image src='https://cdn.doumistatic.com/124,010671f87e70c759.png'></image>
+</view>
+
+<view bindtap='onClickListItem' hidden='{{true}}' wx:for="{{jobReward.recommend}}" data-item='{{item}}' class='view-item' wx:key="this">
+  <view class='view-item-left'>
+    <text class='job-title '>{{item.title}}</text>
+    <view class='box-label-item'>
+      <view wx:for="{{item.tags}}" wx:key="this">
+        <text wx:if='{{index < 3}}'>{{item}}</text>
+      </view>
+    </view>
+
+    <view class='box-address-item'>
+      <image></image>
+      <text>{{item.city}}</text>
+    </view>
+  </view>
+  <view class='view-item-right'>
+    <view class='view-item-right-money-box'>
+      <image class='view-item-right-money-image' src='https://cdn.doumistatic.com/127,01067c6bc337ed58.png'></image>
+      <text class='view-item-right-money'>奖金{{item.reward}}元</text>
+    </view>
+
+    <view class='view-item-right-btn'>去推荐</view>
+  </view>
+</view>
+<view class='toMore to-index' hidden='{{true}}'  bindtap='toMore' >
+  <text>查看更多有奖职位</text>
+  <image src='https://cdn.doumistatic.com/128,01111f92efb5dceb.png'></image>
+</view>
+<view style='height:120rpx;'></view>
+
+<view class='dm-resu-phone' style='{{isIphoneX?"padding-bottom:68rpx;background-color:#f2f2f2":""}}'>
+  <button bindtap='onClickToApply' class='dm-btn-apply'>{{applyBtnText}}</button>
+
+  <button class='dm-btn-share' bindtap='bindShowShare' open-type='submit' type="button">我也要转发</button>
+
+</view>
+<dialog id="dialog" bind:cancel="cancelLogin" bind:getUserInfo="getuserInfoCallBack" title='微信账号快速登录' content='微信账号快速登录'></dialog>
+
+<view class='dm-resu-share' hidden='{{true}}'>
+  <view style='flex:1'></view>
+
+  <button type="button" bindtap='bindShowShare' class='image-share'></button>
+
+</view>
+
+<view class='bg-show-dialog' hidden='{{!isShowAddress}}'></view>
+<view class='bg-show-dialog' hidden='{{!isShowShare}}'></view>
+<view hidden='{{!isShowAddress}}' class='dm-select-address' style='{{isIphoneX?"padding-bottom:68rpx;background-color:#f2f2f2":""}}'>
+
+  <view class='box-prompt'>
+    <text>正规兼职不会收取费用,若收费请提高警惕</text>
+  </view>
+  <scroll-view scroll-y="true">
+    <text class='text-label' hidden='{{jobRewardAddress.length == 0}}'>选择工作地点</text>
+    <view hidden='{{jobRewardAddress.length == 0}}' style='height:12rpx'></view>
+    <view class='select-content-box' wx:for="{{jobRewardAddress}}" wx:key="this" bindtap='onSelectAddress' data-index='{{index}}'>
+      <text>{{item.address}}</text>
+      <view style='flex: 1;'></view>
+      <image class='select-content-box-icon' src="{{!item.isSelect ? 'https://cdn.doumistatic.com/130,0114a234203f3f8c.png' :'https://cdn.doumistatic.com/129,01149ddf7fb5bc3c.png'}}"></image>
+    </view>
+
+    <view style='height:32rpx'></view>
+    <text class='text-label' hidden='{{jobRewardInterview.length == 0}}'>选择面试时间</text>
+    <view style='height:12rpx' hidden='{{jobRewardInterview.length == 0}}'></view>
+    <view class='select-content-box' bindtap='onSelectTime' data-index='{{index}}' wx:for="{{jobRewardInterview}}" wx:key="this">
+      <text>{{item.date}}  {{item.week}}  {{item.start}}</text>
+      <view style='flex: 1;'></view>
+      <image class='select-content-box-icon' src="{{!item.isSelect ? 'https://cdn.doumistatic.com/130,0114a234203f3f8c.png' :'https://cdn.doumistatic.com/129,01149ddf7fb5bc3c.png'}}"></image>
+    </view>
+  </scroll-view>
+  <view class='dm-select-address-box'>
+    <view style='flex:1'>
+      <button bindtap='onClickHideAddress' class='dm-btn-apply-cancel'>取消</button>
+    </view>
+    <view style='flex:1'>
+      <form bindsubmit="onClickFastApply" report-submit="true">
+        <button form-type='submit' class='dm-btn-apply-now' type="button">立即报名</button>
+      </form>
+    </view>
+  </view>
+</view>
+
+<view class='dm-resu-share-box' hidden='{{!isShowShare}}'>
+  <view class='dm-resu-share-box-top'>
+    <form bindsubmit='onClickShare' class='dm-resu-share-box-top-item' report-submit='true'>
+      <button form-type='submit' open-type='share' class='dm-resu-share-box-top-item'>
+        <image src='https://cdn.doumistatic.com/135,01161370ec1d664b.png'></image>
+        <text>转发给好友</text>
+      </button>
+    </form>
+    <form bindsubmit='onClickSave' class='dm-resu-share-box-top-item' report-submit='true'>
+      <button form-type='submit' class='dm-resu-share-box-top-item'>
+        <image src='https://cdn.doumistatic.com/136,0116137a40e43ba5.png'></image>
+        <text>保存图片发朋友圈</text>
+      </button>
+    </form>
+  </view>
+  <view class='line-share-box'></view>
+  <view class='share-cancel' bindtap='bindCancelShare'>取消</view>
+</view>
+
+<getPhoneNumber bind:allow="_allow" title='{{bindPhoneTitle}}' bind:refuse="_refuse" id='getPhoneNumber'></getPhoneNumber>

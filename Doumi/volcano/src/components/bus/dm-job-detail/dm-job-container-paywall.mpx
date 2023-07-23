@@ -1,0 +1,397 @@
+<!--
+  Description  职位内容
+  @authors     songyazhao (songyazhao@doumi.com)
+  @date        2019-10-23 17:33:48
+-->
+<template>
+  <!-- 公司地址 -->
+  <view
+    wx:if="{{jobDetail.post_addr_list.length > 0 && jobDetail.show_work_addr}}"
+    class="dm-pannel dm-product-address"
+    bindtap="bindGoToMap(addressOne)">
+    <view class="dm-pannel-bd">
+      <view class="dm-product-text">
+        <text>{{jobDetail.post_addr_list[0].city_name}}{{jobDetail.post_addr_list[0].district_name}}{{jobDetail.post_addr_list[0].street_name}}{{jobDetail.post_addr_list[0].address}}</text>
+      </view>
+      <view wx:if="{{nearestDistance}}" class="dm-product-text distance">
+        <text>距你{{nearestDistance}}</text>
+      </view>
+    </view>
+    <view class="dm-product-info">
+      <icon class="dm-icon-address"></icon>
+    </view>
+    <view
+      wx:if="{{jobDetail.post_addr_list.length > 1}}"
+      class="dm-product-more"
+      catchtap="bindShowMoreAddress">
+      <view>更多地点</view>
+      <view>({{jobDetail.post_addr_list.length}})</view>
+    </view>
+    <dm-address-pop wx:ref="dmAddressPop" bind:item-tap="bindGoToMap"></dm-address-pop>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import util from '~/utils/util'
+import jobStore from '~/store/job'
+import cityStore from '~/store/city'
+import stretchMixin from '~/mixins/stretch'
+import webPagePath from '~/subpackage/subB/pages/webPage/webPage?resolve'
+import companyDetailPath from '~/pages/companyDetail/companyDetail?resolve'
+const STE = jobStore.state
+
+createComponent({
+  options: {
+    styleIsolation: 'shared'
+  },
+
+  mixins: [stretchMixin],
+
+  // -------------------------------------------------------------------------
+  // 计算属性(在store中共享)
+  // -------------------------------------------------------------------------
+
+  computed: {
+    ...jobStore.mapState(Object.keys(STE)),
+    ...cityStore.mapGetters(['currentCity']),
+    addressOne: () => ({ detail: STE.jobDetail.post_addr_list[0] })
+  },
+
+  ready () {
+    this.initStretch({ selector: '.dm-product-summary__text' })
+  },
+
+  methods: {
+    ...jobStore.mapActions(['postEv']),
+
+    // -------------------------------------------------------------------------
+    // 页面bind的事件
+    // -------------------------------------------------------------------------
+
+    // 显示<更多地址>
+    bindShowMoreAddress () {
+      this.$refs.dmAddressPop.show()
+      this.postEv({ append: '@ca_from=shop' })
+    },
+
+    /**
+     * 进入地图页面
+     * @param {object} e.currentTarget.dataset
+     * ├─ @property {string} address - 地址名
+     * ├─ @property {string} longitude - 经度
+     * └─ @property {string} latitude - 纬度
+     */
+    bindGoToMap ({
+      detail: { city_name, district_name, street_name, address, lat, lng }
+    }) {
+      wx.openLocation({
+        name: `${city_name}${district_name}${street_name}${address}`,
+        latitude: +lat,
+        longitude: +lng
+      })
+      this.postEv({ append: '@ca_from=workplace' })
+    },
+    bindGoToCompanyDetail () {
+      if (STE.fromCompanydetail) {
+        wx.navigateBack({
+          delta: 1
+        })
+      } else {
+        wx.navigateTo({ url: `${companyDetailPath}?company_id=${STE.jobDetail.company_id}&id=${STE.id}&jobType=${STE.jobType}&consultantId=${STE.consultantId}` })
+      }
+    },
+
+    // 跳转到自营权益页
+    bindGoToWebPage () {
+      const cityDomain = this.currentCity.domain || 'bj'
+      const webUrl = `https://m.doumi.com/qydb/${cityDomain}/`
+      wx.navigateTo({ url: `${webPagePath}?webUrl=${webUrl}` })
+    },
+
+    // 拨打投诉电话
+    bindOpenComplaintConfirm () {
+      util.telPhone('拨打斗米客服电话投诉', '', STE.kefu_mobile)
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../../styles/util.styl'
+
+// 公司地址
+.dm-product-address
+  margin-bottom 24rpx
+  padding 16px
+  display flex
+  align-items center
+  .dm-pannel-bd
+    flex 1
+  .dm-product-more
+    position relative
+    flex-shrink 0
+    height 40px
+    border-left 1px solid #e5e5e5
+    padding-left 12px
+    margin-left 16px
+    font-size 12px
+    line-height 20px
+    text-align center
+    white-space nowrap
+    &::before
+      content ""
+      position absolute
+      top 50%
+      left 0
+      height 32px
+      margin-top -16px
+      background-color #e5e5e5
+      transform-origin 0 0
+      transform scale3d(0.5, 1, 1)
+  .dm-product-text
+    font-size 14px
+    line-height 22px
+    overflow hidden
+    text
+      float left
+      margin-right 12px
+  .distance
+    color #808080
+    font-size 12px
+    line-height 20px
+    margin-top 2px
+  .dm-product-info
+    display flex
+    align-items center
+    margin-left auto
+    .dm-icon-address
+      height 13px
+      width 6px
+      background url("https://cdn.doumistatic.com/115,e2866ad9cf8bd6.png") no-repeat
+      background-position 0 -125px
+      background-size 100px auto
+      margin-left 10px
+
+// 求职流程
+.dm-product-flow
+  margin-top 16px
+  padding-bottom 32rpx
+  bottomBorder1px(#E5E5E5, 32rpx, 32rpx)
+  .dm-pannel-bd
+    display flex
+    justify-content space-between
+    margin-top 18rpx
+    font-size 28rpx
+    & > view
+      display flex
+      align-items center
+      position relative
+    .arrow
+      position absolute
+      width 36rpx
+      height 2rpx
+      background-color #ccc
+      top calc(50% - 1rpx)
+      left 116%
+      &::after
+        content ""
+        display block
+        position absolute
+        width 10rpx
+        height 2rpx
+        background-color #ccc
+        right 0
+        top -2rpx
+        transform skew(30deg, 30deg)
+    view
+      &::before
+        content ""
+        display inline-block
+        width 48rpx
+        height 48rpx
+        margin-right 8rpx
+        background-size 100%
+        background-repeat no-repeat
+        background-position left center
+      &.one
+        &::before
+          background-image url("https://cdn.doumistatic.com/168,015677a692414179.png")
+      &.two
+        &::before
+          background-image url("https://cdn.doumistatic.com/166,015677b5d3d2b867.png")
+      &.three
+        &::before
+          background-image url("https://cdn.doumistatic.com/169,015677b89fa5120b.png")
+
+// 自营Card
+.dm-product-ziying
+  height 84rpx
+  padding-top 32rpx
+  &__pic
+    display block
+    width 100%
+    height 100%
+
+// 公司信息
+.dm-product-company
+  &__logo
+    width 40px
+    height 40px
+    border-radius 50%
+    margin-right 12px
+  &__dlist
+    height 148rpx
+    display flex
+    align-items center
+    .dm-product-info
+      display flex
+      align-items center
+      margin-left auto
+      .dm-icon-address
+        height 13px
+        width 6px
+        background url("https://cdn.doumistatic.com/115,e2866ad9cf8bd6.png") no-repeat
+        background-position 0 -125px
+        background-size 100px auto
+        margin-left 10px
+  &__dd
+    flex 1
+    line-height 0
+    overflow hidden
+  .dm-product-text
+  .dm-product-label
+    display flex
+    align-items center
+    line-height 22px
+  .dm-product-label
+    font-size 12px
+    color #808080
+    display flex
+    &__meta
+      color #999
+      font-size 12px
+      line-height 20px
+      margin-right 6px
+      &:not(:nth-of-type(1))::before
+        content ""
+        display inline-block
+        width 1px
+        height 10px
+        margin-top 2px
+        margin-left -2px
+        margin-right 4px
+        background-color #999
+        position relative
+        top 1px
+  .dm-product-text
+    max-width 100%
+    color #404040
+    font-size 14px
+  .dm-icon-authorization
+    width 14px
+    height 14px
+    margin 0 2px 0 0
+    &::after
+      display block
+      width 14px
+      height 14px
+      background-position -20px -124px
+  .dm-icon-cert
+    margin 1px 0 0 1px
+    &::after
+      background-position -20px -100px
+
+// 职位详情
+.dm-product-summary
+  margin-top 24rpx
+  padding-bottom 32rpx
+  &__text
+    margin-top 28rpx
+    color #808080
+    text-align justify
+    font-size 14px
+    line-height 22px
+    .letter-wrap
+      word-wrap break-word
+      word-break break-all
+  &__flexible-body
+    display block
+    overflow hidden
+  &__flexible-btn
+    height 54px
+    margin-top -32px
+    position relative
+    color #f80
+    font-size 14px
+    line-height 80px
+    text-align center
+    background-image linear-gradient(180deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.90) 40%, #FFFFFF 100%)
+    &::after
+      content ''
+      display inline-block
+      margin-left 4px
+      position relative
+      top -4px
+      width 8px
+      height 8px
+      border-bottom solid 1px #f80
+      border-left solid 1px #f80
+      transform rotate(-45deg)
+      vertical-align middle
+    &.dm-toggle
+      margin-top -10px
+      &::after
+        top 1px
+        transform rotate(135deg)
+
+// 防骗警示
+.dm-product-complain
+  margin-top 24rpx
+  padding-top 24rpx
+  padding-bottom 24rpx
+  display flex
+  align-items center
+  .dm-product-icon
+    flex-shrink 0
+    width 40px
+    height 40px
+    background url("https://cdn.doumistatic.com/209,01a8ed15364d7eed.png") no-repeat
+    background-size 40px auto
+  .dm-product-text
+    display block
+    flex-shrink 1
+    width 100%
+    margin-left 12px
+    color #f80
+    font-size 12px
+    line-height 20px
+    text
+      display block
+  .dm-text-link
+    position relative
+    flex-shrink 0
+    padding-left 16px
+    color #456db4
+    white-space nowrap
+    &::before
+      content ""
+      position absolute
+      top 50%
+      left 0
+      margin-top -16px
+      width 1px
+      height 32px
+      background-color #e5e5e5
+      transform-origin 0 0
+      transform scale(0.5, 1, 1)
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-address-pop": "./dm-address-pop"
+    }
+  }
+</script>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>组</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_人员管理" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-171.000000, -102.000000)" fill="#68A0DE">
+            <path d="M183.5,108 L186,108 C186.552285,108 187,108.447715 187,109 L187,116 C187,116.552285 186.552285,117 186,117 L173,117 C172.447715,117 172,116.552285 172,116 L172,108 L183.5,108 Z M172,106 C172,104.895 172.895,104 174,104 L180,104 L180,106 L172,106 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

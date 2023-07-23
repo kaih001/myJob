@@ -1,0 +1,13 @@
+<view class="skipPage">
+  <view class="content">
+    <text>斗米找工作申请获得您的微信信息为您提供更好的服务</text>
+    <button
+      bindgetuserinfo="bindGetUserInfo"
+      touch-hover
+      open-type="getUserInfo"
+      type="getUserInfo"
+    >
+      同意
+    </button>
+  </view>
+</view>

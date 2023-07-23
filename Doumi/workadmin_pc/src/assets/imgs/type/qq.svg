@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="86px" height="86px" viewBox="0 0 86 86" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>地推发单</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="48" height="48" rx="24"></rect>
+        <filter x="-60.4%" y="-58.3%" width="220.8%" height="220.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="9.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.415686275   0 0 0 0 0.8   0 0 0 0 0.388235294  0 0 0 0.4 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="1.0_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-24.000000, -28.000000)">
+            <g id="Icon-/-Default-Avatar" transform="translate(43.000000, 47.000000)">
+                <g id="Rectangle-">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#63B45D" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <path d="M25,33.9378929 L25,29 L16,29 L16,19.0037009 C16,15.6879484 18.6780403,13 22.0033309,13 L32,13 L32,26.0008939 C32,30.0794475 28.9395595,33.4450663 25,33.9378929 Z M33,16 L33,13 C34.6568542,13 36,14.3431458 36,16 L33,16 Z M19,18 L19,19 L29,19 L29,18 L19,18 Z M19,21 L19,22 L29,22 L29,21 L19,21 Z M19,24 L19,25 L29,25 L29,24 L19,24 Z M13,30 L24,30 L24,34 L16.2456231,34 C15.1428025,34 13.9839536,33.1517029 13.6536539,32.0937195 L13,30 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

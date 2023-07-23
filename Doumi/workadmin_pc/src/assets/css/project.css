@@ -1,0 +1,150 @@
+ /* 创建项目弹窗 */
+#project .el-dialog--small{width: 550px;}
+#project .el-dialog__header{padding: 24px 20px 0;}
+#project .el-form-item__content{width: 380px;}
+#project .el-form-item__label{text-align: left;}
+#project .el-dialog__body .el-dialog__body_wrap{
+  border-bottom: 1px solid #E5EBF1;
+  padding: 30px 40px 0px 55px;
+}
+#project .el-form-item__label{color: #475568;}
+.dialog-cancel-btn, .dialog-confirm-btn{
+	width:64px;
+	height:36px;
+	border-radius: 1px;
+	border: solid 1px #e0e6ed;
+	background-color:#ffffff;
+	color: #475568;
+}
+#project .dialog-confirm-btn{
+	background-color: #6699ee;
+	color: #ffffff;
+}
+
+#project .dialog-confirm-btn:active{background-color: #517ed6;}
+#project .dialog-cancel-btn:active{color: #517ed6}
+#project .dialog-confirm-btn:hover{
+  background-color: #8bb1f2;
+  color: #ffffff;
+}
+#project .dialog-cancel-btn:hover{
+	border: solid 1px #6699ee;
+	color: #6699ee;
+}
+#project .el-form-item{margin-bottom: 16px;position: relative;}
+#project .el-form-item.require:after{
+  content: '';
+  display: block;
+  position: absolute;
+  top:15px;
+  left:-15px;
+  width: 7px;
+  height: 7px;
+  /*background-color: red;*/
+  background: url(../imgs/x_icon.svg) no-repeat center left;
+}
+/*#project .el-form-item__content{line-height: 0}*/
+#project .el-message{color: #1f2d3d;}
+#project .el-input__inner{border-radius: 2px;}
+#project .el-dialog__footer{padding: 16px 20px 16px;}
+#project .el-tabs__active-bar{background-color:#6699ee;display: none;}
+#project .el-tabs__item.is-active{color: #6699ee;}
+#project .tab-nav .el-tabs__item, #project .tab-nav .el-tabs__active-bar{width: 88px;}
+/*#project .el-tabs__item.is-active{
+  border-bottom: 3px solid #6699ee;    
+  transition: transform .3s cubic-bezier(.645,.045,.355,1);
+}*/
+#project .el-tabs__item{position: relative;}
+#project .el-tabs__item:before{
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 0px;
+  width: 0px;
+  height: 3px;
+  background-color: #6699ee;
+  transition: all .2s;
+}
+#project .el-tabs__item.is-active:before{
+    width: 100%;
+}
+/*#project .tab-seach .seach-input .el-input{width: 348px;}*/
+#project .tab-seach .seach-input .el-input .el-input__inner{width: 348px;}
+#project .el-tabs__header{border-bottom: 1px solid #E0E6ED;} 
+#project .el-select-dropdown__item span{
+  font-size: 14px!important;
+}
+#project .el-form-item__error{
+  position: static;
+  margin-bottom: -7px;
+}
+#project .el-date-editor .el-input__inner{cursor: pointer;}
+#project .mystatus .el-input__inner:hover{border: 1px solid #c0ccda}
+#project .mystatus .el-input__inner:focus{
+  border: 1px solid #6699EE;
+}
+#project .dialog-cancel-btn, .dialog-confirm-btn{border-radius: 2px;}
+@media screen and (max-width: 1200px) {
+  #project .tab-seach .seach-input .el-input{
+    width: 348px;
+  }
+}
+@media screen and (max-width: 1010px) {
+  #project .tab-seach .seach-input .el-input{
+    width: 348px;
+  }
+  .my-autocomplete{
+    min-width: 348px!important;
+    position: absolute!important;
+    top: 114px!important;
+    left: 639px!important;
+    transform-origin: center top 0px!important;
+    z-index: 2000!important;
+  }
+}
+.el-select-dropdown__empty{padding: 17px 0;}
+.my-autocomplete {z-index: 99999!important}
+.my-autocomplete li{
+    /*line-height: normal;*/
+    height: 56px;
+    line-height: 56px;
+    position: relative;
+}
+
+.my-autocomplete li .name{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  /*color: #475568;*/
+  font-size: 14px;
+}
+.addr {
+  width: 44px;
+  height: 20px;
+  line-height: 20px;
+  border: 1px solid #e0e6ed;
+  font-size: 12px;
+  color: #99a9bf;
+  position: absolute;
+  right: 15px;
+  top: 17px;
+  text-align: center;
+  border-radius: 2px;
+}
+.highlighted .addr {border: solid 1px #e0e6ed;color: #99a9bf;}
+.my-autocomplete .seach-empty{color: #c0ccda;font-size: 14px;text-align: center;height: 56px;line-height: 56px;}
+.my-autocomplete li:hover{
+   background-color: #f5f5f5;
+   color: #475568;
+}
+.el-autocomplete-suggestion li.highlighted{
+    background-color: #f5f5f5;
+    color: #475568;
+}
+#project .tab-seach .seach-input .projectSeach>.el-input>.el-input__inner, #project .tab-seach .seach-input .projectSeach{
+  width: 238px;
+}  
+/* 表单验证错误提示样式 */
+#project .el-form-item__error{
+  position: static;
+  margin-bottom: -7px;
+}

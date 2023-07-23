@@ -1,0 +1,161 @@
+<!-- 首页的筛选框 -->
+<view catchtouchmove wx:if="{{jobType || city || sort || select}}" class="mask" bindtap="close"></view>
+<view class="select-box">
+    <view hidden="{{!jobType && !city && !sort && !select}}" class="fix">
+        <view class="select-bar">
+            <view class="item">
+                <view wx:if="{{config.job_type}}" bindtap="click" data-name="jobType" class="{{(!jobType)?'item2':'active'}}">
+                    {{jobText?jobText:'职位类型'}}
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item">
+                <view wx:if="{{config.district}}" bindtap="click" data-name="city" class="{{(!city)?'item2':'active'}}">
+                    <block wx:if="{{streetText && streetId !== 0}}">
+                        {{streetText}}
+                    </block>
+                    <block wx:elif="{{districtText}}">
+                        {{districtText}}
+                    </block>
+                    <block wx:else>
+                        全城
+                    </block>
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item" wx:if='{{hideSort}}'>
+                <view wx:if="{{config.order}}" bindtap="click" data-name="sort" class="{{(!sort)?'item2':'active'}}">
+                    {{sortText?sortText:'推荐排序'}}
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item" >
+                <view wx:if="{{config.more}}" bindtap="click" data-name="select" class="{{(!select && (sexActive == 0 && identityActive == 0 && dateTypeActive == 0 && moreId.length == 0))?'item2':'active'}}">
+                    筛选
+                    <view wx:if="{{(!select && !(sexActive == 0 && identityActive == 0 && dateTypeActive == 0 && moreId.length == 0))}}" class="icon2"></view>
+                    <view wx:else class="icon"></view>
+                </view>
+            </view>
+        </view>
+        <view class="line"></view>
+        <view hidden="{{!jobType && !city && !sort && !select}}" class="content-box">
+            <view hidden="{{!jobType}}" class="job-type" wx:for="{{config.job_type}}" wx:key="index">
+                <view class="item">
+                    <text class="title">{{index}}</text>
+                    <view class="tags" >
+                        <view class="tag" wx:for="{{item}}" wx:key="i" wx:for-item="one" wx:for-index="i">
+                            <button data-text="{{one.title}}" class="{{one.id === jobId?'active':''}}" data-name="job_type" data-title="{{index}}" data-index="{{i}}" data-id="{{one.id}}" bindtap="choose">{{one.title}}</button>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view hidden="{{!city}}" class="city">
+                <block wx:if="{{doubleDis}}">
+                    <view class="addr left">
+                        <view class="item {{item.id === districtId?'active':''}}" wx:for="{{config.district}}" wx:key="id">
+                            <text data-text="{{item.name}}" bindtap="chooseDistrict" data-index="{{index}}" data-name="district" data-id="{{item.id}}">{{item.name}}</text>
+                        </view>
+                    </view>
+                    <view class="addr right">
+                        <view class="item" wx:for="{{secondDistrict}}" wx:key="index">
+                            <text data-text="{{item.name}}" class="{{item.id === streetId?'active':''}}" data-index="{{index}}" data-name="district" bindtap="choose" data-id="{{item.id}}">{{item.name}}</text>
+                        </view>
+                    </view>
+                </block>
+                <block wx:else>
+                    <view class="addr single">
+                        <view class="item {{item.id === districtId?'active':''}}" wx:for="{{config.district}}" wx:key="id">
+                            <text data-text="{{item.name}}" bindtap="singleChooseDistrict" data-index="{{index}}" data-name="district" data-id="{{item.id}}">{{item.name}}</text>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <view hidden="{{!sort}}" class="sort">
+                <view data-text="{{item.name}}" bindtap="choose" data-name="order" data-id="{{item.id}}" data-index="{{index}}" class="option {{item.id === sortId?'active':''}}" wx:for="{{config.order}}" wx:key="item.id">{{item.name}}
+                </view>
+            </view>
+            <checkbox-group bindchange="check">
+                <view hidden="{{!select}}" class="select">
+                    <view class="options-box">
+                        <view class="item" wx:for="{{config.more.demand}}" wx:key="key" wx:for-index="i">
+                            <block wx:if="{{item.key == 'sex'}}">
+                                <text class="title">{{item.title}}</text>
+                                <view class="tags">
+                                    <view class="tag" wx:for="{{item.options}}" wx:key="value" wx:for-item="one">
+                                        <text data-text="{{one.name}}" data-key="{{item.key}}" class="{{sexActive == one.value?'active':''}}" data-index="{{i}}" data-type="demand" data-name="more" data-id="{{one.value}}" bindtap="choose">{{one.name}}</text>
+                                    </view>
+                                </view>
+                            </block>
+                            <block wx:if="{{item.key == 'identity'}}">
+                                <text class="title">{{item.title}}</text>
+                                <view class="tags">
+                                    <view class="tag" wx:for="{{item.options}}" wx:key="value" wx:for-item="one">
+                                        <text data-text="{{one.name}}" data-key="{{item.key}}" class="{{identityActive == one.value?'active':''}}" data-index="{{i}}" data-type="demand" data-name="more" data-id="{{one.value}}" bindtap="choose">{{one.name}}</text>
+                                    </view>
+                                </view>
+                            </block>
+                            <block wx:if="{{item.key == 'dateType'}}">
+                                <text class="title">{{item.title}}</text>
+                                <view class="tags">
+                                    <view class="tag" wx:for="{{item.options}}" wx:key="value" wx:for-item="one">
+                                        <text data-text="{{one.name}}" data-key="{{item.key}}" class="{{dateTypeActive == one.value?'active':''}}" data-index="{{i}}" data-type="demand" data-name="more" data-id="{{one.value}}" bindtap="choose">{{one.name}}</text>
+                                    </view>
+                                </view>
+                            </block>
+                        </view>
+                        <block wx:for="{{config.more.more}}" wx:key="id" wx:for-item="item">
+                            <view class="line"></view>
+                            <view class="checkbox">
+                                <text>{{item.name}}</text>
+                                <checkbox data-index="{{index}}" data-key="{{item.key}}" data-type="more" data-name="more" bindtap="choose" checked="{{!item.show}}" value="{{[item.key,item.name]}}"/>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="line"></view>
+                    <view class="button-box">
+                        <button bindtap="reset" style="border-color:#e5e5e5;background:#fff;" class="button">重置</button>
+                        <button bindtap="sortCom" style="border-color:#ffcc00;background:#ffcc00;" class="button com">完成</button>
+                    </view>
+                </view>
+            </checkbox-group>
+        </view>
+    </view>
+    <view hidden="{{jobType || city || sort || select}}">
+        <view class="select-bar">
+            <view class="item">
+                <view wx:if="{{config.job_type}}" bindtap="click" data-name="jobType" class="{{(!jobType)?'item2':'active'}}">
+                    {{jobText?jobText:'职位类型'}}
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item">
+                <view wx:if="{{config.district}}" bindtap="click" data-name="city" class="{{(!city)?'item2':'active'}}">
+                    <block wx:if="{{streetText && streetId !== 0}}">
+                        {{streetText}}
+                    </block>
+                    <block wx:elif="{{districtText}}">
+                        {{districtText}}
+                    </block>
+                    <block wx:else>
+                        全城
+                    </block>
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item" wx:if='{{hideSort}}'>
+                <view wx:if="{{config.order}}" bindtap="click" data-name="sort" class="{{(!sort)?'item2':'active'}}">
+                    {{sortText?sortText:'推荐排序'}}
+                    <view class="icon"></view>
+                </view>
+            </view>
+            <view class="item" >
+                <view wx:if="{{config.more}}" bindtap="click" data-name="select" class="{{(!select && (sexActive == 0 && identityActive == 0 && dateTypeActive == 0 && moreId.length == 0))?'item2':'active'}}">
+                    筛选
+                    <view wx:if="{{(!select && !(sexActive == 0 && identityActive == 0 && dateTypeActive == 0 && moreId.length == 0))}}" class="icon2"></view>
+                    <view wx:else class="icon"></view>
+                </view>
+            </view>
+        </view>
+        <view class="line"></view>
+    </view>
+</view>

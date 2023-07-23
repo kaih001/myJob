@@ -1,0 +1,254 @@
+<template>
+ <dm-modal
+  id="dmModal"
+  cancel-text="返回"
+  confirm-text="去职位列表"
+  bind:cancel="bindModalCancel"
+  bind:confirm="bindModalConfirm">
+</dm-modal>
+
+<view class="dm-page apply">
+  <view class="dm-section">
+    <form class="dm-form">
+      <view class="dm-cells-tips">
+        <text>请填写资料验证手机，可更快上岗并确保工资到账</text>
+      </view>
+      <view class="dm-cells">
+        <view wx:if="{{!fieldStatus.isRealName}}" class="dm-cell dm-cell-input">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label stretch">姓名</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input
+              type="text"
+              class="dm-input"
+              placeholder="请输入真实姓名"
+              value="{{userInfo.real_name}}"
+              data-apply-type="real_name"
+              bindinput="bindWatchChange"
+            />
+          </view>
+        </view>
+        <view wx:if="{{!fieldStatus.isGender}}" class="dm-cell dm-cell-input">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label stretch">性别</view>
+          </view>
+          <view class="dm-cell-bd">
+            <radio-group class="radio-group dm-radio-group" data-apply-type="gender" bindchange="bindWatchChange">
+              <label class="dm-radio-label">
+                <radio class="dm-radio-input" name="sex" value="1" checked="{{userInfo.gender == 1}}" />
+                <text class="dm-radio-text">男</text>
+              </label>
+              <label class="dm-radio-label">
+                <radio class="dm-radio-input" name="sex" value="2" checked="{{userInfo.gender == 2}}" />
+                <text class="dm-radio-text">女</text>
+              </label>
+            </radio-group>
+          </view>
+        </view>
+        <view wx:if="{{!fieldStatus.isAtSchool}}" class="dm-cell dm-cell-input">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label stretch">身份</view>
+          </view>
+          <view class="dm-cell-bd">
+            <radio-group class="radio-group dm-radio-group" data-apply-type="at_school" bindchange="bindWatchChange">
+              <label class="dm-radio-label">
+                <radio class="dm-radio-input" name="at_school" value="1" checked="{{userInfo.at_school == 1}}" />
+                <text class="dm-radio-text">学生</text>
+              </label>
+              <label class="dm-radio-label">
+                <radio class="dm-radio-input" name="at_school" value="0" checked="{{userInfo.at_school === 0 || userInfo.at_school === '0'}}" />
+                <text class="dm-radio-text">非学生</text>
+              </label>
+            </radio-group>
+          </view>
+        </view>
+        <view wx:if="{{!fieldStatus.isDegree}}" class="dm-cell dm-cell-input dm-cell-access" hover-class="dm-touch">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label stretch">学历</view>
+          </view>
+          <view class="dm-cell-bd">
+            <picker
+              value="{{userInfo.degree}}"
+              range="{{degreeList}}"
+              range-key="label"
+              bindchange="bindWatchChange"
+              data-apply-type="degree">
+              <input
+                class="dm-input"
+                disabled
+                placeholder="请选择最高学历"
+                placeholder-class="input-placeholder"
+                value="{{degreeText}}"
+              />
+            </picker>
+          </view>
+          <view class="dm-cell-fd"></view>
+        </view>
+        <view wx:if="{{!fieldStatus.isBirthDate}}" class="dm-cell dm-cell-input dm-cell-access" hover-class="dm-touch">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">出生年份</view>
+          </view>
+          <view class="dm-cell-bd">
+            <picker mode="date" value="{{userInfo.birth_date}}" start="1963-01-01" end="2003-01-01" bindchange="bindWatchChange" fields="year" data-apply-type="birth_date">
+              <input
+                class="dm-input"
+                disabled
+                placeholder="请选择出生年份"
+                placeholder-class="input-placeholder"
+                value="{{birthText}}"
+              />
+            </picker>
+          </view>
+          <view class="dm-cell-fd"></view>
+        </view>
+
+        <view class="dm-cell dm-cell-input dm-cell-access" hover-class="dm-touch" wx:if="{{is_resume_complete != 1}}">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">期望工作城市</view>
+          </view>
+          <view class="dm-cell-bd">
+            <picker class="input" mode="multiSelector" bindchange="bindregionPickerChange" bindcolumnchange="bindColumnchange" range-key="short_name" range="{{region}}" value="{{[0,0,0]}}"
+            >
+              <view class="input-placeholder" style="color:#000" wx:if="{{!townLabel}}">{{locationCity.name}}</view>
+              <view class="picker input-show" wx:else>
+                {{provinceLabel === cityLabel ? (cityLabel + ' ' + townLabel) : (provinceLabel + ' ' + cityLabel + ' ' + townLabel)}}
+              </view>
+            </picker>
+          </view>
+          <view class="dm-cell-fd"></view>
+        </view>
+
+        <view class="dm-cell dm-cell-input dm-cell-access" hover-class="dm-touch" wx:if="{{is_resume_complete != 1}}">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">期望工作岗位</view>
+          </view>
+          <view class="dm-cell-bd">
+            <view class="input {{ expectPost.text ? '' : 'input-placeholder' }}" bindtap="bindSelectPost">
+              <view class="post-label">{{expectPost.text || '请选择期望岗位'}}</view>
+            </view>
+          </view>
+          <view class="dm-cell-fd"></view>
+        </view>
+      </view>
+
+      <view class="dm-cells" wx:if="{{!loginFlag}}">
+        <view class="dm-cell dm-cell-input">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">手机号</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input type="number" class="dm-input" placeholder="请输入11位手机号码" maxlength="11" data-apply-type="phoneNumber" value= "{{phoneNumber}}"bindinput="bindWatchChange" />
+          </view>
+        </view>
+        <view class="dm-cell dm-cell-input dm-cell-code" wx:if="{{checkPicCodeFlg}}">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">验证码</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input type="text" class="dm-input" placeholder="请输入图片验证码" maxlength="6" data-apply-type="inputPicCode" bindinput='bindWatchChange' value="{{inputPicCode}}" />
+          </view>
+          <view class="dm-cell-ft" bindtap='getPicCode'>
+            <image class="dm-cell-code-image" src="{{picCode}}" />
+            <icon class="dm-cell-code-refresh"></icon>
+          </view>
+        </view>
+        <view class="dm-cell dm-cell-input dm-cell-code">
+          <view class="dm-cell-hd">
+            <view class="dm-cell-label">验证码</view>
+          </view>
+          <view class="dm-cell-bd">
+            <input type="number" class="dm-input" placeholder="请输入6位验证码" maxlength="6" data-apply-type="code" bindinput='bindWatchChange' value="{{code}}" />
+          </view>
+          <view class="dm-cell-ft" bindtap='getCode'>
+            <view class="{{codeBtnStyle}}">{{codeBtnText}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="dm-cells dm-cells-btn">
+        <button class="dm-btn dm-btn-primary dm-btn-large" type="button" hover-class="dm-touch" bindtap="bindConfirm">确定</button>
+      </view>
+      <!-- <view class="dm-cells-text" bindtap='cantGetCode' wx:if="{{!loginFlag}}">
+        <text>无法获取验证码？</text>
+      </view> -->
+      <view class="btn-bottom-wrapper">
+        <view class="agreement-agree" wx:if="{{jobDetail.is_zhima&&jobDetail.is_proto}}">
+          <icon class="agree-icon" wx:class="{{{disagree:!isAgree}}}" catchtap="toggleAgree"></icon>同意<text class="agreement-text" catchtap="goAgreement">《斗米报名协议》</text>
+        </view>
+        <view class="dm-cells-text" bindtap='cantGetCode' wx:if="{{!loginFlag}}">
+          <text>无法获取验证码？</text>
+        </view>
+      </view>
+    </form>
+  </view>
+</view>
+
+</template>
+
+<script src="./handle.js"></script>
+
+<style lang="stylus">
+.stretch {
+  letter-spacing: 2em;
+}
+
+
+.dm-radio-group,
+.dm-radio-label {
+  height: 100%;
+}
+.dm-cell-hd {
+  margin-right: 20rpx;
+}
+
+
+.dm-cells-tips {
+  display: flex;
+  align-items: flex-start;
+}
+
+.dm-cells-tips text {
+  display: block;
+  flex: 1;
+}
+
+.btn-bottom-wrapper
+  display flex
+  align-items center
+  justify-content space-between
+  margin-top 24rpx
+  padding 0 72rpx
+  .agreement-agree
+    font-size 12px
+    color #808080
+    margin-bottom 12px
+    padding-left 16px
+    .agree-icon
+      display inline-block
+      width 26rpx
+      height 26rpx
+      margin-right 10rpx
+      vertical-align middle
+      background url('../../../../../assets/image/agree.png') no-repeat
+      background-size cover
+    .disagree
+      background url('../../../../../assets/image/disagree.png') no-repeat
+      background-size cover
+    .agreement-text
+      color #4578D1
+      display inline-block
+      text-align top
+      vertical-align middle
+
+
+</style>
+
+<script type="application/json">
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "dm-modal": "../../../../../components/dmx/dm-modal"
+  }
+}
+
+</script>

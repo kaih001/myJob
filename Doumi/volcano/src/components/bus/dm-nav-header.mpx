@@ -1,0 +1,140 @@
+<template>
+  <dm-nav-bar-adapter class="dm-nav-bar-adapter" bindtap="bindTap">
+    <view wx:if="{{__mpx_mode__ === 'wx'}}" class="dm-header">
+      <view
+        class="dm-header-city"
+        slot="before"
+        catchtap="bindSelectCity">{{currentCity.name || '北京'}}
+      </view>
+      <view class="dm-header-search" style="flex:1;">
+        <icon class="dmx-icon dmx-icon-search"></icon>
+        <input
+          class="dm-header-search__input"
+          placeholder="搜索职位/公司"
+          disabled
+          bindtap="bindJumpSearchPage"
+        />
+      </view>
+      <view style="margin-right: 200rpx;margin-left:10rpx" bindtap="goZiZhi">资质</view>
+    </view>
+
+    <view wx:elif="{{__mpx_mode__ === 'ali'}}" class="dm-header">
+      <image class="logo" src="../../assets/image/logo.png"></image>
+      <view
+        class="dm-header-city"
+        slot="before"
+        catchtap="bindSelectCity">{{currentCity.name || '北京'}}
+      </view>
+    </view>
+
+    <slot></slot>
+  </dm-nav-bar-adapter>
+</template>
+
+<script>
+import mpx, { createComponent } from '@mpxjs/core'
+import util from '~/utils/util'
+import cityStore from '~/store/city'
+import citySelectorPath from '~/pages/citySelector/citySelector?resolve'
+import searchPath from '~/pages/search/search?resolve'
+
+createComponent({
+  computed: {
+    ...cityStore.mapGetters(['currentCity'])
+  },
+
+  methods: {
+    bindTap () {
+      this.triggerEvent('click')
+    },
+    goZiZhi(){
+      // mpx.navigateTo({ url: `../../pages/ziZhiMiddle/ziZhiMiddle`})
+      this.triggerEvent('zizhi')
+    },
+    // - 跳转城市选择页
+    bindSelectCity () {
+      this.triggerEvent('tracker', { append: '@ca_from=location_city' })
+      mpx.navigateTo({ url: `${citySelectorPath}?callbackName=updateDataInCity` })
+    },
+    // 点击搜索框跳转到搜索页面
+    bindJumpSearchPage () {
+      this.triggerEvent('tracker', { append: '@ca_from=search' })
+      const curPage = util.getCurrentPage()
+      const type = curPage.filterQuery['job_date_type'] ? curPage.filterQuery['job_date_type'] : '0'
+      mpx.navigateTo({ url: `${searchPath}?jobDateType=${type}` })
+    },
+  }
+})
+</script>
+
+<style lang="stylus">
+@import '../../styles/util.styl'
+@import '../../styles/icon.styl'
+
+.dm-nav-bar-adapter
+  display flex
+  position absolute
+  width 100%
+  top 0
+  left 0
+  z-index 2
+  background-color #ffd931
+  // background-image:url('../../assets/image/bg_header.png')
+  // background-size 100% 100%
+  // background-repeat no-repeat
+
+.dm-header
+  height 100%
+  margin-top -1px
+  display flex
+  align-items center
+  background-color #ffd931
+  .logo
+    margin-left:32rpx
+    height:64rpx
+    width:160rpx
+  .dm-header-search
+    height 64rpx
+    flex auto
+    position relative
+    background-color white
+    border-radius 16px
+    .dmx-icon
+      position absolute
+      top 50%
+      transform translateY(-50%)
+    .dmx-icon-search
+      left 20rpx
+    &__input
+      height 100%
+      padding 0 56rpx
+      color #404040
+      font-size 12px
+  .dm-header-city
+    flex none
+    min-width 136rpx
+    padding 0 56rpx 0 32rpx
+    background-color #FFD931
+    display flex
+    align-items center
+    justify-content center
+    position relative
+    box-sizing border-box
+    drawTriangle()
+    &::after
+      position absolute
+      right 24rpx
+      top 50%
+      transform translateY(-30%)
+
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-nav-bar-adapter":"../dmx/dm-nav-bar-adapter",
+      "dm-search-box": "../dmx/dm-search-box"
+    }
+  }
+</script>

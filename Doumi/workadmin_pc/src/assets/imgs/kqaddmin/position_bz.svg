@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="92px" height="84px" viewBox="0 0 92 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>工作地点</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-17.6%" y="-15.0%" width="135.3%" height="130.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="0.5" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-23.6%" y="-25.1%" width="147.1%" height="150.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="1" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="0%" y1="45.8600968%" x2="100%" y2="45.8600968%" id="linearGradient-3">
+            <stop stop-color="#A7A9AC" offset="0%"></stop>
+            <stop stop-color="#B3B4B7" offset="55.7019181%"></stop>
+            <stop stop-color="#A7A9AC" offset="100%"></stop>
+        </linearGradient>
+        <path d="M4.00218213,26.5 C1.79183797,26.5 0,24.7097594 0,22.50399 L0,3.99601004 C0,1.78907463 1.79182702,0 4.00218213,0 L65.9978179,0 C68.208162,0 70,1.79024057 70,3.99601004 L70,22.50399 C70,24.7109254 68.208173,26.5 65.9978179,26.5 L38.5555556,26.5 L35.6687728,29.7476306 C35.2994198,30.1631527 34.6968553,30.1589622 34.3312272,29.7476306 L31.4444444,26.5 L4.00218213,26.5 Z" id="path-4"></path>
+        <filter x="-23.6%" y="-54.1%" width="147.1%" height="208.2%" filterUnits="objectBoundingBox" id="filter-6">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.07 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Artboard-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-163.000000, -389.000000)">
+        <g id="Group-2" transform="translate(174.000000, 400.000000)">
+            <g id="Group-3" transform="translate(25.000000, 34.000000)">
+                <path d="M17.0155717,29.1821495 C17.2155987,28.9461311 17.5440383,28.9377731 17.7523839,29.1670267 L17.7523839,29.1670267 C17.959287,29.394693 17.9635526,29.772128 17.7648343,30.0066023 L10.3059917,38.8075375 C10.1059647,39.043556 9.77752515,39.051914 9.56917951,38.8226604 L9.56917951,38.8226604 C9.36227637,38.594994 9.35801084,38.217559 9.55672914,37.9830847 L17.0155717,29.1821495" id="Rectangle" fill="#939393" opacity="0.131354944" filter="url(#filter-1)"></path>
+                <path d="M25.5551857,26.9057375 C28.4091771,23.8227885 28.7142825,21.0123652 26.9072136,19.1919823 C25.1001448,17.3715994 21.1112764,18.5304281 18.257285,21.6133771 C15.4032936,24.6963261 14.405098,27.6378354 16.2121669,29.4582183 C18.0192358,31.2786013 22.7011943,29.9886865 25.5551857,26.9057375 Z" id="Oval-3" fill="#939393" opacity="0.25495569" filter="url(#filter-2)" transform="translate(21.669560, 24.309368) rotate(-7.000000) translate(-21.669560, -24.309368) "></path>
+                <g id="Group-19">
+                    <ellipse id="Oval-12" fill-opacity="0.78869452" fill="#646464" cx="9.5" cy="37.75" rx="2" ry="1.25"></ellipse>
+                    <g id="Group-12-Copy-3">
+                        <path d="M8.5,17.9987461 C8.5,17.4471539 8.94386482,17 9.5,17 L9.5,17 C10.0522847,17 10.5,17.4386148 10.5,17.9987461 L10.5,37.0012539 C10.5,37.5528461 10.0561352,38 9.5,38 L9.5,38 C8.94771525,38 8.5,37.5613852 8.5,37.0012539 L8.5,17.9987461 Z" id="Rectangle" fill="url(#linearGradient-3)"></path>
+                        <rect id="Rectangle-5" fill="#707070" x="8.5" y="12.5" width="2" height="7" rx="1"></rect>
+                        <circle id="Oval-3" fill="#248CFF" cx="9.5" cy="9.5" r="9.5"></circle>
+                        <ellipse id="Oval-7" fill="#FFFFFF" opacity="0.925839552" cx="4.75612662" cy="4.87790698" rx="1.61659174" ry="1.62209302"></ellipse>
+                    </g>
+                </g>
+            </g>
+            <g id="Group-Copy-5">
+                <g id="Rectangle-6">
+                    <g id="Rectangle-6-Copy-2">
+                        <mask id="mask-5" fill="white">
+                            <use xlink:href="#path-4"></use>
+                        </mask>
+                        <g id="Combined-Shape">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-4"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                            <path stroke-opacity="0.243829257" stroke="#979797" stroke-width="0.5" d="M4.00218213,26.25 L31.4444444,26.25 L31.6312968,26.333909 L34.5180795,29.5815396 C34.7857138,29.8826282 35.2134649,29.8835521 35.4819205,29.5815396 L38.3687032,26.333909 L38.5555556,26.25 L65.9978179,26.25 C68.0701842,26.25 69.75,24.5727716 69.75,22.50399 L69.75,3.99601004 C69.75,1.92798423 68.0697627,0.25 65.9978179,0.25 L4.00218213,0.25 C1.92981579,0.25 0.25,1.92722838 0.25,3.99601004 L0.25,22.50399 C0.25,24.5720158 1.93023734,26.25 4.00218213,26.25 Z"></path>
+                        </g>
+                        <g mask="url(#mask-5)" id="Group-45">
+                            <g transform="translate(-31.000000, -9.500000)">
+                                <g>
+                                    <rect id="Rectangle-6" fill="#248CFF" x="0" y="0" width="37.5" height="48"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <text id="工作地点" font-family="PingFangSC-Medium, PingFang SC" font-size="12" font-weight="400" fill="#666666">
+                    <tspan x="14" y="18">工作地点</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

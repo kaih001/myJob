@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="34px" viewBox="0 0 30 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>坐标点_默认</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFC800" offset="0%"></stop>
+            <stop stop-color="#FFA500" offset="46.2485017%"></stop>
+            <stop stop-color="#FFA500" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="50%" cy="-27.3942211%" fx="50%" fy="-27.3942211%" r="79.1441524%" gradientTransform="translate(0.500000,-0.273942),scale(1.000000,0.889025),rotate(90.000000),translate(-0.500000,0.273942)" id="radialGradient-2">
+            <stop stop-color="#FFEBD4" offset="0%"></stop>
+            <stop stop-color="#FFA500" offset="100%"></stop>
+        </radialGradient>
+        <path d="M11.792678,27.826979 C5.10945431,26.7684863 0,20.9809316 0,14 C0,6.2680135 6.2680135,0 14,0 C21.7319865,0 28,6.2680135 28,14 C28,21.1667094 22.6149798,27.0756799 15.6704798,27.9013713 C14.7934508,28.716251 14.1859444,29.9141841 13.8479605,31.4951704 L13.4717559,31.4147453 C13.478777,31.3819024 13.4780173,31.3478725 13.4695372,31.3153757 C13.0701391,29.7848187 12.511186,28.6220198 11.792678,27.826979 Z" id="path-3"></path>
+    </defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-111.000000, -45.000000)">
+        <g id="Pin-Copy-9" transform="translate(112.000000, 46.000000)">
+            <ellipse id="Oval-6" fill-opacity="0.2" fill="#000000" cx="13.5" cy="31" rx="5.5" ry="2"></ellipse>
+            <g id="Oval">
+                <use stroke="#E27E09" fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#radialGradient-2)" d="M13.9014086,30.9952987 C13.9114552,31.0318325 13.9214073,31.0685656 13.9312648,31.1054978 L13.8479605,31.4951704 L13.4717559,31.4147453 L13.5762842,30.9257935 L13.9014086,30.9952987 Z M13.6712743,30.2420016 C14.0516505,29.1146713 14.6032867,28.2104267 15.330143,27.5350778 L15.4495681,27.4241155 L15.6114463,27.4048684 C22.3617362,26.6022684 27.5,20.8560983 27.5,14 C27.5,6.54415588 21.4558441,0.5 14,0.5 C6.54415588,0.5 0.5,6.54415588 0.5,14 C0.5,20.663123 5.35889728,26.3017609 11.8708934,27.3331345 L12.0452634,27.3607514 L12.1636349,27.4917314 C12.7811835,28.175059 13.2819167,29.0923251 13.6712743,30.2420016 Z"></path>
+            </g>
+            <circle id="Oval-2" fill="#FFFFFF" cx="14" cy="14" r="5"></circle>
+        </g>
+    </g>
+</svg>

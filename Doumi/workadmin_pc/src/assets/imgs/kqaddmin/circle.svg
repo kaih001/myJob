@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M6,12 C9.3137085,12 12,9.3137085 12,6 C12,2.6862915 9.3137085,0 6,0 C2.6862915,0 0,2.6862915 0,6 C0,9.3137085 2.6862915,12 6,12 Z" id="path-1"></path>
+    </defs>
+    <g id="1.0_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-5" transform="translate(-158.000000, -116.000000)">
+            <g id="Group" transform="translate(158.000000, 116.000000)">
+                <g id="Combined-Shape-Copy-2">
+                    <use fill="#FCFDFE" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <path stroke="#E0E6ED" stroke-width="1" d="M6,11.5 C9.03756612,11.5 11.5,9.03756612 11.5,6 C11.5,2.96243388 9.03756612,0.5 6,0.5 C2.96243388,0.5 0.5,2.96243388 0.5,6 C0.5,9.03756612 2.96243388,11.5 6,11.5 Z"></path>
+                </g>
+                <circle id="Oval-8-Copy-4" fill="#E0E6ED" cx="6" cy="6" r="2"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

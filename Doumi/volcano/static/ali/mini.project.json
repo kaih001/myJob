@@ -1,0 +1,16 @@
+{
+  "component2": true,
+  "compileType": "miniprogram",
+  "setting": {
+    "newFeature": true,
+    "urlCheck": true,
+    "es6": false,
+    "postcss": true,
+    "minified": false,
+    "autoAudits": false
+  },
+  "appid": "2019091867587027",
+  "projectname": "doumi-seek-work-base",
+  "description": "mpx for doumi-seek-work-base",
+  "condition": {}
+}

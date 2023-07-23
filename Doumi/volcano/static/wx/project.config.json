@@ -1,0 +1,229 @@
+{
+	"compileType": "miniprogram",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"enhance": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"nodeModules": false,
+		"autoAudits": false,
+		"uglifyFileName": true,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"bundle": false
+	},
+	"appid": "wxe1d7b959cd75eae2",
+	"projectname": "doumi-seek-work",
+	"description": "斗米找工作小程序，采用Mpx框架渐进式开发",
+	"condition": {
+		"miniprogram": {
+			"current": 14,
+			"list": [
+				{
+					"id": 0,
+					"name": "首页(场景值1047)",
+					"pathName": "pages/index/index",
+					"scene": 1047
+				},
+				{
+					"id": 0,
+					"name": "城市选择页",
+					"pathName": "pages/citySelector/citySelector"
+				},
+				{
+					"id": -1,
+					"name": "搜索页",
+					"pathName": "pages/search/search",
+					"query": "city_id=12&word=%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86&lat=40.04026413&lng=116.292610168&order=2"
+				},
+				{
+					"id": 13,
+					"name": "首次引导-简历补充页",
+					"pathName": "pages/basicInfoFirst/basicInfoFirst",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "方便面专区-test",
+					"pathName": "pages/prefecture/prefecture",
+					"query": "source=yyw_2_方便面项目&category=post_20190318024344"
+				},
+				{
+					"id": 2,
+					"name": "职位详情",
+					"pathName": "pages/jobDetail/jobDetail",
+					"query": "id=116490248&jobType=2&source=sy_postlist&reqid=01d72e8ab94efce4e537ce8bdae0f8a1"
+				},
+				{
+					"id": 3,
+					"name": "约面流程-职位详情-直聘帖",
+					"pathName": "pages/jobDetailInterview/jobDetailInterview",
+					"query": "id=4466233&jobType=1&source=&ca_campaign=post_20190318024344&from=yyw_2_haowan&reqid=ea368cadda94cfc64f75fb3d10243e87"
+				},
+				{
+					"id": 4,
+					"name": "约面流程-职位详情-普通帖",
+					"pathName": "pages/jobDetailInterview/jobDetailInterview",
+					"query": "id=2341082&jobType=10&source=sy_postlist"
+				},
+				{
+					"id": 4,
+					"name": "约面流程-补充信息页",
+					"pathName": "subA/pages/interview/applyInterview/applyInterview",
+					"query": "isInterview=true"
+				},
+				{
+					"id": 4,
+					"name": "约面流程-签到页-直接进入",
+					"pathName": "pages/interview/signIn/signIn",
+					"query": "id=4466233"
+				},
+				{
+					"id": 4,
+					"name": "约面流程-签到页-扫码进入",
+					"pathName": "pages/interview/signIn/signIn",
+					"query": "scene=pcode%253D189"
+				},
+				{
+					"id": 5,
+					"name": "约面流程-面试详情",
+					"pathName": "pages/myInterviewDetail/myInterviewDetail",
+					"query": "apply_id=116491868"
+				},
+				{
+					"id": 7,
+					"name": "我的",
+					"pathName": "pages/mine/mine",
+					"query": ""
+				},
+				{
+					"id": 6,
+					"name": "求职记录页",
+					"pathName": "pages/myTabList/myTabList",
+					"query": "tabType=0"
+				},
+				{
+					"id": 14,
+					"name": "我的简历页",
+					"pathName": "pages/basicInfo/basicInfo"
+				},
+				{
+					"id": 11,
+					"name": "我的简历-期望职位选择页",
+					"pathName": "subA/pages/applyExpectPost/applyExpectPost"
+				},
+				{
+					"id": -1,
+					"name": "报名成功页",
+					"pathName": "subA/pages/applySuccess/applySuccess",
+					"query": "jobType=51&id=4161524&isChaoJianZhi=false&contactPerson="
+				},
+				{
+					"id": 9,
+					"name": "登录",
+					"pathName": "pages/login/login",
+					"query": ""
+				},
+				{
+					"id": 10,
+					"name": "公司详情页",
+					"pathName": "pages/companyDetail/companyDetail",
+					"query": "company_id=10583"
+				},
+				{
+					"id": 21,
+					"name": "奖金-奖金规则页",
+					"pathName": "subB/pages/reward/bonusRules/bonusRules",
+					"query": ""
+				},
+				{
+					"id": 22,
+					"name": "奖金-我的奖金",
+					"pathName": "subB/pages/reward/myReward/myReward",
+					"query": ""
+				},
+				{
+					"id": 24,
+					"name": "奖金-分享职位详情页面",
+					"pathName": "subB/pages/reward/rmjobdetail/rmjobdetail",
+					"query": "jobid=4160050&auth_str=eyJpdiI6InYxMnRJbzlFSXdQdDdiTnNWanhrYmc9PSIsInZhbHVlIjoidlhoa3RReGVubmNNdUNVeW1pWVdOTDNlRUtLam1OS3NqSTNqYjRaMDZaVEd1a1U1bStnbmh2M0hmeEE1bCtCNDhheXhUdDhNTlNGTHRnZUFVaDdLODJjU0JuK0U0dEtPR3haV0ViaVExbXY1VzM2REg0dE12clwvQXV2a2hKU2taYnhiRUpjNDRUMUdpU3JnaEl0YVBOUWNpR3BcLzhrbkI4aEloUVNMem5yWkdcL0pCbCtON1JQclRnaUxqQzU1MXNQK0pQYjRSbW9vbVwvdFlqQ0tMV3d3NFYrM0RGeE4zR1VVUkJwN292bzNsenA1YXAydnlnY05OSnZESHpQRm1FdTgiLCJtYWMiOiIzYzk5NmRjZjIzNDc3NTgyOTU5NmRiZTljZDc1M2EyOTEzNzVkOGY1NmRmMmNmMWE3NDkwNDc3YTc3OWFiOWIzIn0=",
+					"scene": "1044",
+					"shareInfo": {
+						"groupName": "测试模拟群1",
+						"shareName": "ekQj543JlemF79wAsM6W5ssQ7UUrZb9pVs1983JecGc@cr4dev",
+						"shareKey": "yTdUjSGV2q45im8Y6FpGRxhf3whNhPuMgYaS_8Fjc5wDKvhi79l0KcByDbjhZkK0x9SY3sk0X4RfqYEn2ajFMg~~"
+					}
+				},
+				{
+					"id": 25,
+					"name": "奖金-职位列表",
+					"pathName": "subB/pages/reward/rmlist/rmlist",
+					"query": ""
+				},
+				{
+					"id": 26,
+					"name": "奖金-职位详情",
+					"pathName": "subB/pages/reward/jobDetail/jobDetail",
+					"query": "id=7298042&jobType=undefined&source=undefined"
+				},
+				{
+					"id": 27,
+					"name": "奖金-授权跳过",
+					"pathName": "subB/pages/reward/skipPage/skipPage",
+					"query": ""
+				},
+				{
+					"id": 28,
+					"name": "奖金-分享职位详情页面",
+					"pathName": "subB/pages/reward/rmjobdetail/rmjobdetail",
+					"query": "jobid= 4160061&auth_str=*{“iv\":\"v12tIo9EIwPt7bNsVjxkbg==\",\"value\":\"vXhktQxenncMuCUymiYWNL3eEKKjmNKsjI3jb4Z06ZTGukU5m+gnhv3HfxA5l+B48ayxTt8MNSFLtgeAUh7K82cSBn+E4tKOGxZWEbiQ1mv5W36DH4tMvr\\/AuvkhJSkZbxbEJc44T1GiSrghItaPNQciGp\\/8knB8hIhQSLznrZG\\/JBl+N7RPrTgiLjC551sP+JPb4Rmoom\\/tYjCKLWww4V+3DFxN3GUURBp7ovo3lzp5ap2vygcNNJvDHzPFmEu8\",\"mac\":\"3c996dcf234775829596dbe9cd753a291375d8f56df2cf1a7490477a779ab9b3\"}",
+					"scene": "1013"
+				},
+				{
+					"id": 29,
+					"name": "奖金-我要推荐",
+					"pathName": "subB/pages/reward/IWantTRecommend/IWantTRecommend",
+					"query": ""
+				},
+				{
+					"id": 29,
+					"name": "奖金-开通城市",
+					"pathName": "subB/pages/reward/citySelector/citySelector",
+					"query": ""
+				},
+				{
+					"id": 29,
+					"name": "奖金-实名认证",
+					"pathName": "subB/pages/reward/certification/certification",
+					"query": ""
+				},
+				{
+					"id": 30,
+					"name": "WEBVIEW",
+					"pathName": "subB/pages/webPage/webPage",
+					"query": "https%3A%2F%2Fm.doumi.com%2Fbj%2Fs1%2Fx%2Fpost%2Fpost_20180615044607%2F%3Fca_campaign%3Dpost_20180615044607"
+				},
+				{
+					"id": 38,
+					"name": "添加顾问微信页面",
+					"pathName": "subB/pages/operationalActivities/addCounselor/addCounselor",
+					"query": "witchPageShow=2"
+				},
+				{
+					"id": 39,
+					"name": "顾问小工具",
+					"pathName": "subB/pages/adviser/screen/screen",
+					"query": ""
+				}
+			]
+		}
+	}
+}

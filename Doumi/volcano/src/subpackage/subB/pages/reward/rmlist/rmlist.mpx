@@ -1,0 +1,768 @@
+<template>
+  <scroll-view class="dm-page" scroll-y>
+    <view class="dm-section rmlist">
+      <view class="header">
+        <view class="header-nav">
+          <view
+            class="header-nav-item city"
+            bindtap="bindSelectCity"
+          >{{currentCity.name || '北京'}}</view>
+          <view
+            class="header-nav-item rule"
+            bindtap="onClickToRules"
+          >奖金领取规则</view>
+          <view
+            class="header-nav-item rewart"
+            bind:tap="onClickToMyReward"
+          >我的奖金</view>
+        </view>
+      </view>
+      <view
+        class="guide"
+        wx-if="{{isShowGuide}}"
+        bind:tap="bindAuthHandle"
+      >
+        <view class="product-text">现在注册，即可赚取高额代招奖金</view>
+        <view class="product-opt">马上注册</view>
+      </view>
+      <view class="dm-pannel list">
+        <view class="dm-pannel-hd">
+          <view class="dm-pannel-title">职位列表</view>
+        </view>
+        <view class="dm-pannel-bd">
+          <view
+            class="product-info"
+            wx:for="{{list}}"
+            wx:key="index"
+            data-item="{{item}}"
+            bind:tap="onClickItem"
+          >
+            <view class="product-content">
+              <view class="product-title">{{item.title}}</view>
+              <view class="product-price"><text>{{item.salary}}</text>{{item.salary_type}}</view>
+            </view>
+            <view class="product-meta" wx:if="{{item.company_name}}">
+              <view class="product-meta-item">
+                <icon class="dmx-icon dmx-icon-corp"></icon>
+                {{item.company_name}}
+              </view>
+            </view>
+            <view class="product-label" wx:if="{{item.tags.length > 0}}">
+              <dm-tag
+                wx:for="{{item.tags}}"
+                wx:for-item="tagsItem"
+                wx:for-index="tagsIndex"
+                wx:key="tagsIndex"
+                text="{{tagsItem}}"
+                color=""
+                bgColor="">
+              </dm-tag>
+            </view>
+            <view class="product-views" wx-if="{{isShowRewart}}">
+              <view class="product-reward" wx:if="{{item.entry_reward_days}}">
+                预估奖金
+                <view class="product-reward-text">
+                  <text>{{item.reward}}</text>元
+                </view>
+              </view>
+              <view class="product-progress">
+                <view class="product-progress-item">
+                  报名
+                  <view class="product-progress-status"></view>
+                </view>
+                <view class="product-progress-item">
+                  面试
+                  <view class="product-progress-status"></view>
+                  <text class="product-progress-reward" wx:if="{{item.interviewed_reward}}">+{{item.interviewed_reward}}</text>
+                </view>
+                <view class="product-progress-item">
+                  通过
+                  <view class="product-progress-status"></view>
+                  <text class="product-progress-reward" wx:if="{{item.offer_reward}}">+{{item.offer_reward}}</text>
+                </view>
+                <view class="product-progress-item">
+                  入职
+                  <view class="product-progress-status"></view>
+                </view>
+                <view class="product-progress-item" wx:if="{{item.entry_reward_days}}">
+                  入职{{item.entry_reward_days}}天
+                  <view class="product-progress-status"></view>
+                  <text class="product-progress-reward" wx:if="{{item.entry_reward}}">+{{item.entry_reward}}</text>
+                </view>
+                <view class="product-progress-item" wx:else>
+                  在岗奖励
+                  <view class="product-progress-status"></view>
+                  <text class="product-progress-reward" wx:if="{{item.entry_reward}}"><text class="product-progress-reward-text">每月预估</text> +{{item.entry_reward}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="dm-loadmore" hidden="{{ page === 1 || !hasMore }}">
+            <icon class="dm-loadmore-icon"></icon>
+            <text class="dm-loadmore-text">正在加载</text>
+          </view>
+          <view class="dm-loadmore" hidden="{{ hasMore }}">
+            <text class="dm-loadmore-text">没有更多职位啦</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <dialogRules id="dialogRules"></dialogRules>
+  <dialog
+    id="dialog"
+    title="微信账号快速登录"
+    content="微信账号快速登录"
+    bind:getUserInfo="getuserInfoCallBack"
+    bind:cancel="bindCancel"
+  ></dialog>
+  <getPhoneNumber
+    id="getPhoneNumber"
+    title="{{ bindPhoneTitle }}"
+  ></getPhoneNumber>
+  <dm-switch-env
+    bind:on-test="clickToggleENV"
+    bind:on-sim="clickToggleENV"
+  ></dm-switch-env>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import { util, api, app, encrypt } from '../../../../../allJS.js'
+import cityStore from '../../../../../store/city'
+import pageIndex from '../../../../../pages/index/index?resolve'
+import pageMyReward from '../myReward/myReward?resolve'
+import pageCertification from '../certification/certification?resolve'
+import pageJobDetail from '../jobDetail/jobDetail?resolve'
+import pageSkipPage from '../skipPage/skipPage?resolve'
+import pageCitySelector from '../citySelector/citySelector?resolve'
+
+createPage({
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    list: [], // 列表数据
+    page: 1, // 分页
+    page_size: 10, // 分页帖子条数
+    zid: 1, // 专区ID
+    hasMore: true, // 列表是否还有更多职位
+    ource: 'sy_postlist&rm', // 来源
+    isShowRules: false, // 是否显示赏金
+    isLogin: false, // 判断是否已登录
+    isBindPhone: false, // 判断是否已绑定手机号码
+    bindPhoneTitle: '需要绑定手机号才能领取到奖金', // 授权手机号弹层文案
+    isCertified: false, // 是否已实名认证
+    isShowGuide: false, // 展示认证引导
+    isShowRewart: false, // 展示职位奖金
+  },
+
+  computed: {
+    ...cityStore.mapGetters(['currentCity'])
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad (options) {
+    this.__init()
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow () {
+    // pv埋点
+    api.setLog(1, `/jianzhi/connection/a`)
+
+    // 用户授权信息查询
+    this.__updateLoginStatus()
+    // 如果已授权未绑定手机号显示注册引导
+    if (this.isLogin && !this.isBindPhone) {
+      this.isShowGuide = true
+    }
+    // 如果已登录则进行实名认证检测
+    if (this.isBindPhone && !this.isCertified) {
+      this.__checkRealNameAuth()
+    }
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh () {
+    this.page = 1
+    this.__renderPage()
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom () {
+    if (this.hasMore) {
+      this.getJobList()
+    }
+  },
+
+  /**
+   * 事件方法
+   */
+  methods: {
+    /**
+     * 获取职位列表
+     */
+    getJobList () {
+      let time = new Date().getTime()
+      let cid = this.currentCity.id
+      let sStr = this.zid + cid + time + encrypt.md5_key
+      let sign = encrypt.md5(sStr)
+
+      util.requestByPost(
+        'post/list',
+        {
+          id: this.zid,
+          city_id: cid,
+          page: this.page,
+          page_size: this.page_size,
+          time,
+          sign
+        },
+        true,
+        res => {
+          wx.stopPullDownRefresh()
+          if (res.data.code == 200) {
+            let list = []
+            if (this.page != 1) {
+              list = this.list
+            }
+
+            for (let i = 0; i < res.data.data.detail.length; i++) {
+              list.push(res.data.data.detail[i])
+            }
+
+            let page =
+              this.page < res.data.data.page_total
+                ? this.page + 1
+                : this.page
+            if (list.length === 0 && this.page === 1) {
+              page = 1
+            }
+            this.list = list
+            this.hasMore = this.page < res.data.data.page_total
+            this.page = page
+          } else {
+            wx.showToast({
+              title: res.data.message,
+              icon: 'none'
+            })
+          }
+        },
+        err => {
+          wx.stopPullDownRefresh()
+        }
+      )
+    },
+
+    /**
+     * 调试工具
+     */
+    clickToggleENV () {
+      this.page = 1
+      this.__renderPage()
+    },
+
+    /**
+     * 跳转到规则页
+     */
+    onClickToRules () {
+      this.selectComponent('#dialogRules').showDialog()
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=rule')
+    },
+
+    /**
+     * 跳转到我的奖金
+     */
+    onClickToMyReward (e) {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=wdsj')
+
+      // 获取用户绑定状态
+      this.__updateLoginStatus()
+
+      if (!this.isBindPhone) {
+        this.selectComponent('#getPhoneNumber').showDialog()
+        return
+      } else {
+        // 验证是否已实名认证
+        util.requestByPost(
+          'headhunter/get_authentication',
+          {},
+          false,
+          res => {
+            const { code, data, message } = res.data
+            if (code === 200) {
+              if (data.authentic_status === 1) {
+                this.isCertified = true
+                wx.navigateTo({
+                  url: pageMyReward
+                })
+              } else {
+                this.isCertified = false
+                wx.navigateTo({
+                  url: `${pageCertification}?callbackName=getRealNameAuthCallback`
+                })
+              }
+            } else {
+              wx.showToast({
+                title: message,
+                icon: 'none'
+              })
+            }
+          },
+          err => {
+            // wx.stopPullDownRefresh()
+          }
+        )
+      }
+    },
+
+    /**
+     * 跳转到实名认证
+     */
+    bindAuthHandle () {
+      // 获取用户绑定状态
+      this.__updateLoginStatus()
+
+      if (!this.isBindPhone) {
+        this.selectComponent('#getPhoneNumber').showDialog()
+        return
+      } else {
+        wx.navigateTo({
+          url: pageCertification
+        })
+      }
+    },
+
+    /**
+     * 点击职位进入详情页
+     */
+    onClickItem (e) {
+      const item = e.currentTarget.dataset.item
+      api.setLog(
+        2,
+        `@atype=click@ca_name=doumi@ca_source=h5@ca_from=qtjzw@post_id=${item.id}`
+      )
+      wx.navigateTo({
+        url:`${pageJobDetail}?id=${item.id}&jobType=${item.job_type_id}&source=${this.source}`
+      })
+    },
+
+    /**
+     * 获取用户信息
+     */
+    getuserInfoCallBack (e) {
+      util.getUserInfoLog(e, app, e => {
+        if (e === 'fail') {
+          this.selectComponent('#dialog').showDialog()
+          return
+        }
+        this.__updateLoginStatus()
+        if (this.isLogin) {
+          this.selectComponent('#dialog').hideDialog()
+          if (!this.isBindPhone) {
+            this.isShowGuide = true
+          }
+          if (this.isBindPhone && !this.isCertified) {
+          this.__checkRealNameAuth()
+          }
+          this.__renderPage()
+        } else {
+          this.selectComponent('#dialog').showDialog()
+        }
+      })
+    },
+
+    /**
+     * 获取用户信息-点击跳过跳转
+     */
+    bindCancel () {
+      this.selectComponent('#dialog').showDialog()
+      wx.navigateTo({
+        url: `${pageSkipPage}?callbackName=getSkipPageCallback`
+      })
+    },
+
+    /**
+     * 获取用户信息-点击跳过跳转后的回调
+     */
+    getSkipPageCallback () {
+      this.selectComponent('#dialog').hideDialog()
+    },
+
+    /**
+     * 跳转到首页
+     */
+    onClickToIndex () {
+      api.setLog(2, '@atype=click@ca_name=doumi@ca_source=h5@ca_from=more')
+      wx.reLaunch({
+        url: pageIndex
+      })
+    },
+
+    /**
+     * 切换城市
+     */
+    bindSelectCity () {
+      wx.navigateTo({
+        url: `${pageCitySelector}?callbackName=updateDataInCity`
+      })
+    },
+
+    // - 重新选择城市后刷新数据
+    updateDataInCity () {
+      this.page = 1
+      this.getJobList()
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    /**
+     * 页面初始化
+     * 为了所有用户都能获取unionID，每次onLoad页面都要调一次用户授权弹层
+     * 判断是否授权定位，如果授权则直接加载列表
+     */
+    __init () {
+      // 获取用户授权信息
+      this.__getInfo()
+    },
+
+    /**
+     * 查询用户授权
+     */
+    __getInfo () {
+      // 查询是否授权
+      wx.getUserInfo({
+        withCredentials: true,
+        success: async res => {
+          await app.login()
+          this.__updateLoginStatus()
+          if (this.isBindPhone && !this.isCertified) {
+            this.__checkRealNameAuth()
+          }
+          this.__renderPage()
+          this.selectComponent('#dialog').hideDialog()
+        },
+        fail: res => {
+          this.selectComponent('#dialog').showDialog()
+        }
+      })
+    },
+
+    /**
+     * 获取页面
+     * 如果获取到定位授权则加载列表数据；
+     * 没有获取定位授权则跳转到开通城市选择页
+     */
+    async __renderPage () {
+      // this.selectComponent('#dialog').hideDialog()
+
+      try {
+        await app.checkAuthAndGetLocation()
+        await app.getCityInfo()
+        this.getJobList() // 获取列表数据
+      } catch (err) {
+        if (err === 'noLocation') {
+          if (cityStore.getters.currentCity.id === '') {
+            // 拒绝定位后并且没有选择过城市跳转到城市选择页
+            wx.navigateTo({
+              url: pageCitySelector
+            })
+          } else {
+            // 拒绝定位且选择过城市,渲染选择城市下的列表数据
+            this.getJobList() // 获取列表数据
+          }
+        } else {
+          app.showErrorPageHandler(err)
+        }
+      }
+    },
+
+    /**
+     * 获取用户授权登录状态
+     */
+    __updateLoginStatus () {
+      const userId = wx.getStorageSync('userId')
+      this.isLogin = userId !== '' && userId > -1
+      this.isBindPhone = userId > 0
+    },
+
+    /**
+     * 获取实名认证状态
+     */
+    __checkRealNameAuth () {
+      util.requestByPost(
+        'headhunter/get_authentication',
+        {},
+        false,
+        res => {
+          const { code, data, message } = res.data
+          if (code == 200) {
+            if (data.authentic_status === 1) {
+              this.isCertified = true
+            } else {
+              this.isCertified = false
+            }
+            this.isShowGuide = !this.isCertified
+            this.isShowRewart = this.isCertified
+          } else {
+            wx.showToast({
+              title: message,
+              icon: 'none'
+            })
+          }
+        },
+        err => {
+          // wx.stopPullDownRefresh()
+        }
+      )
+    },
+
+    /**
+     * 获取实名认证后-跳转到之前的操作页面的回调
+     */
+    getRealNameAuthCallback () {
+      wx.navigateTo({
+        url: pageMyReward
+      })
+    },
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-page
+  height auto
+.rmlist
+  background-color #FF8752
+  .header
+    display flex
+    align-items flex-end
+    box-sizing border-box
+    width 750rpx
+    height 448rpx
+    background url('https://cdn.doumistatic.com/204,01a5c8841cf21699.png') no-repeat center
+    background-size cover
+    &-nav
+      flex auto
+      display flex
+      justify-content space-around
+      &-item
+        width 216rpx
+        height 140rpx
+        background: url('https://cdn.doumistatic.com/202,01a5cc02d48382f3.png') no-repeat 0 0
+        background-size 300rpx auto
+        color #fff
+        font-size 28rpx
+        font-weight 400
+        line-height 140rpx
+        text-align center
+        &.city
+          &::after
+            content ''
+            position relative
+            top -2px
+            display inline-block
+            width 0
+            height 0
+            border-left 4px solid transparent
+            border-right 4px solid transparent
+            border-top 5px solid #fff
+            margin-left 4px
+        &.rule
+          width 276rpx
+          background-position 0 -140rpx
+  .list
+    .dm-pannel-hd
+      display none
+    .product-info
+      background #fff
+      box-shadow 0 2px 14px 0 rgba(0, 0, 0, 0.08)
+      border-radius 4px
+      margin 12px 16px 0
+      padding 12px
+      &:first-child
+        margin-top 0
+    .product-content
+      display flex
+      align-items center
+    .product-title
+      flex auto
+      font-size 16px
+      font-weight 700
+      line-height 24px
+      text-overflow ellipsis
+      white-space nowrap
+      overflow hidden
+    .product-price
+      flex none
+      color #f60
+      font-size 12px
+      font-weight 400
+      line-height 20px
+      margin-left 12px
+      text
+        font-size 14px
+        font-weight 700
+        line-height 22px
+        margin-right 2px
+    .product-meta
+      overflow hidden
+      margin-top 4px
+      &-item
+        position relative
+        float left
+        box-sizing border-box
+        color #808080
+        font-size 12px
+        line-height 20px
+        .dmx-icon
+          float left
+          width 10px
+          height 10px
+          background-size auto 100%
+          background-repeat no-repeat
+          background-position center center
+          margin 5px 5px 5px 0
+          &-corp
+            background-image url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iOXB4IiBoZWlnaHQ9IjlweCIgdmlld0JveD0iMCAwIDkgOSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTUuMiAoNzgxODEpIC0gaHR0cHM6Ly9za2V0Y2hhcHAuY29tIC0tPgogICAgPHRpdGxlPuWFrOWPuOWQjeensEAyeDwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSLpobXpnaIiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJpUGhvbmUtOCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTI0NC4wMDAwMDAsIC0xOTEuMDAwMDAwKSIgZmlsbC1ydWxlPSJub256ZXJvIj4KICAgICAgICAgICAgPGcgaWQ9IuWIhue7hC00LWNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0NC4wMDAwMDAsIDE5MS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0xLjgwMzg4Mzg2LDAuODM5MjIzMjI3IEw2LC0xLjE5OTA0MDg3ZS0xMyBMNiw5IEwxLDkgTDEsMS44MTk4MDM5IEMxLDEuMzQzMTIyODggMS4zMzY0NTk2NywwLjkzMjcwODA2NiAxLjgwMzg4Mzg2LDAuODM5MjIzMjI3IFoiIGlkPSLnn6nlvaIiIGZpbGw9IiNDQ0NDQ0MiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSLnn6nlvaIiIGZpbGw9IiNGRkZGRkYiIHg9IjIiIHk9IjMiIHdpZHRoPSIyIiBoZWlnaHQ9IjEiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5Z29uIGlkPSLnn6nlvaIiIGZpbGw9IiNDQ0NDQ0MiIHBvaW50cz0iNSAzIDggMyA4IDguOTk5OTk5OTkgNSA4Ljk5OTk5OTk5Ij48L3BvbHlnb24+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0i55+p5b2iLWNvcHkiIGZpbGw9IiNGRkZGRkYiIHg9IjIiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjEiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+')
+    .product-label
+      margin-top 12px
+      margin-bottom 4px
+      .dm-tag
+        margin-top 8px
+      font-size 0
+    .product-views
+      display flex
+      justify-content center
+      position relative
+      margin-top 16px
+      padding-top 12px
+      &::before
+        content ''
+        position absolute
+        top 0
+        left 0
+        right 0
+        height 1px
+        background-color #ccc
+        transform-origin 0 0
+        transform scale3d(1, .5, 1)
+    .product-reward
+      flex none
+      width 72px
+      color #808080
+      font-size 12px
+      line-height 20px
+      &-text
+        display block
+        color #f60
+        margin-top 4px
+        text
+          font-size 14px
+          font-weight 700
+          line-height 22px
+          margin-right 4px
+    .product-progress
+      flex auto
+      position relative
+      display flex
+      justify-content space-between
+      max-width calc(100% - 72px)
+      min-height 28px
+      &::after
+        content ''
+        position absolute
+        top 28px
+        left 12px
+        right 21px
+        height 1px
+        background-color #ccc
+      &-item
+        position relative
+        color #808080
+        font-size 12px
+        line-height 20px
+      &-status
+        position absolute
+        top 23px
+        left 50%
+        z-index 1
+        width 10px
+        height 10px
+        background: url('https://cdn.doumistatic.com/202,01a5cc02d48382f3.png') no-repeat -45px -140px
+        background-size 150px auto
+        border-radius 10px
+        margin-left -5px
+      &-item:last-child
+        .product-progress-status
+          left auto
+          right 16px
+          margin-left 0
+      &-reward
+        display block
+        color #f60
+        font-size 12px
+        font-weight 700
+        line-height 20px
+        text-align center
+        white-space nowrap
+        margin-top 16px
+        &-text
+          color #999
+          font-size 10px
+          font-weight 400
+          margin-left -24px
+    .dm-loadmore
+      color #404040
+      &::after
+        display none
+  .guide
+    display flex
+    align-items center
+    background-color #FEE52A
+    box-shadow 0 2px 14px 0 #FF4627
+    border-radius 4px
+    padding 8px 10px
+    margin 0 16px 12px
+    .product-text
+      flex auto
+      color #404040
+      font-size 12px
+      font-weight 700
+      line-height 20px
+    .product-opt
+      flex none
+      background-image linear-gradient(135deg, #FF7B4A 0%, #FE3C2A 100%)
+      box-shadow 0 2px 8px 0 #FF4627
+      border-radius 4px
+      color #fff
+      font-size 12px
+      font-weight 700
+      line-height 20px
+      padding 6px 15px
+</style>
+
+<script type="application/json">
+  {
+    "navigationBarTitleText": "斗米微猎头",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+      "dm-switch-env": "~/components/bus/dm-switch-env",
+      "dialog": "~/components/dialog/dialog",
+      "dialogRules": "~/components/myRewardRules/myRewardRules",
+      "getPhoneNumber": "~/components/getPhoneNumber/getPhoneNumber",
+      "dm-tag": "~/components/dmx/dm-tag"
+    }
+  }
+</script>

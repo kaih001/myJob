@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>删除_默认</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.1_页面" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-2" transform="translate(-122.000000, -137.000000)">
+            <g id="Group" transform="translate(122.000000, 138.000000)">
+                <polygon id="Line" fill="#C0CCDA" fill-rule="nonzero" points="0 5 18 5 18 3 0 3"></polygon>
+                <path d="M4,3 L13,3 L13,1 L13,1 C13,0.44771525 12.5522847,-1.01453063e-16 12,0 L5,0 L5,0 C4.44771525,1.01453063e-16 4,0.44771525 4,1 L4,3 Z" id="Line" fill="#C0CCDA" fill-rule="nonzero"></path>
+                <path d="M15,4 L3,4 L3,14.9941413 C3,15.5502354 3.44991848,16 4.00585866,16 L13.9941413,16 C14.5502354,16 15,15.5500815 15,14.9941413 L15,4 Z" id="Rectangle-493" stroke="#C0CCDA" stroke-width="2"></path>
+                <polygon id="Line" fill="#C0CCDA" fill-rule="nonzero" points="6 7 6 13 8 13 8 7"></polygon>
+                <polygon id="Line-Copy" fill="#C0CCDA" fill-rule="nonzero" points="10 7 10 13 12 13 12 7"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

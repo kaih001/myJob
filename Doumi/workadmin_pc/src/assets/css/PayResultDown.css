@@ -1,0 +1,28 @@
+#PayResultDown .section-warp{
+	padding: 16px 20px;
+	overflow: hidden;
+}
+.pay-result-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dddddd;
+}
+
+.pay-result-header h2{
+  font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	color: #475568;
+  padding-bottom: 16px;
+}
+.table-warp{
+  margin-top: 40px;
+}
+.pagination-warp{
+  text-align: right;
+}
+
+#PayResultDown .el-dialog__body{
+  padding: 30px 20px;
+}

@@ -1,0 +1,124 @@
+<template>
+  <view class="worklist_wrap">
+    <view class="nearby_work_title">附近赚钱零工</view>
+    <view class="workDetBoxWrap">
+      <view class="workDetBox">
+        <view class="title">夜班分拣，每小时20，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
+        <view class="headImage">
+          <view class="center_section">
+            <view class="order">服务员<text class="line">|</text>3-5年<text class="line">|</text>职位描述</view>
+            <view class="position"> <text class="position_det">北京海淀回龙观</text><text>距您0.5km</text></view>
+          </view>
+          <view class="right_section">
+            电话联系
+          </view>
+        </view>
+      <view class="workDetBox">
+        <view class="title">夜班分拣，每小时20，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
+        <view class="headImage">
+          <view class="center_section">
+            <view class="order">服务员<text class="line">|</text>3-5年<text class="line">|</text>职位描述</view>
+            <view class="position"> <text class="position_det">北京海淀回龙观</text><text>距您0.5km</text></view>
+          </view>
+          <view class="right_section">
+            电话联系
+          </view>
+        </view>
+      <view class="workDetBox">
+        <view class="title">夜班分拣，每小时20，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
+        <view class="headImage">
+          <view class="center_section">
+            <view class="order">服务员<text class="line">|</text>3-5年<text class="line">|</text>职位描述</view>
+            <view class="position"> <text class="position_det">北京海淀回龙观</text><text>距您0.5km</text></view>
+          </view>
+          <view class="right_section">
+            电话联系
+          </view>
+        </view>
+      </view>
+    </view>
+    <button class="telContact">电话联系</button>
+  </view>
+</template>
+
+<script>
+  import { createComponent } from '@mpxjs/core'
+
+  createComponent({})
+</script>
+
+<style lang="stylus">
+  .worklist_wrap
+    background #fff
+    margin-top 8px
+    padding 0 16px
+    .nearby_work_title
+      font-family PingFangSC-Medium
+      font-size 18px
+      color #404040
+      height 55px
+      line-height 55px
+      border-bottom 1px solid #F5F5F5
+    .workDetBoxWrap
+      margin-bottom 50px
+      .workDetBox
+        background #FFF
+        .title
+          font-family PingFangSC-Semibold
+          font-size 18px
+          color #333333
+          letter-spacing 0
+          line-height 24px
+          white-space nowrap
+          text-overflow ellipsis
+          overflow hidden
+          margin 22px 10px 8px 0
+          font-weight bold
+        .headImage
+          display flex
+          border-radius 8px
+          align-items center
+          padding-bottom 32px
+          border-bottom 1px solid #F5F5F5
+          .center_section
+            flex 1
+            .order
+              .line
+                margin 0 6px
+            .position
+              font-family PingFangSC-Regular
+              font-size 14px
+              color #808080
+              letter-spacing 0
+              line-height 20px
+              .position_det
+                margin-right 10px
+          .right_section
+            width 80px
+            height 26px
+            background #FFCC00
+            border-radius 13px
+            font-weight bold
+            text-align center
+            line-height 26px
+    .telContact
+      position fixed
+      left 0
+      right 0
+      bottom 0
+      height 50px
+      line-height 50px
+      text-align center
+      background #FFCC00
+      font-family PingFangSC-Regular
+      font-size 16px
+      color #404040
+      letter-spacing 2
+</style>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {}
+  }
+</script>

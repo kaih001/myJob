@@ -1,0 +1,38 @@
+<template>
+  <!-- 自定义返回头 -->
+  <nav-bar title="职位详情" backShow="{{true}}"></nav-bar>
+
+  <!-- 分享卡片模版 -->
+  <dm-share-detail wx:ref="dmShareDetail" share="{{share}}"></dm-share-detail>
+
+  <!-- 方便面面试提醒框 -->
+  <dm-interview-pop wx:ref="dmInterviewPop"></dm-interview-pop>
+
+  <dm-job-detail></dm-job-detail>
+</template>
+
+<script>
+import { createPage } from '@mpxjs/core'
+import jobMixin from '~/mixins/job'
+
+createPage({
+  mixins: [jobMixin]
+})
+</script>
+
+<style lang="stylus">
+</style>
+
+<script type="application/json">
+  {
+    "disableScroll": true,
+    "navigationBarTitleText": "职位详情",
+    "navigationStyle": "custom",
+    "usingComponents": {
+      "nav-bar": "~/components/navBar/navBar",
+      "dm-share-detail": "~/components/dm-share-detail",
+      "dm-interview-pop": "~/components/dm-interview-pop",
+      "dm-job-detail": "~/components/bus/dm-job-detail/index"
+    }
+  }
+</script>

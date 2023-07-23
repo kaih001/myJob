@@ -1,0 +1,165 @@
+html,body{background-color: #ffffff;}
+.both{overflow: hidden;clear: both;}
+.ss_top{
+	height:50px;
+	border-bottom: 1px solid #e0e6ed;
+}
+/* .SocialSecurity {
+	margin: 0;
+} */
+.SocialSecurity .s-wapper .addbtn .el-button span{
+	font-size: 13px;
+}
+.SocialSecurity .dialog-adds .el-dialog--small{width: 410px;}
+.SocialSecurity .dialog-adds .el-dialog__body{padding: 30px 20px;}
+.SocialSecurity .dialog-adds .el-form-item, .search .el-form-item{margin-bottom: 0}
+.SocialSecurity .dialog-adds .el-dialog__footer{padding: 0px 20px 15px;}
+.SocialSecurity .el-form-item.is-required .el-form-item__label{position: relative;padding-left: 15px;}
+.SocialSecurity .el-form-item.is-required .el-form-item__label:before{
+	/*content: "*";*/
+	display: block;
+	width: 7px;
+	height: 7px;
+	background: url(../imgs/x_icon.svg) no-repeat center left;
+	color: #ffaa00;
+	position: absolute;
+	left: 7px;
+	top: 14px;
+}
+.SocialSecurity .el-form-item__error{
+  position: static;
+  margin-bottom: -7px;
+}
+.footerdiv{float: right;overflow: hidden; margin: 30px 10px 20px 0;}
+.s-wapper{
+	/* padding: 0 20px 0 20px; */
+	overflow: hidden;
+    margin-bottom: 100px;
+}
+.s-wapper h2{
+	font-size: 16px;
+	font-weight: 700;
+	text-align: left;
+	color: #475568;
+	height: 54px;
+	line-height: 54px;
+	border-bottom: 1px solid #e0e6ed;
+	margin-bottom: 25px;
+}
+.search{margin-top: 20px;}
+.opers{margin:20px 0 10px 0;}
+.operation-btn{
+	float: right;
+	color: #6699ee;
+	font-size: 13px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+.operation-btn .add_icon{
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	margin-right: 6px;
+	background-image:url(../../assets/imgs/shareIcon/add_hover.svg);
+}
+.deletebtn{
+	float: left;
+}
+
+.SocialSecurity .fixedbar{
+	width: 100%;
+	display: flex;
+    justify-content: flex-end;
+    height: 60px;
+    position: fixed;
+    bottom:0;
+    right: 0px;
+    border-top: 1px solid #e0e6ed;
+    background: #fff;
+    z-index: 98;
+    margin-right: 20px;
+}
+.SocialSecurity .fixedbar p{
+	font-size: 14px;
+	margin-right: 20px;
+	line-height: 60px;
+}
+.SocialSecurity .fixedbar .save{
+	float: right;
+	width: 100px;
+	height: 60px;
+	border-left: 1px solid #e0e6ed;
+	text-align: center;
+	line-height: 60px;
+	font-size: 16px;
+	cursor: pointer;
+	background-color: #6699ee;
+	color: #ffffff;
+}
+.SocialSecurity .fixedbar .save:hover{
+    background-color: #8bb1f2;
+}
+.SocialSecurity .fixedbar .save:active{
+    background-color: #517ed6;
+}
+ .opers{margin:20px 0 10px 0;}
+.addbtn{
+ 	float: right;
+ 	color: #6699ee;
+	cursor: pointer;
+ 	font-size: 13px;
+ }
+.addbtn .add_icon{
+	display: block;
+ 	width: 13px;
+ 	height: 13px;
+ 	margin-right: 6px;
+	float: left;
+	margin-top: 10px;
+ 	background-image:url(../../assets/imgs/shareIcon/add_hover.svg);
+ }
+
+.operation-btn .export-icon{
+	display: block;
+	width: 12px;
+	height: 12px;
+	margin-right: 6px;
+	float: left;
+	margin-top: 1px;
+	background-image:url(../../assets/imgs/export.svg);
+}
+.operation-btn .import-icon{
+  display: inline-block;
+  width: 15px;
+  margin-right: 6px;
+  height: 15px;
+  background-image:url(../../assets/imgs/import_icon.svg);
+  background-size: 100% 100%;
+  vertical-align: middle;
+}
+.operation-btn>span {
+    display: block;
+    cursor: pointer;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+}
+.operation-btn .import-btn{
+
+}
+.operation-btn .export-btn{
+	margin-left: 10px;
+}
+.operation-btn .add-btn{
+	margin-left: 10px;
+
+}
+input#import-file-excel {
+    position: absolute;
+    opacity: 0;
+    display: block;
+    width: 42px;
+    border: 1px solid #ccc;
+}

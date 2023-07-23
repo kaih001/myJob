@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>定位当前坐标</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-355.000000, -49.000000)">
+            <g id="Group-18" transform="translate(355.000000, 49.000000)">
+                <g id="Group-17">
+                    <circle id="Oval-4" stroke="#008EFF" stroke-width="1.2" cx="10" cy="10" r="7"></circle>
+                    <rect id="Rectangle-8" fill="#008EFF" transform="translate(10.000000, 18.100000) rotate(90.000000) translate(-10.000000, -18.100000) " x="8.5" y="17.5" width="3" height="1.20000005"></rect>
+                    <rect id="Rectangle-8" fill="#008EFF" transform="translate(10.000000, 2.100000) rotate(90.000000) translate(-10.000000, -2.100000) " x="8.5" y="1.5" width="3" height="1.20000005"></rect>
+                    <rect id="Rectangle-8" fill="#008EFF" x="0.5" y="9" width="3" height="1.20000005"></rect>
+                    <rect id="Rectangle-8" fill="#008EFF" x="16.5" y="9" width="3" height="1.20000005"></rect>
+                    <circle id="Oval-4" fill="#008EFF" cx="10" cy="10" r="4"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

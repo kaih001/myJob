@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>手动添加</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-31.000000, -68.000000)">
+        <g id="Group-28" transform="translate(31.000000, 68.000000)">
+            <g id="Group-29">
+                <rect id="Rectangle-20" fill="#D8D8D8" opacity="0" x="0" y="0" width="14" height="14"></rect>
+                <path d="M6.64,7.18482413 L10.272,8.02157873 C10.696,8.20037785 11,8.63924842 11,9.14313685 C11,9.19190025 10.992,9.24879088 10.984,9.30568151 L10.384,12.9597142 C10.296,13.5530022 9.832,14 9.232,14 L3.8,14 C3.472,14 3.168,13.861837 2.952,13.6424018 L0,9.62754878 C0.331109063,9.12836402 0.752442396,8.82223825 1.264,8.70917148 C1.7755576,8.5961047 2.35422427,9.13261885 3,10.3187139 L3,2 L5,2 L5,7 L6.208,7.09542457 C6.36,7.09542457 6.504,7.1279335 6.64,7.18482413 Z M11,2 L13,2 L13,4 L11,4 L11,6 L9,6 L9,4 L7,4 L7,2 L9,2 L9,0 L11,0 L11,2 Z" id="Combined-Shape" fill="#6699EE"></path>
+            </g>
+        </g>
+    </g>
+</svg>

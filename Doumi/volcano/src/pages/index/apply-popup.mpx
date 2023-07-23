@@ -1,0 +1,89 @@
+<template>
+  <!-- 普通报名选择时间、工作地点的弹层 -->
+  <dm-apply-pop
+    wx:ref="applyPop"
+    bind:show="bindShow"
+    bind:hide="bindHide"
+    bind:apply="bindApply">
+  </dm-apply-pop>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+import jobStore from '~/store/job'
+import util from '~/utils/util'
+
+const STE = jobStore.state
+
+createComponent({
+  computed: {
+    ...jobStore.mapState(Object.keys(STE)),
+    ...jobStore.mapGetters(['pierceParams']),
+    /**
+     * 是否可以直接报名, 以下三种情况均符合:
+     * @case 只有一个工作时间 并且 只有一个工作地点
+     * @case 无工作时间 并且 只有一个工作地点
+     * @case 只有一个工作时间 并且 无工作地点
+     */
+    isDirectApply () {
+      const { post_work_times, post_address } = STE.jobBtnStatus
+      const { post_address_list } = post_address
+
+      return (post_work_times.length === 0 && post_address_list.length === 1) ||
+        (post_work_times.length === 0 && post_address_list.length === 0) ||
+        (post_work_times.length === 1 && post_address_list.length === 1)
+    }
+  },
+
+  methods: {
+    ...jobStore.mapMutations(['DESTROY_JOB']),
+    ...jobStore.mapActions(['postEv', 'generalApplyJob', 'fastGeneralApplyJob', 'getDetail', 'updateDetailBtn']),
+
+    bindShow () {
+      wx.hideTabBar()
+      util.getCurrentPage().isScrollY = false // 禁止主页面滚动
+    },
+
+    bindHide () {
+      wx.showTabBar()
+      util.getCurrentPage().isScrollY = true // 恢复主页面滚动
+    },
+
+    bindApply () {
+      this.generalApplyJob()
+    },
+
+    // -------------------------------------------------------------------------
+    // 页面方法, 双下划线开头表示私有方法, 供内部调用
+    // -------------------------------------------------------------------------
+
+    async init (id) {
+      this.DESTROY_JOB() // 销毁职位数据
+      STE.id = id
+
+      // 给当前组件所在的页面附加极速报名成功的回调方法
+      util.getCurrentPage().applyCallback = this.fastGeneralApplyJob.bind(this)
+      util.showLoading()
+
+      await this.getDetail()
+      await this.updateDetailBtn()
+
+      // - 目前直接投简历全部走普通报名流程
+      this.$nextTick(() => {
+        this.isDirectApply
+          ? this.generalApplyJob()
+          : this.$refs.applyPop.show()
+      })
+    }
+  }
+})
+</script>
+
+<script type="application/json">
+  {
+    "component": true,
+    "usingComponents": {
+      "dm-apply-pop": "~/components/bus/dm-job-detail/dm-apply-pop"
+    }
+  }
+</script>

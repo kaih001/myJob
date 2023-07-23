@@ -1,0 +1,84 @@
+<template>
+  <view class="dm-loadmore" wx:if="{{isShowLoading}}">
+    <icon class="dm-loadmore-icon"></icon>
+    <text class="dm-loadmore-text">{{options.loadingTxt}}</text>
+  </view>
+  <view class="dm-loadmore" wx:if="{{isShowNoMore && !isShowLoading}}">
+    <text class="dm-loadmore-text">{{options.noMoreTxt}}</text>
+  </view>
+</template>
+
+<script>
+import { createComponent } from '@mpxjs/core'
+
+createComponent({
+  properties: {
+    options: {
+      type: Object,
+      value: {
+        loadingTxt: '正在加载',
+        noMoreTxt: '已经到底了！'
+      }
+    }
+  },
+
+  data: {
+    isShowLoading: false,
+    isShowNoMore: false
+  },
+
+  methods: {
+    showLoading () {
+      this.isShowLoading = true
+      this.isShowNoMore = false
+    },
+    showNoMore () {
+      this.isShowLoading = false
+      this.isShowNoMore = true
+    },
+    hide () {
+      this.isShowLoading = false
+      this.isShowNoMore = false
+    }
+  }
+})
+</script>
+
+<style lang="stylus">
+.dm-loadmore
+  position relative
+  color #808080
+  font-size 12px
+  line-height 20px
+  text-align center
+  padding 12px
+  background url('https://cdn.doumistatic.com/27,60db2b264f3aca.png') no-repeat center bottom
+  background-size 100% auto
+  &::after
+    content ''
+    position absolute
+    right 0
+    bottom 0
+    left 0
+    height 1px
+    background-color #e5e5e5
+    transform-origin 0 100%
+    transform scale3d(1, 0.5, 1)
+  &-icon
+    display inline-block
+    width 20px
+    height 20px
+    background url('https://cdn.doumistatic.com/34,6380e6b42a3bc0.png') no-repeat
+    background-size 20px auto
+    vertical-align middle
+    margin-right 8px
+    animation spin 0.9s infinite linear
+  &-text
+    display inline-block
+</style>
+
+<script type="application/json">
+  {
+    "component": true
+  }
+</script>

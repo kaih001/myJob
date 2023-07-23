@@ -1,0 +1,21 @@
+// 多选框未选中的样式
+checkbox .wx-checkbox-input
+  border-radius 2px
+  width 16px
+  height 16px
+  border 1px solid #999
+  // 多选框选中的样式
+  &.wx-checkbox-input-checked
+    border 1px solid #fa0
+    background #fa0
+    // 多选框选中对勾的样式
+    &::before
+      width 16px
+      // 选中后对勾大小，不要超过背景的尺寸
+      height 16px
+      line-height 16px
+      text-align center
+      font-size 15px
+      // 对勾颜色
+      color #fff
+      background transparent

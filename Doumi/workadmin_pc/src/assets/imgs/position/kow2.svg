@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="188px" height="108px" viewBox="0 0 188 108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>提示内容</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="105.357422%" y1="12.2619048%" x2="0%" y2="64.6875%" id="linearGradient-1">
+            <stop stop-color="#FFB948" offset="0%"></stop>
+            <stop stop-color="#F5974E" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="35.7105655%" x2="0%" y2="72.1800595%" id="linearGradient-2">
+            <stop stop-color="#FFA766" offset="0%"></stop>
+            <stop stop-color="#F78329" offset="100%"></stop>
+        </linearGradient>
+        <path d="M499.585786,148.414214 L347,148.414214 L347,148.414214 C345.895431,148.414214 345,149.309644 345,150.414214 L345,244.414214 C345,245.518783 345.895431,246.414214 347,246.414214 L529,246.414214 C530.104569,246.414214 531,245.518783 531,244.414214 L531,150.414214 C531,149.309644 530.104569,148.414214 529,148.414214 L512.414214,148.414214 L506,142 L499.585786,148.414214 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-344.000000, -140.000000)">
+            <g id="Rectangle-113-Copy-4">
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#linearGradient-2)" stroke-width="1" d="M512.62132,147.914214 L512.767767,148.06066 L512.414214,147.914214 L512.62132,147.914214 Z M499.37868,147.914214 L506,141.292893 L512.62132,147.914214 L529,147.914214 C530.380712,147.914214 531.5,149.033502 531.5,150.414214 L531.5,244.414214 C531.5,245.794925 530.380712,246.914214 529,246.914214 L347,246.914214 C345.619288,246.914214 344.5,245.794925 344.5,244.414214 L344.5,150.414214 C344.5,149.033502 345.619288,147.914214 347,147.914214 L499.37868,147.914214 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

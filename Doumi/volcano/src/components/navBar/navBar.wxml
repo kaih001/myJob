@@ -1,0 +1,12 @@
+<view class="navbar" style="{{navbarStyle}}">
+  <view style="{{statusBarHeight}}"></view>
+  <view class="title-container">
+    <image class="back" wx:if="{{backShow}}" bindtap="back"  src="../../assets/image/btnBack.png"></image>
+    <view class="title-center" wx:if="{{titleInCenter}}">{{title}}</view>
+    <view class="title-left" wx:else>
+      <!-- 职位详情的返回按钮 -->
+      <view class="title">{{title}}</view>
+    </view>
+  </view>
+</view>
+<view style="{{navbarStyle}}"></view>

@@ -1,0 +1,353 @@
+<template>
+	<nav-bar title="斗米找工作" backShow="{{true}}"></nav-bar>
+	<import src="../../../../../template/error/error.wxml" />
+	<template is="error" wx:if="{{showErrorTemp}}" data="{{type: errorType}}" />
+
+	<scroll-view
+	bindscrolltolower="loadMore"
+	lower-threshold="10"
+	scroll-y
+	class="dm-page zhuanqu"
+	wx:if="{{!showErrorTemp}}"
+	scroll-with-animation
+	scroll-top="{{setScrollTop}}">
+		<!-- 授权弹窗组件调用 -->
+		<view class="prefecture-box">
+			<view class="dm-pannel recommend">
+			<view class="dm-pannel-hd">
+				<view class="dm-pannel-title">顾问筛选结果页</view>
+			</view>
+			<view class="dm-pannel-bd">
+				<scroll-view lower-threshold="50">
+					<view class="dm-list">
+						<view
+						class="dm-list-item"
+						wx:for="{{listData}}"
+						wx:key="id"
+						wx:for-item="item"
+						data-id="{{item.id}}"
+              			data-ad_type="{{item.ad_types}}"
+						data-ca_kw="{{index}}"
+						data-reqid="{{reqid}}">
+							<view
+								class="dm-product-box"
+								hover-class="dm-touch"
+								data-index="{{index}}"
+                				data-id="{{item.id}}"
+								data-type="{{item.job_type}}"
+                				data-label="{{item.operate_label}}"
+								data-query="id={{item.id}}&jobType={{item.job_type}}&ca_campaign={{jobAdviser}}&reqid={{reqid}}"
+								bindtap="bindItemClick">
+								<view class="dm-product-content">
+									<view class="dm-product-title">{{item.title}}</view>
+									<view class="dm-product-price">
+										<text class="dm-product-price-value">{{item.salary}}</text>
+										<block wx:if="{{item.is_salary_nego != 1}}">{{item.salary_unit_str}}/{{item.salary_type_str}}</block>
+									</view>
+								</view>
+								<view class="dm-product-info">
+									<view class="dm-product-meta">
+										<icon class="dm-icon dm-icon-location-sm"></icon>{{item.post_area}}
+									</view>
+									<view class="dm-product-meta">
+										<icon class="dm-icon dm-icon-clock-sm"></icon>{{item.date}}
+									</view>
+								</view>
+								<view class="dm-product-label">
+									<view class="dm-tag dm-tag-icon dm-tag-haowan" wx:if="{{item.is_funny_work==1}}">
+										<text class="dm-tag-text">好玩兼职</text>
+									</view>
+									<view class="dm-tag dm-tag-icon dm-tag-danbao" wx:if="{{item.is_wages_guarantee == 1}}">
+										<text class="dm-tag-text">工资保障</text>
+									</view>
+									<view class="dm-tag">
+										<text class="dm-tag-text">{{item.payment_type_str}}</text>
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+			<view class="dm-loadmore" wx:if="{{showButtomLoading}}">
+				<icon class="dm-loadmore-icon"></icon>
+				<text class="dm-loadmore-text">正在加载</text>
+			</view>
+			<view class="dm-loadmore" wx:if="{{showNoMore}}">
+				<text class="dm-loadmore-text">没有更多职位啦！</text>
+			</view>
+			</view>
+			<view class="dm-gotop dm-active" bindtap='backTop'></view>
+		</view>
+	</scroll-view>
+</template>
+<script src="./handle.js"></script>
+<style>
+	.prefecture-box {
+		box-sizing: border-box;
+		min-height: 100%;
+	}
+
+	.dm-icon-danbao {
+		width: 56px;
+		height: 16px;
+	}
+
+	.dm-icon-danbao::after {
+		width: 56px;
+		height: 16px;
+		background-position: 0 0;
+	}
+
+	.dm-icon-huobao {
+		width: 70px;
+		height: 18px;
+	}
+
+	.dm-icon-huobao::after {
+		width: 70px;
+		height: 18px;
+		background-position: 0 -20px;
+	}
+
+	.dm-icon-location-sm,
+	.dm-icon-clock-sm,
+	.dm-icon-arrow-sm {
+		width: 10px;
+		height: 10px;
+	}
+
+	.dm-icon-location-sm::after,
+	.dm-icon-clock-sm::after,
+	.dm-icon-arrow-sm::after {
+		width: 10px;
+		height: 10px;
+		background-position: -60px 0;
+	}
+
+	.dm-icon-clock-sm::after {
+		background-position: -70px 0;
+	}
+
+	.dm-icon-arrow-sm::after {
+		background-position: -80px 0;
+	}
+
+	.dm-tag {
+		display: inline-block;
+		position: relative;
+		width: 39px;
+		height: 16px;
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.dm-tag::after {
+		content: "";
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 200%;
+		height: 200%;
+		box-sizing: border-box;
+		background-color: transparent;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		font-size: 0;
+		line-height: 0;
+		text-align: center;
+		padding: 5px 7px;
+		transform-origin: 0 0;
+		transform: scale(0.5);
+	}
+
+	.dm-tag-text {
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		color: #808080;
+		font-size: 20px;
+		line-height: 20px;
+		white-space: nowrap;
+		padding: 5px 7px;
+		transform-origin: 0 0;
+		transform: scale(0.5);
+		margin-right: -50%;
+		margin-bottom: -50%;
+	}
+
+	.recommend {
+		background-color: #fff;
+	}
+
+	.recommend .dm-pannel-hd {
+		display: none;
+	}
+
+	.recommend .dm-list-item {
+		position: relative;
+	}
+
+	.recommend .dm-list-item::after {
+		content: "";
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: 1px;
+		background-color: #e5e5e5;
+		transform-origin: 0 100%;
+		transform: scale3d(1, 0.5, 1);
+	}
+
+	.recommend .dm-product-box {
+		position: relative;
+		padding: 12px 16px;
+	}
+
+	.recommend .dm-product-box.dm-touch {
+		background-color: #f5f5f5;
+	}
+
+	.recommend .dm-product-content {
+		display: flex;
+	}
+
+	.recommend .dm-product-title {
+		flex: 1;
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 24px;
+		margin-right: 8px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.recommend .dm-product-price {
+		color: #f60;
+		font-size: 16px;
+		line-height: 24px;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.recommend .dm-product-price-value {
+		font-size: 18px;
+		font-weight: 600;
+		margin-right: 4px;
+	}
+
+	.recommend .dm-product-info {
+		margin-top: 4px;
+		overflow: hidden;
+	}
+
+	.recommend .dm-product-meta {
+		float: left;
+		color: #808080;
+		font-size: 12px;
+		line-height: 20px;
+		margin-right: 12px;
+	}
+
+	.recommend .dm-product-meta .dm-icon {
+		float: left;
+		margin: 5px 4px 5px -1px;
+	}
+
+	.recommend .dm-product-label {
+		padding-top: 4px;
+		padding-bottom: 4px;
+		margin-top: 4px;
+		overflow: hidden;
+	}
+
+	.recommend .dm-product-label .dm-icon-danbao {
+		float: left;
+		margin-right: 8px;
+	}
+
+	.recommend .dm-product-label .dm-tag {
+		float: left;
+	}
+
+	.recommend .dm-product-location {
+		position: absolute;
+		bottom: 16px;
+		right: 20px;
+		display: flex;
+		align-items: center;
+		height: 36px;
+		background-color: rgba(229, 229, 229, 0.3);
+		border-radius: 2px;
+		color: #808080;
+		font-size: 20px;
+		line-height: 36px;
+		text-align: center;
+		padding-right: 8px;
+		padding-left: 8px;
+		transform-origin: 100% 100%;
+		transform: scale(0.5);
+	}
+
+	.recommend .dm-product-location .dm-icon {
+		width: 20px;
+		height: 20px;
+		margin-right: 8px;
+	}
+
+	.recommend .dm-product-location .dm-icon::after {
+		width: 20px;
+		height: 20px;
+		background-position: -160px 0;
+		background-size: 200px auto;
+	}
+
+	.recommend .dm-product-location text {
+		margin-right: 16px;
+	}
+
+	.recommend .dm-product-location .dm-text-link {
+		margin-right: 0;
+	}
+
+	.dm-banner-img {
+		display: block;
+		width: 100%;
+	}
+
+	.dm-tag-icon {
+		margin-right: 8px;
+		width: 49px;
+	}
+
+	.dm-tag-danbao .dm-tag-text {
+		color: #4ab300;
+		border: 1px solid #4ab300;
+	}
+
+	.dm-tag-mingqi .dm-tag-text {
+		color: #60a0ff;
+		border: 1px solid #60a0ff;
+	}
+
+	.dm-tag-haowan .dm-tag-text {
+		color: #ff6a6a;
+		border: 1px solid #ff6a6a;
+	}
+</style>
+<script type="application/json">
+	{
+		"navigationBarTitleText": "斗米找工作",
+		"navigationStyle": "custom",
+		"usingComponents": {
+			"dialog": "../../../../../components/dialog/dialog",
+			"selector": "../../../../../components/selector/selector",
+			"nav-bar": "../../../../../components/navBar/navBar"
+		}
+	}
+</script>
